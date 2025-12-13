@@ -19,6 +19,9 @@ class Person(BaseModel):
     phone = Column(String(50), nullable=False)
     user_id = Column(Integer, ForeignKey('user.id'), nullable=False)
 
+    def __str__(self):
+        return self.first_name + " " + self.last_name
+
 class UserRole(enum.Enum):
     ADMIN = 1
     USER = 2
@@ -40,11 +43,15 @@ class User(BaseModel):
 
 class Paitent(Person):
     __tablename__ = 'paitent'
+    appointment_schedules = relationship("AppointmentSchedule", backref="paitent", lazy=True)
 
 
 class Doctor(Person):
     __tablename__ = 'doctor'
     major = Column(String(50), nullable=True)
+    appointment_schedules = relationship("AppointmentSchedule", backref="doctor", lazy=True)
+
+
 
 class Service(BaseModel):
     __tablename__ = 'service'
@@ -63,9 +70,6 @@ class AppointmentSchedule(db.Model):
     paitent_id = Column(Integer, ForeignKey("paitent.id"))
     datetime = Column(DateTime, nullable=False)
     status = Column(Enum(Status), default=Status.PENDING)
-
-    paitent = relationship("Paitent", backref="appointment_schedule", lazy=True)
-    doctor = relationship("Doctor", backref="appointment_schedule", lazy=True)
 
 
     __table_args__ = (
@@ -223,10 +227,6 @@ def insert_data():
     db.session.add(invoice)
     db.session.commit()
 
-if __name__ == '__main__':
-    with app.app_context():
-        p = Paitent.query.get(1)
-        print(p.appointment_schedule[0].__dict__)
 
 
 
