@@ -1,5 +1,4 @@
 from datetime import datetime
-
 from dentalapp import db, app
 from sqlalchemy import Column, Integer, String, DATE, DateTime, Double, Boolean, ForeignKey, Enum, UniqueConstraint, Column
 from sqlalchemy.orm import relationship
@@ -104,7 +103,7 @@ class Invoice(db.Model):
     vat = Column(Double, default=10.0)
     total_invoice = Column(Double)
 
-def inser_data():
+def insert_data():
     # ================== USERS ==================
     admin = User(
         name="Admin",
