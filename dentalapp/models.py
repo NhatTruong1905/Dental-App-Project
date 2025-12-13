@@ -1,99 +1,98 @@
 from dentalapp import db, app
 from sqlalchemy import Column, Integer, String, DATE, DateTime, Double, Boolean, ForeignKey, Enum, UniqueConstraint, Column
 from sqlalchemy.orm import relationship
-from enum import Enum as VAT
-
+import enum
 
 class BaseModel(db.Model):
     __abstract__ = True
-
     id = Column(Integer, primary_key=True, autoincrement=True)
     active = Column(Boolean, default=True)
 
 class Person(BaseModel):
     __abstract__ = True
-
-    name = Column(String(255), nullable=False)
+    first_name = Column(String(100), nullable=False)
+    last_name = Column(String(100), nullable=False)
     birthday = Column(DATE, nullable=False)
-    phone = Column(String(20), nullable=False)
     address = Column(String(255), nullable=False)
+    phone = Column(String(50), nullable=False)
 
-    def __str__(self):
-        return self.name
+class UserRole(enum.Enum):
+    ADMIN = 1
+    USER = 2
+    DOCTOR = 3
+    STAFF = 4
 
-service_paitents = db.Table(
-    'service_paitents',
-    Column('service_id', Integer, ForeignKey('service.id'), primary_key=True),
-    Column('paitents_id', Integer, ForeignKey('paitents.id'), primary_key=True),
-)
+class Status(enum.Enum):
+    PENDING = 0
+    IN_PROGRESS = 1
+    COMPLETED = 2
+
+class User(BaseModel):
+    __tablename__ = 'user'
+    name = Column(String(50), nullable=False)
+    avatar = Column(String(100), default='https://res.cloudinary.com/dxxwcby8l/image/upload/v1647056401/ipmsmnxjydrhpo21xrd8.jpg')
+    username = Column(String(50), nullable=False, unique=True)
+    password = Column(String(50), nullable=False)
+    user_role = Column(Enum(UserRole), default=UserRole.USER)
+
+class Paitents(BaseModel):
+    __tablename__ = 'paitents'
+    id = Column(Integer, ForeignKey("user.id"), primary_key=True, autoincrement=True)
+
+
+class Doctor(BaseModel):
+    __tablename__ = 'doctor'
+    id = Column(Integer, ForeignKey("user.id"), primary_key=True, autoincrement=True)
+    major = Column(String(50), nullable=True)
 
 class Service(BaseModel):
-    __tablename__ = "service"
+    __tablename__ = 'service'
     name = Column(String(100), nullable=False)
     price = Column(Double, nullable=False)
-
-    def __str__(self):
-        return self.name
-
-class Paitents(Person):
-    __tablename__ = "paitents"
-    services = relationship("Service", secondary="service_paitents", backref="paitents", lazy=True)
-    medicines = relationship("Medicine", secondary="medicine_paitents", backref="paitents", lazy=True)
-    bill = relationship("Bill", backref="paitents", lazy=True)
-
-
-class Doctor(Person):
-    __tablename__ = "doctor"
-
-
-class AppointmentSchedule(BaseModel):
-    __tablename__ = "appointment_schedule"
-    date_time = Column(DateTime, nullable=False)
-    id_doctor = Column(Integer, ForeignKey('doctor.id'), nullable=False)
-    id_paitents = Column(Integer, ForeignKey('paitents.id'), nullable=False)
-    description = Column(String(255), nullable=False)
-
-    paitents = relationship("Paitents", backref="apppointment", lazy=True)
-    doctor = relationship("Doctor", backref="schedules", lazy=True)
-
-    __table_args__ = (
-        UniqueConstraint('id_doctor', 'date_time'),
-    )
-
-medicine_paitents = db.Table(
-    'medicine_paitents',
-    Column('medicine_id', Integer, ForeignKey('medicine.id'), primary_key=True),
-    Column('paitents_id', Integer, ForeignKey('paitents.id'), primary_key=True),
-)
 
 class Medicine(BaseModel):
-    __tablename__ = "medicine"
+    __tablename__ = 'medicine'
     name = Column(String(100), nullable=False)
     price = Column(Double, nullable=False)
-    production_date = Column(DATE, nullable=False)
-    expiration_date = Column(DATE, nullable=False)
 
-    def __str__(self):
-        return self.name
+class AppointmentSchedule(BaseModel):
+    __tablename__ = 'appointment_schedule'
+    doctor_id = Column(Integer, ForeignKey("doctor.id"))
+    paitents_id = Column(Integer, ForeignKey("paitents.id"))
+    datetime = Column(DateTime, nullable=False)
+    status = Column(Enum(Status), default=Status.PENDING)
 
-class VATEnum(VAT):
-    VAT_10_PER = 10
-    VAT_2_PER = 2
+    __table_args__ = (
+        UniqueConstraint('doctor_id', 'datetime'),
+    )
 
-class Bill(BaseModel):
-    total_medicine = Column(Double, nullable=False)
-    total_service =  Column(Double, nullable=False)
-    total = Column(Double, nullable=False)
-    name = Column(String(255), nullable=False)
-    vat = Column(Enum(VATEnum), default=VATEnum.VAT_10_PER)
-    paitents_id = Column(Integer, ForeignKey('paitents.id'), nullable=False)
+class AppointmentScheduleService(BaseModel):
+    __tablename__ = 'appointment_schedule_service'
+    appointment_schedule_id = Column(Integer, ForeignKey("appointment_schedule.id"))
+    service_id = Column(Integer, ForeignKey("service.id"))
+    price_service = Column(Double, nullable=False)
+
+class AppointmentScheduleMedicine(BaseModel):
+    __tablename__ = 'appointment_schedule_medicine'
+    appointment_schedule_id = Column(Integer, ForeignKey("appointment_schedule.id"))
+    medicine_id = Column(Integer, ForeignKey("medicine.id"))
+    price_medicine = Column(Double, nullable=False)
+    quantity_day = Column(Integer, nullable=False)
+    dosage = Column(Integer, nullable=False)
 
 class TreatmentCard(BaseModel):
-    id_doctor = Column(Integer, ForeignKey('doctor.id'), nullable=False)
-    id_paitents = Column(Integer, ForeignKey('paitents.id'), nullable=False)
-    description = Column(String(255), nullable=False)
+    __tablename__ = 'treatment_card'
+    appointment_schedule_id = Column(Integer, ForeignKey("appointment_schedule.id"))
+    note = Column(String(100), nullable=False)
 
-    paitents = relationship("Paitents", backref="treatment", lazy=True)
+class Invoice(BaseModel):
+    __tablename__ = 'invoice'
+    appointment_schedule_id = Column(Integer, ForeignKey("appointment_schedule.id"))
+
+    total_service = Column(Double, nullable=False)
+    total_medicine = Column(Double, nullable=False)
+    vat = Column(Double, default=10.0)
+    total_invoice = Column(Double)
 
 
 if __name__ == '__main__':
