@@ -1,0 +1,50 @@
+[
+    {
+        "name": "Tẩy trắng răng",
+        "price": 300000
+    },
+    {
+        "name": "Nhồi răng",
+        "price": 500000
+    },
+    {
+        "name": "Trồng răng",
+        "price": 1200000
+    },
+    {
+        "name": "Niềng răng",
+        "price": 5200000
+    },
+    {
+        "name": "Trồng răng sứ",
+        "price": 3200000
+    },
+    {
+        "name": "Nhổ răng ",
+        "price": 100000
+    },
+    {
+        "name": "Khám răng ",
+        "price": 100000
+    },
+    {
+        "name": "Trám răng ",
+        "price": 150000
+    },
+    {
+        "name": "Lấy cao răng ",
+        "price": 200000
+    },
+    {
+        "name": "Chỉnh răng",
+        "price": 750000
+    },
+    {
+        "name": "Chỉnh hàm",
+        "price": 1000000
+    },
+    {
+        "name": "Hàn răng",
+        "price": 1500000
+    }
+]
