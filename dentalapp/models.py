@@ -1,17 +1,19 @@
 from datetime import datetime
 from dentalapp import db, app
-from sqlalchemy import Column, Integer, String, DATE, DateTime, Double, Boolean, ForeignKey, Enum, UniqueConstraint, Column
+from sqlalchemy import Column, Integer, String, DATE, DateTime, Double, Boolean, ForeignKey, Enum, UniqueConstraint
 from sqlalchemy.orm import relationship
 import enum
+
 
 class BaseModel(db.Model):
     __abstract__ = True
     id = Column(Integer, primary_key=True, autoincrement=True)
     active = Column(Boolean, default=True)
 
+
 class Person(BaseModel):
     __abstract__ = True
-    id = Column(Integer, primary_key=True, autoincrement=True)
+    # id = Column(Integer, primary_key=True, autoincrement=True) Khai báo bị trùng vì kế thừa BaseModel rồi
     first_name = Column(String(100), nullable=False)
     last_name = Column(String(100), nullable=False)
     birthday = Column(DATE, nullable=False)
@@ -22,24 +24,29 @@ class Person(BaseModel):
     def __str__(self):
         return self.first_name + " " + self.last_name
 
+
 class UserRole(enum.Enum):
     ADMIN = 1
     USER = 2
     DOCTOR = 3
     STAFF = 4
 
+
 class Status(enum.Enum):
     PENDING = 0
     IN_PROGRESS = 1
     COMPLETED = 2
 
+
 class User(BaseModel):
     __tablename__ = 'user'
     name = Column(String(50), nullable=False)
-    avatar = Column(String(100), default='https://res.cloudinary.com/dxxwcby8l/image/upload/v1647056401/ipmsmnxjydrhpo21xrd8.jpg')
+    avatar = Column(String(100),
+                    default='https://res.cloudinary.com/dxxwcby8l/image/upload/v1647056401/ipmsmnxjydrhpo21xrd8.jpg')
     username = Column(String(50), nullable=False, unique=True)
     password = Column(String(50), nullable=False)
     user_role = Column(Enum(UserRole), default=UserRole.USER)
+
 
 class Paitent(Person):
     __tablename__ = 'paitent'
@@ -52,16 +59,19 @@ class Doctor(Person):
     appointment_schedules = relationship("AppointmentSchedule", backref="doctor", lazy=True)
 
 
-
 class Service(BaseModel):
     __tablename__ = 'service'
     name = Column(String(100), nullable=False)
     price = Column(Double, nullable=False)
+    appointment_schedule_services = relationship("AppointmentScheduleService", backref="service", lazy=True)
+
 
 class Medicine(BaseModel):
     __tablename__ = 'medicine'
     name = Column(String(100), nullable=False)
     price = Column(Double, nullable=False)
+    appointment_schedule_medicines = relationship("AppointmentScheduleMedicine", backref="medicine", lazy=True)
+
 
 class AppointmentSchedule(db.Model):
     __tablename__ = 'appointment_schedule'
@@ -71,10 +81,18 @@ class AppointmentSchedule(db.Model):
     datetime = Column(DateTime, nullable=False)
     status = Column(Enum(Status), default=Status.PENDING)
 
+    invoice = relationship("Invoice", backref="appointment_schedule", lazy=True, uselist=False)
+    treatment_card = relationship("TreatmentCard", backref="appointment_schedule", lazy=True, uselist=False)
+
+    appointment_schedule_services = relationship("AppointmentScheduleService", backref="appointment_schedule",
+                                                 lazy=True)
+    appointment_schedule_medicines = relationship("AppointmentScheduleMedicine", backref="appointment_schedule",
+                                                  lazy=True)
 
     __table_args__ = (
         UniqueConstraint('doctor_id', 'datetime'),
     )
+
 
 class AppointmentScheduleService(db.Model):
     __tablename__ = 'appointment_schedule_service'
@@ -82,6 +100,7 @@ class AppointmentScheduleService(db.Model):
     appointment_schedule_id = Column(Integer, ForeignKey("appointment_schedule.id"))
     service_id = Column(Integer, ForeignKey("service.id"))
     price_service = Column(Double, nullable=False)
+
 
 class AppointmentScheduleMedicine(db.Model):
     __tablename__ = 'appointment_schedule_medicine'
@@ -92,11 +111,13 @@ class AppointmentScheduleMedicine(db.Model):
     quantity_day = Column(Integer, nullable=False)
     dosage = Column(Integer, nullable=False)
 
+
 class TreatmentCard(db.Model):
     __tablename__ = 'treatment_card'
     id = Column(Integer, primary_key=True, autoincrement=True)
     appointment_schedule_id = Column(Integer, ForeignKey("appointment_schedule.id"), unique=True)
     note = Column(String(100), nullable=False)
+
 
 class Invoice(db.Model):
     __tablename__ = 'invoice'
@@ -106,6 +127,7 @@ class Invoice(db.Model):
     total_medicine = Column(Double, nullable=False)
     vat = Column(Double, default=10.0)
     total_invoice = Column(Double)
+
 
 def insert_data():
     # ================== USERS ==================
@@ -228,7 +250,13 @@ def insert_data():
     db.session.commit()
 
 
+if __name__ == '__main__':
+    with app.app_context():
+        a = AppointmentSchedule.query.first()
+        # ================ TEST =================
+        print(a.invoice)
+        print(a.treatment_card)
+        print(a.appointment_schedule_services)
 
-
-
-
+        am = AppointmentScheduleMedicine.query.first()
+        print(am.appointment_schedule)
