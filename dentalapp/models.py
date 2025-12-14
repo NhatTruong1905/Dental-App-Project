@@ -81,12 +81,13 @@ class AppointmentSchedule(db.Model):
     datetime = Column(DateTime, nullable=False)
     status = Column(Enum(Status), default=Status.PENDING)
 
-    invoice = relationship("Invoice", backref="appointment_schedule", lazy=True)
-    treatmentcard = relationship("TreatmentCard", backref="appointment_schedule", lazy=True)
+    invoice = relationship("Invoice", backref="appointment_schedule", lazy=True, uselist=False)
+    treatment_card = relationship("TreatmentCard", backref="appointment_schedule", lazy=True, uselist=False)
+
     appointment_schedule_services = relationship("AppointmentScheduleService", backref="appointment_schedule",
                                                  lazy=True)
     appointment_schedule_medicines = relationship("AppointmentScheduleMedicine", backref="appointment_schedule",
-                                                 lazy=True)
+                                                  lazy=True)
 
     __table_args__ = (
         UniqueConstraint('doctor_id', 'datetime'),
@@ -251,4 +252,11 @@ def insert_data():
 
 if __name__ == '__main__':
     with app.app_context():
-        db.create_all()
+        a = AppointmentSchedule.query.first()
+        # ================ TEST =================
+        print(a.invoice)
+        print(a.treatment_card)
+        print(a.appointment_schedule_services)
+
+        am = AppointmentScheduleMedicine.query.first()
+        print(am.appointment_schedule)
