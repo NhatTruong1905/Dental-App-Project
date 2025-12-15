@@ -4,6 +4,8 @@ from sqlalchemy.orm import relationship
 import enum
 import os
 import json
+import hashlib
+from flask_login import UserMixin
 
 
 class BaseModel(db.Model):
@@ -38,15 +40,18 @@ class Status(enum.Enum):
     COMPLETED = 2
 
 
-class User(BaseModel):
+class User(BaseModel, UserMixin):
     __tablename__ = 'user'
     name = Column(String(50), nullable=False)
     phone = Column(String(50), nullable=False)
     avatar = Column(String(100),
-                    default='https://res.cloudinary.com/dxxwcby8l/image/upload/v1647056401/ipmsmnxjydrhpo21xrd8.jpg')
+                    default='https://res.cloudinary.com/dt1pa28g2/image/upload/v1765801014/default_avatar_dht_fu4l1b.jpg')
     username = Column(String(50), nullable=False, unique=True)
     password = Column(String(50), nullable=False)
     user_role = Column(Enum(UserRole), default=UserRole.USER)
+
+    def __str__(self):
+        return self.name
 
 
 class Patients(Person):
@@ -66,6 +71,9 @@ class Service(BaseModel):
     price = Column(Double, nullable=False)
     appointment_schedule_services = relationship("AppointmentScheduleService", backref="service", lazy=True)
 
+    def __str__(self):
+        return self.name
+
 
 class Medicine(BaseModel):
     __tablename__ = 'medicine'
@@ -74,6 +82,9 @@ class Medicine(BaseModel):
     production_date = Column(DATE, nullable=False)
     expiration_date = Column(DATE, nullable=False)
     appointment_schedule_medicines = relationship("AppointmentScheduleMedicine", backref="medicine", lazy=True)
+
+    def __str__(self):
+        return self.name
 
 
 class AppointmentSchedule(db.Model):
@@ -156,8 +167,15 @@ def insert_medicine(medicines):
         db.session.add_all(medicines)
         db.session.commit()
 
+def add_admin(name, username, password, phone):
+    password = str(hashlib.md5(password.strip().encode('utf-8')).hexdigest())
+    admin = User(name=name, username=username, password=password, phone=phone, user_role=UserRole.ADMIN)
+    with app.app_context():
+        db.session.add(admin)
+        db.session.commit()
 
 if __name__ == '__main__':
     create_db()
     insert_service("services.json")
     insert_medicine("medicines.json")
+    add_admin('admin', 'admin', '123', '0334903055')
