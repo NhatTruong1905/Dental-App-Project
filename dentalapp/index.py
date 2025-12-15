@@ -1,4 +1,4 @@
-from dentalapp.routes import home, login_logout
+from dentalapp.routes import home, login_logout, register
 from dentalapp import app, login
 from dentalapp.dao import users
 from dentalapp.admin import *
@@ -13,5 +13,6 @@ def load_user(user_id):
 if __name__ == '__main__':
     app.register_blueprint(home.home_bp)
     app.register_blueprint(login_logout.login_logout_bp)
+    app.register_blueprint(register.register_bp)
 
     app.run(debug=True)
