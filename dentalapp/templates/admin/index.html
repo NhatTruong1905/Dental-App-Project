@@ -2,7 +2,7 @@
 
 {% block body %}
 
-{% if current_user.is_authenticated %}
+{% if current_user.is_authenticated and current_user.user_role.value == 1 %}
 <h1 class="text-info mt-1">CHÀO MỪNG ĐẾN TRANG QUẢN TRỊ</h1>
 <h2 class="text-success">Chào {{ current_user.name }}!</h2>
 

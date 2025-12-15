@@ -52,7 +52,7 @@ class LogoutView(BaseView):
         return redirect('/admin')
 
     def is_accessible(self) -> bool:
-        return current_user.is_authenticated
+        return current_user.is_authenticated and current_user.user_role == UserRole.ADMIN
 
 
 admin.add_view(MedicineView(Medicine, db.session, name="Thuốc"))
