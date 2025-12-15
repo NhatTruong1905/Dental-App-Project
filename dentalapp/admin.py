@@ -1,7 +1,9 @@
 from dentalapp import admin, db
 from dentalapp.models import Medicine, Service, UserRole
 from flask_admin.contrib.sqla import ModelView
-from flask_login import current_user
+from flask_login import current_user, logout_user
+from flask_admin import BaseView, expose
+from flask import redirect
 
 class BaseModelAdminView(ModelView):
     column_display_pk = True
@@ -43,6 +45,16 @@ class ServiceView(BaseModelAdminView):
         "price": lambda v, c, m, p: f"{m.price:,.0f} ₫"
     }
 
+class LogoutView(BaseView):
+    @expose('/')
+    def index(self):
+        logout_user()
+        return redirect('/admin')
+
+    def is_accessible(self) -> bool:
+        return current_user.is_authenticated
+
 
 admin.add_view(MedicineView(Medicine, db.session, name="Thuốc"))
 admin.add_view(ServiceView(Service, db.session, name="Dịch vụ"))
+admin.add_view(LogoutView(name="Đăng xuất"))
