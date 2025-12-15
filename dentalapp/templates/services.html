@@ -1,0 +1,37 @@
+{%extends 'layout/base.html'%}
+
+{% block title %}Dịch vụ{% endblock %}
+
+{% block content %}
+    <div class="row">
+        <div class="container mt-4">
+            <h3 class="mb-3">Dịch vụ</h3>
+            <table class="table table-bordered table-hover align-middle">
+                <thead class="table-dark">
+                    <tr>
+                        <th>#</th>
+                        <th>Tên dịch vụ</th>
+                        <th>Giá (VNĐ)</th>
+                        <th>Trạng thái</th>
+                    </tr>
+                </thead>
+                <tbody>
+                {% for s in servicess %}
+                    <tr>
+                        <td>{{ s.id }}</td>
+                        <td>{{ s.name }}</td>
+                        <td>{{ "{:,.0f}".format(s.price) }}</td>
+                        <td>
+                            {% if s.active %}
+                                <span class="badge bg-success">Hoạt động</span>
+                            {% else %}
+                                <span class="badge bg-secondary">Ngừng</span>
+                            {% endif %}
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+{% endblock %}

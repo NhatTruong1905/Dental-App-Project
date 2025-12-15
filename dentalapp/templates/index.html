@@ -1,10 +1,19 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
-    <h1>Hello C++</h1>
-</body>
-</html>
+{%extends 'layout/base.html'%}
+
+{% block title %}Trang chủ{% endblock %}
+
+{% block content %}
+<section
+    class="d-flex align-items-center justify-content-center text-white"
+    style="
+        height: 80vh;
+        background: linear-gradient(90deg, #0d6efd, #20c997);
+    "
+>
+    <div class="text-center">
+        <h1 class="fw-bold">PHÒNG KHÁM NHA KHOA</h1>
+        <p class="fs-5 mt-3">Chăm sóc nụ cười – Bảo vệ sức khỏe răng miệng</p>
+    </div>
+</section>
+
+{% endblock %}
