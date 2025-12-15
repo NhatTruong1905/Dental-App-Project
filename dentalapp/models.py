@@ -49,9 +49,9 @@ class User(BaseModel):
     user_role = Column(Enum(UserRole), default=UserRole.USER)
 
 
-class Paitent(Person):
-    __tablename__ = 'paitent'
-    appointment_schedules = relationship("AppointmentSchedule", backref="paitent", lazy=True)
+class Patients(Person):
+    __tablename__ = 'patients'
+    appointment_schedules = relationship("AppointmentSchedule", backref="patients", lazy=True)
 
 
 class Doctor(Person):
@@ -80,7 +80,7 @@ class AppointmentSchedule(db.Model):
     __tablename__ = 'appointment_schedule'
     id = Column(Integer, primary_key=True, autoincrement=True)
     doctor_id = Column(Integer, ForeignKey("doctor.id"))
-    paitent_id = Column(Integer, ForeignKey("paitent.id"))
+    paitent_id = Column(Integer, ForeignKey("patients.id"))
     datetime = Column(DateTime, nullable=False)
     status = Column(Enum(Status), default=Status.PENDING)
 
@@ -137,7 +137,7 @@ def create_db():
         db.session.commit()
 
 def insert_service(services):
-    with open(os.path.join(app.root_path, 'data/services.json')) as f:
+    with open(os.path.join(app.root_path, 'data/services.json'), encoding="utf-8") as f:
         data = json.load(f)
     services = []
     for s in data:
@@ -147,7 +147,7 @@ def insert_service(services):
         db.session.commit()
 
 def insert_medicine(medicines):
-    with open(os.path.join(app.root_path, 'data/medicines.json')) as f:
+    with open(os.path.join(app.root_path, 'data/medicines.json'), encoding="utf-8") as f:
         data = json.load(f)
     medicines = []
     for m in data:
