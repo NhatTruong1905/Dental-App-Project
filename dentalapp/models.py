@@ -14,12 +14,10 @@ class BaseModel(db.Model):
 
 class Person(BaseModel):
     __abstract__ = True
-    # id = Column(Integer, primary_key=True, autoincrement=True) Khai báo bị trùng vì kế thừa BaseModel rồi
     first_name = Column(String(100), nullable=False)
     last_name = Column(String(100), nullable=False)
     birthday = Column(DATE, nullable=False)
     address = Column(String(255), nullable=False)
-    phone = Column(String(50), nullable=False)
     user_id = Column(Integer, ForeignKey('user.id'), nullable=False)
 
     def __str__(self):
@@ -42,6 +40,7 @@ class Status(enum.Enum):
 class User(BaseModel):
     __tablename__ = 'user'
     name = Column(String(50), nullable=False)
+    phone = Column(String(50), nullable=False)
     avatar = Column(String(100),
                     default='https://res.cloudinary.com/dxxwcby8l/image/upload/v1647056401/ipmsmnxjydrhpo21xrd8.jpg')
     username = Column(String(50), nullable=False, unique=True)
