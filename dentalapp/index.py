@@ -1,6 +1,6 @@
 from dentalapp.routes import home, login_logout
 from dentalapp import app, login
-from dao import users
+from dentalapp.dao import users
 
 
 @login.user_loader
