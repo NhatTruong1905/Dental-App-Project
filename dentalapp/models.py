@@ -18,6 +18,7 @@ class Person(BaseModel):
     last_name = Column(String(100), nullable=False)
     birthday = Column(DATE, nullable=False)
     address = Column(String(255), nullable=False)
+    phone = Column(String(50), nullable=False)
     user_id = Column(Integer, ForeignKey('user.id'), nullable=False)
 
     def __str__(self):
