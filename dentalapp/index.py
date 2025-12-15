@@ -1,6 +1,7 @@
 from dentalapp.routes import home, login_logout
 from dentalapp import app, login
 from dentalapp.dao import users
+from dentalapp.admin import *
 
 
 
