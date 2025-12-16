@@ -150,24 +150,110 @@ def create_db():
         db.create_all()
         db.session.commit()
 
-def insert_service(services):
-    with open(os.path.join(app.root_path, 'data/services.json'), encoding="utf-8") as f:
-        data = json.load(f)
-    services = []
-    for s in data:
-        services.append(Service(**s))
+def insert_service():
+    services = [
+        {
+            "name": "Tẩy trắng răng",
+            "price": 300000
+        },
+        {
+            "name": "Nhồi răng",
+            "price": 500000
+        },
+        {
+            "name": "Trồng răng",
+            "price": 1200000
+        },
+        {
+            "name": "Niềng răng",
+            "price": 5200000
+        },
+        {
+            "name": "Trồng răng sứ",
+            "price": 3200000
+        },
+        {
+            "name": "Nhổ răng ",
+            "price": 100000
+        },
+        {
+            "name": "Khám răng ",
+            "price": 100000
+        },
+        {
+            "name": "Trám răng ",
+            "price": 150000
+        },
+        {
+            "name": "Lấy cao răng ",
+            "price": 200000
+        },
+        {
+            "name": "Chỉnh răng",
+            "price": 750000
+        },
+        {
+            "name": "Chỉnh hàm",
+            "price": 1000000
+        },
+        {
+            "name": "Hàn răng",
+            "price": 1500000
+        }
+    ]
     with app.app_context():
-        db.session.add_all(services)
+        for s in services:
+            db.session.add(Service(**s))
         db.session.commit()
 
-def insert_medicine(medicines):
-    with open(os.path.join(app.root_path, 'data/medicines.json'), encoding="utf-8") as f:
-        data = json.load(f)
-    medicines = []
-    for m in data:
-        medicines.append(Medicine(**m))
+def insert_medicine():
+    medicines = [
+        {
+            "name": "Paracetamol 500mg",
+            "price": 15000,
+            "production_date": "2025-01-10",
+            "expiration_date": "2026-01-10"
+        },
+        {
+            "name": "Amoxicillin 500mg",
+            "price": 25000,
+            "production_date": "2025-08-01",
+            "expiration_date": "2026-08-01"
+        },
+        {
+            "name": "Vitamin C",
+            "price": 10000,
+            "production_date": "2025-03-15",
+            "expiration_date": "2027-03-15"
+        },
+        {
+            "name": "paracetamol 500mg",
+            "price": 25000,
+            "production_date": "2025-08-01",
+            "expiration_date": "2026-08-01"
+        },
+        {
+            "name": "Benzocain 250mg",
+            "price": 200000,
+            "production_date": "2025-01-01",
+            "expiration_date": "2025-08-01"
+        },
+        {
+            "name": "Acetaminophen 500mg",
+            "price": 15000,
+            "production_date": "2025-01-01",
+            "expiration_date": "2027-01-01"
+        },
+        {
+            "name": "Thuốc kháng viêm 500mg",
+            "price": 50000,
+            "production_date": "2025-01-01",
+            "expiration_date": "2026-01-01"
+        }
+    ]
     with app.app_context():
-        db.session.add_all(medicines)
+        for m in medicines:
+            db.session.add(Medicine(**m))
         db.session.commit()
 
 def add_admin(name, username, password, phone):
@@ -179,6 +265,6 @@ def add_admin(name, username, password, phone):
 
 if __name__ == '__main__':
     create_db()
-    insert_service("services.json")
-    insert_medicine("medicines.json")
+    insert_service()
+    insert_medicine()
     add_admin('admin', 'admin', '123', '0334903055')
