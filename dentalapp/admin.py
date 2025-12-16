@@ -34,6 +34,7 @@ class MedicineView(BaseModelAdminView, AuthenticatedAdmin):
 
 class ServiceView(BaseModelAdminView, AuthenticatedAdmin):
     column_filters = ['id', 'name', 'price', 'active']
+    column_exclude_list = ['image']
     column_searchable_list = ['name', 'id']
     column_labels = {
         "id": "Mã Dịch vụ",
