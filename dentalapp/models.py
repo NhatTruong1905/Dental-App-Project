@@ -6,6 +6,7 @@ import os
 import json
 import hashlib
 from flask_login import UserMixin
+from datetime import datetime
 
 
 class BaseModel(db.Model):
@@ -54,9 +55,9 @@ class User(BaseModel, UserMixin):
         return self.name
 
 
-class Patients(Person):
-    __tablename__ = 'patients'
-    appointment_schedules = relationship("AppointmentSchedule", backref="patients", lazy=True)
+class Patient(Person):
+    __tablename__ = 'patient'
+    appointment_schedules = relationship("AppointmentSchedule", backref="patient", lazy=True)
 
 
 class Doctor(Person):
@@ -69,6 +70,8 @@ class Service(BaseModel):
     __tablename__ = 'service'
     name = Column(String(100), nullable=False)
     price = Column(Double, nullable=False)
+    created_date = Column(DateTime, default=datetime.now())
+    image = Column(String(100), default='https://res.cloudinary.com/dt1pa28g2/image/upload/v1765882079/service_default_ymbsdi.jpg')
     appointment_schedule_services = relationship("AppointmentScheduleService", backref="service", lazy=True)
 
     def __str__(self):
@@ -91,7 +94,7 @@ class AppointmentSchedule(db.Model):
     __tablename__ = 'appointment_schedule'
     id = Column(Integer, primary_key=True, autoincrement=True)
     doctor_id = Column(Integer, ForeignKey("doctor.id"))
-    paitent_id = Column(Integer, ForeignKey("patients.id"))
+    patient_id = Column(Integer, ForeignKey("patient.id"))
     datetime = Column(DateTime, nullable=False)
     status = Column(Enum(Status), default=Status.PENDING)
 
