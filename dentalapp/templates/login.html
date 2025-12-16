@@ -4,39 +4,42 @@
 
 {% block content %}
 <div class="container">
-    <div class="row justify-content-center align-items-center" style="min-height: 80vh;">
-        <div class="col-md-4 col-sm-8">
-            <div class="card shadow-lg">
-                <div class="card-body">
+<div class="row justify-content-center align-items-center mt-5">
+    <div class="col-md-4 col-sm-8">
+        <div class="card shadow-lg border-0 rounded-4">
+            <div class="card-body p-4">
 
-                    <h3 class="text-center text-primary mb-4">
-                        Đăng nhập người dùng
-                    </h3>
+                <h3 class="text-center text-primary mb-4 fw-bold">Đăng nhập người dùng</h3>
 
-                    <form method="post" action="/login?next=/">
-                        {% if err_msg %}
-                        <div class="alert alert-danger">{{err_msg}}</div>
-                        {% endif %}
-                        <input type="hidden" name="login_type" value="user">
-                        <div class="form-floating mb-3 mt-3">
-                            <input type="text" class="form-control" id="username" placeholder="Tên đăng nhập"
-                                   name="username" required/>
-                            <label for="username">Tên đăng nhập</label>
-                        </div>
+                <form method="post" action="/login?next=/">
+                    {% if err_msg %}
+                    <div class="alert alert-danger text-center">
+                        {{ err_msg }}
+                    </div>
+                    {% endif %}
 
-                        <div class="form-floating mt-3 mb-3">
-                            <input type="password" class="form-control" id="pwd" placeholder="Mật khẩu" name="password"
-                                   required/>
-                            <label for="pwd">Mật khẩu</label>
-                        </div>
+                    <input type="hidden" name="login_type" value="user">
 
-                        <div class="form-floating mt-3 mb-3">
-                            <button type="submit" class="btn btn-danger">Đăng nhập</button>
-                        </div>
-                    </form>
-                </div>
+                    <div class="form-floating mb-3">
+                        <input type="text" class="form-control" id="username" placeholder="Tên đăng nhập" name="username" required>
+                        <label for="username">Tên đăng nhập</label>
+                    </div>
+
+                    <div class="form-floating mb-3">
+                        <input type="password" class="form-control" id="pwd" placeholder="Mật khẩu" name="password" required>
+                        <label for="pwd">Mật khẩu</label>
+                    </div>
+
+                    <div class="d-grid gap-2 mt-4">
+                        <button type="submit" class="btn btn-primary btn-lg">Đăng nhập</button>
+                        <a href="/register" class="btn btn-outline-secondary">Chưa có tài khoản? Đăng ký</a>
+                    </div>
+                </form>
+
             </div>
         </div>
     </div>
+</div>
+
 </div>
 {% endblock %}
