@@ -6,6 +6,18 @@
 <h1 class="text-info mt-1">CHÀO MỪNG ĐẾN TRANG QUẢN TRỊ</h1>
 <h2 class="text-success">Chào {{ current_user.name }}!</h2>
 
+<div class="card" style="width: 18rem;">
+    <img src="{{ current_user.avatar }}" class="card-img-top" alt="...">
+    <div class="card-body">
+        <h5 class="card-title">Quản trị viên</h5>
+    </div>
+    <ul class="list-group list-group-flush">
+        <li class="list-group-item">Họ tên: {{ current_user.name }}</li>
+        <li class="list-group-item">Số điện thoại: {{ current_user.phone }}</li>
+        <li class="list-group-item">Vai trò: Quản trị</li>
+    </ul>
+</div>
+
 
 {% else %}
 <div class="container">
@@ -17,11 +29,13 @@
                     <form method="post" action="/login?next=/admin">
                         <div class="form-group">
                             <label for="username">Tên đăng nhập</label>
-                            <input type="text" class="form-control" id="username" name="username" placeholder="Tên đăng nhập" required>
+                            <input type="text" class="form-control" id="username" name="username"
+                                   placeholder="Tên đăng nhập" required>
                         </div>
                         <div class="form-group">
                             <label for="pwd">Mật khẩu</label>
-                            <input type="password" class="form-control" id="pwd" name="password" placeholder="Mật khẩu" required>
+                            <input type="password" class="form-control" id="pwd" name="password" placeholder="Mật khẩu"
+                                   required>
                         </div>
 
                         <button type="submit" class="btn btn-primary btn-block mt-3">Đăng nhập</button>
