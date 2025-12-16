@@ -77,4 +77,4 @@ class LogoutView(BaseView):
 admin.add_view(MedicineView(Medicine, db.session, name="Thuốc"))
 admin.add_view(ServiceView(Service, db.session, name="Dịch vụ"))
 admin.add_view(UserView(User, db.session, name="Người dùng"))
-admin.add_view(LogoutView(name="Đăng xuất"))
+# admin.add_view(LogoutView(name="Đăng xuất"))
