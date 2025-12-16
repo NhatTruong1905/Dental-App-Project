@@ -1,37 +1,28 @@
-{%extends 'layout/base.html'%}
-
-{% block title %}Dịch vụ{% endblock %}
+{% extends 'layout/base.html' %}
 
 {% block content %}
-    <div class="row">
-        <div class="container mt-4">
-            <h3 class="mb-3">Dịch vụ</h3>
-            <table class="table table-bordered table-hover align-middle">
-                <thead class="table-dark">
-                    <tr>
-                        <th>#</th>
-                        <th>Tên dịch vụ</th>
-                        <th>Giá (VNĐ)</th>
-                        <th>Trạng thái</th>
-                    </tr>
-                </thead>
-                <tbody>
-                {% for s in servicess %}
-                    <tr>
-                        <td>{{ s.id }}</td>
-                        <td>{{ s.name }}</td>
-                        <td>{{ "{:,.0f}".format(s.price) }}</td>
-                        <td>
-                            {% if s.active %}
-                                <span class="badge bg-success">Hoạt động</span>
-                            {% else %}
-                                <span class="badge bg-secondary">Ngừng</span>
-                            {% endif %}
-                        </td>
-                    </tr>
-                {% endfor %}
-                </tbody>
-            </table>
+<h1 class="text-info mt-5 text-center">Dịch vụ của chúng tôi</h1>
+<form class="d-flex mb-5 mt-5 w-50 mx-auto" method="get" action="/services">
+    <input class="form-control me-2" type="text" placeholder="Tìm dịch vụ..." name="kw"/>
+    <button class="btn btn-primary" type="submit">Tìm</button>
+</form>
+{% if services %}
+<div class="row">
+    {% for s in services %}
+    <div class="col-md-4 col-6 p-3">
+        <div class="card">
+            <img class="card-img-top" src="{{ s.image }}" alt="{{ s.name }}">
+            <div class="card-body">
+                <h4 class="card-title">{{ s.name }}</h4>
+                <p class="card-text">{{ "{:,.0f}".format(s.price) }} ₫</p>
+                <button class="btn btn-primary">Đặt lịch khám ngay</button>
+            </div>
         </div>
     </div>
+    {% endfor %}
+</div>
+{% else %}
+<div class="alert alert-danger mt-2">Không có sản dịch vụ nào!</div>
+{% endif %}
+
 {% endblock %}
