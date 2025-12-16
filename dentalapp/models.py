@@ -71,7 +71,7 @@ class Service(BaseModel):
     name = Column(String(100), nullable=False)
     price = Column(Double, nullable=False)
     created_date = Column(DateTime, default=datetime.now())
-    image = Column(String(100), default='https://res.cloudinary.com/dt1pa28g2/image/upload/v1765882079/service_default_ymbsdi.jpg')
+    image = Column(String(200), default='https://res.cloudinary.com/dt1pa28g2/image/upload/v1765882079/service_default_ymbsdi.jpg')
     appointment_schedule_services = relationship("AppointmentScheduleService", backref="service", lazy=True)
 
     def __str__(self):
@@ -153,52 +153,64 @@ def create_db():
 def insert_service():
     services = [
         {
+            "name": "Bọc răng sứ",
+            "price": 300000,
+            "image": "https://res.cloudinary.com/dt1pa28g2/image/upload/v1765900829/icon-service-boc-rang-su_cpwtul.webp"
+        },
+        {
+            "name": "Cấy ghép implant",
+            "price": 500000,
+            "image": "https://res.cloudinary.com/dt1pa28g2/image/upload/v1765900958/icon-service-implant_d1wvzp.webp"
+        },
+        {
+            "name": "Niềng răng thẩm mỹ",
+            "price": 1200000,
+            "image": "https://res.cloudinary.com/dt1pa28g2/image/upload/v1765901070/icon-service-nieng-rang_d2swzn.png"
+        },
+        {
+            "name": "Mặt dán sứ Veneer",
+            "price": 5200000,
+            "image": "https://res.cloudinary.com/dt1pa28g2/image/upload/v1765901120/icon-service-veneer_nxeebx.png"
+        },
+        {
             "name": "Tẩy trắng răng",
-            "price": 300000
+            "price": 3200000,
+            "image": "https://res.cloudinary.com/dt1pa28g2/image/upload/v1765901187/icon-service-tay-trang-rang_hchtln.png"
         },
         {
-            "name": "Nhồi răng",
-            "price": 500000
+            "name": "Nhổ răng khôn",
+            "price": 100000,
+            "image": "https://res.cloudinary.com/dt1pa28g2/image/upload/v1765901227/icon-service-nho-rang_ki3atr.png"
         },
         {
-            "name": "Trồng răng",
-            "price": 1200000
+            "name": "Bệnh lý nha chu",
+            "price": 100000,
+            "image": "https://res.cloudinary.com/dt1pa28g2/image/upload/v1765901281/icon-service-dieu-tri-nha-chu_ck2ojw.png"
         },
         {
-            "name": "Niềng răng",
-            "price": 5200000
+            "name": "Điều trị tuỷ",
+            "price": 150000,
+            "image": "https://res.cloudinary.com/dt1pa28g2/image/upload/v1765901322/icon-service-dieu-tri-tuy_n57ifs.png"
         },
         {
-            "name": "Trồng răng sứ",
-            "price": 3200000
+            "name": "Hàn trám răng",
+            "price": 200000,
+            "image": "https://res.cloudinary.com/dt1pa28g2/image/upload/v1765901368/icon-service-han-tram-rang_ada0bp.png"
         },
         {
-            "name": "Nhổ răng ",
-            "price": 100000
+            "name": "Cạo vôi răng",
+            "price": 750000,
+            "image": "https://res.cloudinary.com/dt1pa28g2/image/upload/v1765901419/icon-service-cao-voi-rang_zu7aym.png"
         },
         {
-            "name": "Khám răng ",
-            "price": 100000
+            "name": "Chăm sóc răng miệng cho thai phụ",
+            "price": 1000000,
+            "image": "https://res.cloudinary.com/dt1pa28g2/image/upload/v1765901475/icon-service-rang-mieng-thai-phu_csfkwv.png"
         },
         {
-            "name": "Trám răng ",
-            "price": 150000
-        },
-        {
-            "name": "Lấy cao răng ",
-            "price": 200000
-        },
-        {
-            "name": "Chỉnh răng",
-            "price": 750000
-        },
-        {
-            "name": "Chỉnh hàm",
-            "price": 1000000
-        },
-        {
-            "name": "Hàn răng",
-            "price": 1500000
+            "name": "Nha khoa trẻ em",
+            "price": 1500000,
+            "image": "https://res.cloudinary.com/dt1pa28g2/image/upload/v1765901521/icon-service-nha-khoa-tre-em_vgqcyr.png"
         }
     ]
     with app.app_context():
