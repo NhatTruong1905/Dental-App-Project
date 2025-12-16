@@ -21,8 +21,10 @@ def login_process():
     username = request.form.get('username')
     password = request.form.get('password')
     user = auth_user(username, password)
+    login_type = request.form.get('login_type')
     if user:
         login_user(user)
-
-    next = request.args.get('next')
-    return redirect(next if next else '/')
+        next = request.args.get('next')
+        return redirect(next if next else '/')
+    elif login_type == "user":
+        return render_template('login.html', err_msg="Tên đăng nhập hoặc mật khẩu không chính xác!")
