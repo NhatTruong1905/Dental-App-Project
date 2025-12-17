@@ -29,10 +29,14 @@
 {% include 'layout/header.html'%}
 {% endblock %}
 
-<section class="container main">
-    {% block content required %}
+<div class="main">
+    <section class="container mt-5">
+        {% block content required %}
+        {% endblock %}
+    </section>
+    {% block other %}
     {% endblock %}
-</section>
+</div>
 
 {% block footer %}
 {% include 'layout/footer.html' %}

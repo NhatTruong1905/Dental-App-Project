@@ -3,13 +3,100 @@
 {% block title %}Trang chủ{% endblock %}
 
 {% block content %}
-<div class="container mt-5">
-    <section class="d-flex align-items-center justify-content-center text-white" style="height: 80vh;background: linear-gradient(90deg, #0d6efd, #20c997);">
-    <div class="text-center">
-        <h1 class="fw-bold">PHÒNG KHÁM NHA KHOA</h1>
-        <p class="fs-5 mt-3">Chăm sóc nụ cười – Bảo vệ sức khỏe răng miệng</p>
+
+<div class="row justify-content-center">
+    <div class="col-12 col-md-10 col-lg-8">
+        <div id="demo" class="carousel slide" data-bs-ride="carousel" data-bs-interval="2000">
+            <div class="carousel-indicators">
+                <button type="button" data-bs-target="#demo" data-bs-slide-to="0" class="active"></button>
+                <button type="button" data-bs-target="#demo" data-bs-slide-to="1"></button>
+                <button type="button" data-bs-target="#demo" data-bs-slide-to="2"></button>
+                <button type="button" data-bs-target="#demo" data-bs-slide-to="3"></button>
+            </div>
+            <div class="carousel-inner">
+                <div class="carousel-item active">
+                    <div class="ratio ratio-16x9">
+                        <img src="https://res.cloudinary.com/dt1pa28g2/image/upload/v1765996984/portrait-female-dentist_aory6v_c_fill_w_900_h_600_ksvhxa.jpg"
+                             alt="Chicago" class="d-block w-100" style="object-fit: cover;">
+                    </div>
+                </div>
+                <div class="carousel-item">
+                    <div class="ratio ratio-16x9">
+                        <img src="https://res.cloudinary.com/dt1pa28g2/image/upload/v1765996687/female-dentist-special-glasses-treating-her-patient-s-teeth-with-dental-instruments_ocwmin_c_fill_w_900_h_600_f9slaf.jpg"
+                             alt="Los Angeles" class="d-block w-100" style="object-fit: cover;">
+                    </div>
+                </div>
+                <div class="carousel-item">
+                    <div class="ratio ratio-16x9">
+                        <img src="https://res.cloudinary.com/dt1pa28g2/image/upload/v1765996983/empty-stomatology-orthodontist-bright-office-room-with-nobody-it_f74ahj_c_fill_w_900_h_600_u368l6.jpg"
+                             alt="Chicago" class="d-block w-100" style="object-fit: cover;">
+                    </div>
+                </div>
+                <div class="carousel-item">
+                    <div class="ratio ratio-16x9">
+                        <img src="https://res.cloudinary.com/dt1pa28g2/image/upload/v1765996688/female-dentist-treats-patients-teeth-stomatologist-working-with-professional-equipment_yecmga_c_fill_w_900_h_600_v2yn5x.jpg"
+                             alt="New York" class="d-block w-100" style="object-fit: cover;">
+                    </div>
+                </div>
+            </div>
+
+            <button class="carousel-control-prev" type="button" data-bs-target="#demo" data-bs-slide="prev">
+                <span class="carousel-control-prev-icon"></span>
+            </button>
+            <button class="carousel-control-next" type="button" data-bs-target="#demo" data-bs-slide="next">
+                <span class="carousel-control-next-icon"></span>
+            </button>
+        </div>
     </div>
-</section>
 </div>
 
+
 {% endblock %}
+
+{% block other %}
+<div class="mt-5 text-center p-2" style="background-color: #0177fe; color: white; font-weight: bold; font-size: 17px;">
+    NHA KHOA TIÊU CHUẨN CHẤT LƯỢNG VỚI CÁC BÁC SĨ ĐỨNG ĐẦU NGÀNH TẠI VIỆT NAM
+</div>
+<div class="container py-5">
+    <h2 class="text-center fw-bold mb-4">ĐỘI NGŨ CHUYÊN GIA</h2>
+
+    <div class="row justify-content-center">
+        <div class="col-lg-4 col-md-5 col-12 p-3">
+            <div class="card profile-card h-100">
+                <div class="card-body text-center">
+                    <img src="https://res.cloudinary.com/dt1pa28g2/image/upload/v1766002622/avt_doctor_um1ddj_c_fill_w_128_h_128_v6f3ny.jpg"
+                         alt="Bác sĩ Nguyễn Văn Tuấn"
+                         class="rounded-circle profile-img mb-3">
+                    <h3 class="card-title mb-2">Tiến sĩ Nguyễn Văn Tuấn</h3>
+                    <p class="text-primary fw-semibold mb-2">Chuyên gia Phục hình &amp; Cấy ghép Implant</p>
+                    <p class="card-text">
+                        Bác sĩ Nguyễn Văn Tuấn là Tiến sĩ chuyên ngành Răng – Hàm – Mặt,
+                        có nhiều năm công tác tại các bệnh viện tuyến trung ương.
+                        Chuyên sâu trong phục hình răng sứ, cấy ghép Implant
+                        và điều trị các ca phức tạp.
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-4 col-md-5 col-12 p-3">
+            <div class="card profile-card h-100">
+                <div class="card-body text-center">
+                    <img src="https://res.cloudinary.com/dt1pa28g2/image/upload/v1766003791/dht_doctor_vkdb1z_c_fill_w_128_h_128_jkteyc.jpg"
+                         alt="Bác sĩ Dương Hữu Thành"
+                         class="rounded-circle profile-img mb-3">
+                    <h3 class="card-title mb-2">GS.TS Dương Hữu Thành</h3>
+                    <p class="text-primary fw-semibold mb-2">Giám đốc chuyên môn</p>
+                    <p class="card-text">
+                        Giáo sư, Tiến sĩ Dương Hữu Thành là chuyên gia đầu ngành Răng – Hàm – Mặt,
+                        với nhiều năm kinh nghiệm giảng dạy và điều trị lâm sàng,
+                        chuyên sâu trong phục hình răng sứ thẩm mỹ và cấy ghép Implant.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+
