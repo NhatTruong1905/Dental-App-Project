@@ -1,10 +1,10 @@
-import hashlib
+import re
+
 from dentalapp.models import User
 import cloudinary.uploader
 from dentalapp import db
+from dentalapp.utils import hash_password
 
-def hash_password(password):
-    return hashlib.md5(password.strip().encode('utf-8')).hexdigest()
 
 def get_current_user(user_id):
     return User.query.get(user_id)
@@ -28,3 +28,14 @@ def change_password(user, new_password):
     user.password = hash_password(new_password)
     db.session.commit()
 
+
+def validate_username(username):
+    return not User.query.filter(User.username==username).first()
+
+
+def validate_phone(phone):
+    return bool(re.match(r"^(01|02|03|04|05|06|07|08|09)\d{8}$", phone))
+
+
+def validate_password(pwd, confirm):
+    return pwd == confirm
