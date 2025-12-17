@@ -1,8 +1,8 @@
+{% if current_user.is_authenticated and current_user.user_role.value == 1 %}
+
 {% extends 'admin/master.html' %}
 
 {% block body %}
-
-{% if current_user.is_authenticated and current_user.user_role.value == 1 %}
 <h1 class="text-info mt-1">CHÀO MỪNG ĐẾN TRANG QUẢN TRỊ</h1>
 <h2 class="text-success">Chào {{ current_user.name }}!</h2>
 
@@ -17,35 +17,10 @@
         <li class="list-group-item">Vai trò: Quản trị</li>
     </ul>
 </div>
-
+{% endblock %}
 
 {% else %}
-<div class="container">
-    <div class="row justify-content-center align-items-center" style="min-height: 70vh;">
-        <div class="col-md-5 col-sm-8">
-            <div class="card shadow-lg">
-                <div class="card-body">
-                    <h3 class="text-center text-primary mb-4">Đăng nhập quản trị</h3>
-                    <form method="post" action="/login?next=/admin">
-                        <div class="form-group">
-                            <label for="username">Tên đăng nhập</label>
-                            <input type="text" class="form-control" id="username" name="username"
-                                   placeholder="Tên đăng nhập" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="pwd">Mật khẩu</label>
-                            <input type="password" class="form-control" id="pwd" name="password" placeholder="Mật khẩu"
-                                   required>
-                        </div>
 
-                        <button type="submit" class="btn btn-primary btn-block mt-3">Đăng nhập</button>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
+<p style="text-align: center; font-size: 50px;">Bạn không được cấp quyền truy cập vào trang này!</p>
 
 {% endif %}
-
-{% endblock %}

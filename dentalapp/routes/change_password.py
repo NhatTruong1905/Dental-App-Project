@@ -1,6 +1,7 @@
 from flask import render_template, redirect, Blueprint, request
 from flask_login import current_user
-from dentalapp.dao.users import hash_password, change_password
+from dentalapp.dao.users import change_password
+from dentalapp.utils import hash_password
 
 change_password_bp = Blueprint('change_password', __name__)
 
