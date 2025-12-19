@@ -308,22 +308,23 @@ def init_all_data():
     insert_doctors(4)
     insert_patient(10)
 
-# def create_slots(date):
-#     start_morning = datetime.combine(date, time(7, 0))
-#     end_morning = datetime.combine(date, time(11, 30))
-#     start_afternoon = datetime.combine(date, time(13, 0))
-#     end_afternoon = datetime.combine(date, time(16, 30))
-#     slots = []
-#     while start_morning <= end_morning:
-#         slots.append(start_morning)
-#         start_morning += timedelta(minutes=30)
-#     while start_afternoon <= end_afternoon:
-#         slots.append(start_afternoon)
-#         start_afternoon += timedelta(minutes=30)
-#     return slots
+def create_slots(date):
+    start_morning = datetime.combine(date, time(7, 0))
+    end_morning = datetime.combine(date, time(11, 30))
+    start_afternoon = datetime.combine(date, time(13, 0))
+    end_afternoon = datetime.combine(date, time(16, 30))
+    slots = []
+    while start_morning <= end_morning:
+        slots.append(start_morning)
+        start_morning += timedelta(minutes=30)
+    while start_afternoon <= end_afternoon:
+        slots.append(start_afternoon)
+        start_afternoon += timedelta(minutes=30)
+    return slots
 
 
 if __name__ == "__main__":
-    slots = create_slots(date.today())
-    for slot in slots:
-        print(slot)
+    init_all_data()
+    # slots = create_slots(date.today())
+    # for slot in slots:
+    #     print(slot)
