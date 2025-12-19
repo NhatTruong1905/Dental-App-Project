@@ -1,31 +1,17 @@
 from dentalapp import db, app
-from sqlalchemy import Column, Integer, String, DATE, DateTime, Double, Boolean, ForeignKey, Enum, UniqueConstraint
+from sqlalchemy import Column, Integer, String, DATE, DateTime, Double, Boolean, ForeignKey, Enum, UniqueConstraint, Text
 from sqlalchemy.orm import relationship
 import enum
-import os
-import json
-import hashlib
 from flask_login import UserMixin
-from datetime import datetime
+from datetime import datetime, date, timedelta, time
+import random
+from dentalapp.utils import hash_password
 
 
 class BaseModel(db.Model):
     __abstract__ = True
     id = Column(Integer, primary_key=True, autoincrement=True)
     active = Column(Boolean, default=True)
-
-
-class Person(BaseModel):
-    __abstract__ = True
-    first_name = Column(String(100), nullable=False)
-    last_name = Column(String(100), nullable=False)
-    birthday = Column(DATE, nullable=False)
-    address = Column(String(255), nullable=False)
-    phone = Column(String(50), nullable=False)
-    user_id = Column(Integer, ForeignKey('user.id'), nullable=False)
-
-    def __str__(self):
-        return self.first_name + " " + self.last_name
 
 
 class UserRole(enum.Enum):
@@ -44,9 +30,8 @@ class Status(enum.Enum):
 class User(BaseModel, UserMixin):
     __tablename__ = 'user'
     name = Column(String(50), nullable=False)
-    phone = Column(String(50), nullable=False)
-    avatar = Column(String(100),
-                    default='https://res.cloudinary.com/dt1pa28g2/image/upload/v1765801014/default_avatar_dht_fu4l1b.jpg')
+    phone = Column(String(10), nullable=False)
+    avatar = Column(String(100), default='https://res.cloudinary.com/dt1pa28g2/image/upload/v1765801014/default_avatar_dht_fu4l1b.jpg')
     username = Column(String(50), nullable=False, unique=True)
     password = Column(String(50), nullable=False)
     user_role = Column(Enum(UserRole), default=UserRole.USER)
@@ -55,14 +40,22 @@ class User(BaseModel, UserMixin):
         return self.name
 
 
-class Patient(Person):
+class Patient(BaseModel):
     __tablename__ = 'patient'
+    id = Column(Integer,  primary_key=True, autoincrement=True)
+    name = Column(String(50), nullable=False)
+    phone = Column(String(10), nullable=False)
+    birthday = Column(DATE, nullable=False)
+    address = Column(String(255), nullable=False)
+    medical_history = Column(Text, nullable=True)
+    user_id = Column(Integer, ForeignKey('user.id'), nullable=False)
     appointment_schedules = relationship("AppointmentSchedule", backref="patient", lazy=True)
 
 
-class Doctor(Person):
+class Doctor(BaseModel):
     __tablename__ = 'doctor'
-    major = Column(String(50), nullable=True)
+    id = Column(Integer, ForeignKey('user.id'), primary_key=True)
+    major = Column(String(100), nullable=True)
     appointment_schedules = relationship("AppointmentSchedule", backref="doctor", lazy=True)
 
 
@@ -95,7 +88,9 @@ class AppointmentSchedule(db.Model):
     id = Column(Integer, primary_key=True, autoincrement=True)
     doctor_id = Column(Integer, ForeignKey("doctor.id"))
     patient_id = Column(Integer, ForeignKey("patient.id"))
-    datetime = Column(DateTime, nullable=False)
+
+    start = Column(DateTime, nullable=False)
+    end = Column(DateTime, nullable=False)
     status = Column(Enum(Status), default=Status.PENDING)
 
     invoice = relationship("Invoice", backref="appointment_schedule", lazy=True, uselist=False)
@@ -107,7 +102,7 @@ class AppointmentSchedule(db.Model):
                                                   lazy=True)
 
     __table_args__ = (
-        UniqueConstraint('doctor_id', 'datetime'),
+        UniqueConstraint('doctor_id', 'start'),
     )
 
 
@@ -150,7 +145,7 @@ def create_db():
         db.create_all()
         db.session.commit()
 
-def insert_service():
+def insert_services():
     services = [
         {
             "name": "Bọc răng sứ",
@@ -218,7 +213,7 @@ def insert_service():
             db.session.add(Service(**s))
         db.session.commit()
 
-def insert_medicine():
+def insert_medicines():
     medicines = [
         {
             "name": "Paracetamol 500mg",
@@ -268,15 +263,52 @@ def insert_medicine():
             db.session.add(Medicine(**m))
         db.session.commit()
 
-def add_admin(name, username, password, phone):
-    password = str(hashlib.md5(password.strip().encode('utf-8')).hexdigest())
-    admin = User(name=name, username=username, password=password, phone=phone, user_role=UserRole.ADMIN)
+
+
+def create_user_base(name, phone, username, password, role):
+    password = hash_password(password)
+    user = User(name=name, phone=phone, username=username,password=password, user_role=role)
+    db.session.add(user)
+    db.session.flush()
+    return user
+
+def insert_doctors(count):
+    majors = ["Chỉnh nha", "Phục hình", "Nha chu", "Implant", "Niềng", "Phẫu thuật tuỷ"]
+    first_name = ["Hoàng", "Việt", "Minh", "Phúc", "Phát", "Việt"]
+    last_name = ["Nguyễn", "Trần", "Phạm", "Ngô", "Lê"]
     with app.app_context():
-        db.session.add(admin)
+        for i in range(1, count + 1):
+            u = create_user_base(name=f"{random.choice(last_name)} {random.choice(first_name)}", phone=f"0912000{i:03d}", username=f"doctor{i}", password="123", role=UserRole.DOCTOR)
+            dr = Doctor(id=u.id, major=random.choice(majors))
+            db.session.add(dr)
         db.session.commit()
 
-if __name__ == '__main__':
-    create_db()
-    insert_service()
-    insert_medicine()
-    add_admin('admin', 'admin', '123', '0334903055')
+
+def insert_patient(count):
+    first_name = ["Dung", "Nam", "Hậu", "Thành", "Trung", "Hoà"]
+    last_name = ["Lý", "Tô", "Đặng", "Bùi", "Dương"]
+    medical_history = ["Đau răng", "Đau lợi", "Chảy máu răng", "Sâu răng", "Rối loạn mọc răng"]
+    with app.app_context():
+        for i in range(1, count + 1):
+            u = create_user_base(f"{random.choice(last_name)} {random.choice(first_name)}", f"0988000{i:03d}", f"user{i}", "123", UserRole.USER)
+            pa = Patient(name=f"Bệnh nhân {random.choice(last_name)} {random.choice(first_name)}",phone=f"0988000{i:03d}",birthday=date(2000, 1, 1),address=f"Địa chỉ mẫu số {i}, TP.HCM", medical_history=random.choice(medical_history),user_id=u.id)
+            db.session.add(pa)
+        db.session.commit()
+
+
+def init_all_data():
+    with app.app_context():
+        db.drop_all()
+        db.create_all()
+
+    insert_services()
+    insert_medicines()
+    with app.app_context():
+        create_user_base("Nguyễn Văn Tuấn", "0334903055", "admin", "123", UserRole.ADMIN)
+        db.session.commit()
+    insert_doctors(4)
+    insert_patient(10)
+
+
+if __name__ == "__main__":
+    init_all_data()
