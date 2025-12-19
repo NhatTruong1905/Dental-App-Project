@@ -6,7 +6,7 @@ login_logout_bp = Blueprint('login_logout', __name__)
 
 
 @login_logout_bp.route('/login')
-def login_view():
+def render_login():
     return render_template('login.html')
 
 

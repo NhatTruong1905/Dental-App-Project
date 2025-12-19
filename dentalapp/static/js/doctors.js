@@ -1,0 +1,3 @@
+function addToAppointmentSchedule(id,name){
+
+}
