@@ -42,7 +42,6 @@ class User(BaseModel, UserMixin):
 
 class Patient(BaseModel):
     __tablename__ = 'patient'
-    id = Column(Integer,  primary_key=True, autoincrement=True)
     name = Column(String(50), nullable=False)
     phone = Column(String(10), nullable=False)
     birthday = Column(DATE, nullable=False)
