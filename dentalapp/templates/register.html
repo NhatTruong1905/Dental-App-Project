@@ -3,62 +3,48 @@
 {% block title %}Đăng ký{% endblock %}
 
 {% block content %}
-<div class="container">
-  <div class="row justify-content-center mt-5">
-    <div class="col-md-4 col-sm-8">
-      <div class="card shadow-lg border-0 rounded-4">
-        <div class="card-body p-5 d-flex flex-column justify-content-center">
-
-          <h3 class="text-center text-primary mb-4 fw-bold">
-            Đăng ký người dùng
-          </h3>
-
-          {% if err_msg %}
-          <div class="alert alert-danger text-center mb-3">
-            {{ err_msg }}
-          </div>
-          {% endif %}
-
-          <form method="post" action="/register?next=/login" enctype="multipart/form-data">
-
-            <div class="form-floating mb-3">
-              <input type="text" class="form-control" id="name" placeholder="Họ tên" name="name" required />
-              <label for="name">Họ tên</label>
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-5 col-md-7 col-sm-10">
+            <div class="card shadow-lg border-0 rounded-4">
+                <div class="card-body p-5">
+                    <div class="text-center mb-4"><i class="fa-solid fa-user-plus text-primary fs-1 mb-2"></i><h3 class="fw-bold text-primary">Đăng ký người dùng</h3></div>
+                    {% if err_msg %}
+                    <div class="alert alert-danger text-center mb-4"><i class="fa-solid fa-circle-exclamation me-2"></i>{{ err_msg }}</div>
+                    {% endif %}
+                    <form method="post" action="/register?next=/login" enctype="multipart/form-data">
+                        <div class="form-floating mb-3">
+                            <input type="text" class="form-control" id="name" name="name" placeholder="Họ tên" required>
+                            <label for="name"><i class="fa-solid fa-user me-1"></i> Họ tên</label>
+                        </div>
+                        <div class="form-floating mb-3">
+                            <input type="text" class="form-control" id="phone" name="phone" placeholder="Số điện thoại" required>
+                            <label for="phone"><i class="fa-solid fa-phone me-1"></i> Số điện thoại</label>
+                        </div>
+                        <div class="form-floating mb-3">
+                            <input type="text" class="form-control" id="username" name="username" placeholder="Tên đăng nhập" required>
+                            <label for="username"><i class="fa-solid fa-user-tag me-1"></i> Tên đăng nhập</label>
+                        </div>
+                        <div class="form-floating mb-3">
+                            <input type="password" class="form-control" id="pwd" name="password" placeholder="Mật khẩu" required>
+                            <label for="pwd"><i class="fa-solid fa-lock me-1"></i> Mật khẩu</label>
+                        </div>
+                        <div class="form-floating mb-3">
+                            <input type="password" class="form-control" id="confirm" name="confirm" placeholder="Xác nhận mật khẩu" required>
+                            <label for="confirm"><i class="fa-solid fa-lock-open me-1"></i> Xác nhận mật khẩu</label>
+                        </div>
+                        <div class="mb-4">
+                            <label class="form-label fw-semibold"><i class="fa-solid fa-image me-1"></i> Ảnh đại diện</label>
+                            <input type="file" class="form-control" id="avatar" name="avatar">
+                        </div>
+                        <div class="d-grid gap-3">
+                            <button type="submit" class="btn btn-primary btn-lg shadow"><i class="fa-solid fa-user-check me-1"></i> Đăng ký</button>
+                            <a href="/login" class="btn btn-outline-secondary"><i class="fa-solid fa-arrow-left me-1"></i> Quay lại đăng nhập</a>
+                        </div>
+                    </form>
+                </div>
             </div>
-
-            <div class="form-floating mb-3">
-              <input type="text" class="form-control" id="phone" placeholder="Số điện thoại" name="phone" required />
-              <label for="phone">Số điện thoại</label>
-            </div>
-
-            <div class="form-floating mb-3">
-              <input type="text" class="form-control" id="username" placeholder="Tên đăng nhập" name="username" required />
-              <label for="username">Tên đăng nhập</label>
-            </div>
-
-            <div class="form-floating mb-3">
-              <input type="password" class="form-control" id="pwd" placeholder="Mật khẩu" name="password" required />
-              <label for="pwd">Mật khẩu</label>
-            </div>
-
-            <div class="form-floating mb-3">
-              <input type="password" class="form-control" id="confirm" placeholder="Xác nhận mật khẩu" name="confirm" required />
-              <label for="confirm">Xác nhận mật khẩu</label>
-            </div>
-
-            <div class="form-floating mb-3">
-              <input type="file" class="form-control" id="avatar" name="avatar"/>
-              <label for="avatar">Ảnh đại diện</label>
-            </div>
-
-            <div class="d-grid gap-3 mt-4">
-              <button type="submit" class="btn btn-primary btn-lg">Đăng ký</button>
-            </div>
-
-          </form>
         </div>
-      </div>
     </div>
-  </div>
 </div>
 {% endblock %}

@@ -9,7 +9,6 @@ from dentalapp.utils import hash_password
 def get_current_user(user_id):
     return User.query.get(user_id)
 
-
 def auth_user(username, password):
     password = hash_password(password)
     return User.query.filter(User.username == username, User.password == password).first()
