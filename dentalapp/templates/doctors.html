@@ -1,28 +1,29 @@
 {% extends 'layout/base.html' %}
 
 {% block content %}
-    <h1 class="text-info mt-5 text-center">Đội ngũ bác sĩ</h1>
-    {% if doctors %}
-        <div class="row">
-            {% for d in doctors %}
-                <div class="col-md-4 col-6 p-3">
-                    <div class="card">
-                        <img class="card-img-top" src="{{ d.user.avatar }}" alt="{{ d.user.name }}"
-                             style="height: 250px; object-fit: cover; object-position: center;">
-                        <div class="card-body">
-                            <h5 class="card-title">{{ d.user.name }}</h5>
-                            <p class="card-text text-muted">Chuyên Khoa: {{ d.major }}</p>
-                            <p class="card-text text-muted">Số điện thoại: {{ d.user.phone }}</p>
-                            <button class="btn btn-primary" onclick="">Chọn bác sĩ
-                                <a href="/appointment_of_doctor?doctor_id={{ d.id }}"></a>
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            {% endfor %}
+<h1 class="text-info mt-5 text-center fw-bold">Đội ngũ bác sĩ</h1>
+<p class="text-center text-muted mb-4">Các chuyên gia Răng – Hàm – Mặt giàu kinh nghiệm</p>
+
+{% if doctors %}
+<div class="row justify-content-center">
+    {% for d in doctors %}
+    <div class="col-lg-4 col-md-6 col-12 p-3">
+        <div class="card h-100 shadow-sm doctor-card">
+            <img src="{{ d.user.avatar }}" alt="{{ d.user.name }}" class="card-img-top" style="height: 260px; object-fit: cover;">
+
+            <div class="card-body text-center">
+                <h5 class="card-title fw-bold mb-1">{{ d.user.name }}</h5>
+                <p class="text-primary fw-semibold mb-2"><i class="fa-solid fa-user-doctor me-1"></i>{{ d.major }}</p>
+                <p class="text-muted mb-3"><i class="fa-solid fa-phone me-1"></i>{{ d.user.phone }}</p>
+                <a href="/appointment_of_doctor?doctor_id={{ d.id }}" class="btn btn-primary w-100">🦷 Đặt lịch với bác sĩ</a>
+            </div>
         </div>
-    {% else %}
-        <div class="alert alert-danger mt-2">Không có sản bác sĩ nào!</div>
-    {% endif %}
-    <script src="{{ url_for("static",filename="js/doctor.js") }}"></script>
+    </div>
+    {% endfor %}
+</div>
+{% else %}
+<div class="alert alert-danger mt-3 text-center">
+    Không có bác sĩ nào!
+</div>
+{% endif %}
 {% endblock %}
