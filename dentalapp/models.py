@@ -89,8 +89,8 @@ class AppointmentSchedule(db.Model):
     doctor_id = Column(Integer, ForeignKey("doctor.id"))
     patient_id = Column(Integer, ForeignKey("patient.id"))
 
-    start = Column(DateTime, nullable=False)
-    end = Column(DateTime, nullable=False)
+    start_time = Column(DateTime, nullable=False)
+    end_time = Column(DateTime, nullable=False)
     status = Column(Enum(Status), default=Status.PENDING)
 
     invoice = relationship("Invoice", backref="appointment_schedule", lazy=True, uselist=False)
@@ -102,7 +102,7 @@ class AppointmentSchedule(db.Model):
                                                   lazy=True)
 
     __table_args__ = (
-        UniqueConstraint('doctor_id', 'start'),
+        UniqueConstraint('doctor_id', 'start_time'),
     )
 
 
