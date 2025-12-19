@@ -1,45 +1,45 @@
-{%extends 'layout/base.html'%}
+{% extends 'layout/base.html' %}
 
 {% block title %}Đăng nhập{% endblock %}
 
 {% block content %}
-<div class="container">
-<div class="row justify-content-center align-items-center mt-5">
-    <div class="col-md-4 col-sm-8">
-        <div class="card shadow-lg border-0 rounded-4">
-            <div class="card-body p-4">
+<div class="container mt-5">
+    <div class="row justify-content-center align-items-center">
+        <div class="col-lg-4 col-md-6 col-sm-10">
+            <div class="card shadow-lg border-0 rounded-4">
+                <div class="card-body p-5">
 
-                <h3 class="text-center text-primary mb-4 fw-bold">Đăng nhập người dùng</h3>
-
-                <form method="post" action="/login?next=/">
-                    {% if err_msg %}
-                    <div class="alert alert-danger text-center">
-                        {{ err_msg }}
-                    </div>
-                    {% endif %}
-
-                    <input type="hidden" name="login_type" value="user">
-
-                    <div class="form-floating mb-3">
-                        <input type="text" class="form-control" id="username" placeholder="Tên đăng nhập" name="username" required>
-                        <label for="username">Tên đăng nhập</label>
+                    <div class="text-center mb-4">
+                        <i class="fa-solid fa-right-to-bracket text-primary fs-1 mb-2"></i>
+                        <h3 class="fw-bold text-primary">Đăng nhập người dùng</h3>
                     </div>
 
-                    <div class="form-floating mb-3">
-                        <input type="password" class="form-control" id="pwd" placeholder="Mật khẩu" name="password" required>
-                        <label for="pwd">Mật khẩu</label>
-                    </div>
+                    <form method="post" action="/login?next=/">
+                        {% if err_msg %}
+                        <div class="alert alert-danger text-center mb-4"><i class="fa-solid fa-circle-exclamation me-2"></i>{{ err_msg }}</div>
+                        {% endif %}
+                        <input type="hidden" name="login_type" value="user">
 
-                    <div class="d-grid gap-2 mt-4">
-                        <button type="submit" class="btn btn-primary btn-lg">Đăng nhập</button>
-                        <a href="/register" class="btn btn-outline-secondary">Chưa có tài khoản? Đăng ký</a>
-                    </div>
-                </form>
+                        <div class="form-floating mb-3">
+                            <input type="text" class="form-control" id="username" name="username" placeholder="Tên đăng nhập" required>
+                            <label for="username"><i class="fa-solid fa-user me-1"></i> Tên đăng nhập</label>
+                        </div>
 
+                        <div class="form-floating mb-4">
+                            <input type="password" class="form-control" id="pwd" name="password" placeholder="Mật khẩu" required>
+                            <label for="pwd"><i class="fa-solid fa-lock me-1"></i> Mật khẩu</label>
+                        </div>
+
+                        <div class="d-grid gap-3">
+                            <button type="submit" class="btn btn-primary btn-lg shadow"><i class="fa-solid fa-right-to-bracket me-1"></i> Đăng nhập</button>
+                            <a href="/register" class="btn btn-outline-secondary"><i class="fa-solid fa-user-plus me-1"></i> Chưa có tài khoản? Đăng ký</a>
+                        </div>
+                    </form>
+                </div>
             </div>
+
         </div>
     </div>
-</div>
 
 </div>
 {% endblock %}

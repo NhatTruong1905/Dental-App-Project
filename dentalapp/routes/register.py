@@ -1,4 +1,7 @@
 from flask import Blueprint, render_template, redirect, request
+
+import dentalapp.dao.users
+import dentalapp.utils
 from dentalapp.utils import is_image
 from dentalapp.dao import users
 
@@ -12,16 +15,16 @@ def register_view():
 @register_bp.route("/register", methods=["POST"])
 def register_process():
     username = request.form.get("username")
-    if not users.validate_username(username):
+    if not dentalapp.dao.users.validate_username(username):
         return render_template("register.html", err_msg="Tên đăng nhập đã tồn tại vui lòng chọn tên khác!")
 
     phone = request.form.get("phone")
-    if not users.validate_phone(phone):
+    if not dentalapp.dao.users.validate_phone(phone):
         return render_template("register.html", err_msg="Số điện thoạt không hợp lệ vui lòng nhập lại!")
 
     password = request.form.get("password")
     confirm = request.form.get("confirm")
-    if not users.validate_password(password, confirm):
+    if not dentalapp.dao.users.validate_password(password, confirm):
         return render_template("register.html", err_msg="Mật khẩu không khớp vui lòng nhập lại!")
 
     name = request.form.get("name")
@@ -33,4 +36,4 @@ def register_process():
         users.add_user(name=name, phone=phone, username=username, password=password, avatar=avatar)
         return redirect(request.args.get("next"))
     except Exception as ex:
-        return render_template("register.html", err_msg=str(ex))
+        return render_template("register.html", err_msg="Lỗi hệ thống vui lòng thử lại sau!")

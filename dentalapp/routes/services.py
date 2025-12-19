@@ -5,7 +5,7 @@ services_bp = Blueprint('services', __name__)
 
 @services_bp.route('/services')
 def services_view():
-    services = load_services(kw=request.args.get("kw"))
+    services = [service for service in load_services(kw=request.args.get("kw")) if service.active]
     return render_template("services.html", services=services)
 
 

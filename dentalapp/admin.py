@@ -1,3 +1,5 @@
+import dentalapp.dao.users
+import dentalapp.utils
 from dentalapp import admin, db
 from dentalapp.models import Medicine, Service, UserRole, User
 from flask_admin.contrib.sqla import ModelView
@@ -83,10 +85,10 @@ class UserView(AuthenticatedAdmin):
         if not is_created:
             return
 
-        if not users.validate_password(form.pwd.data, form.confirm.data):
+        if not dentalapp.dao.users.validate_password(form.pwd.data, form.confirm.data):
             raise ValidationError("Mật khẩu không khớp!")
 
-        if not users.validate_phone(form.phone.data):
+        if not dentalapp.dao.users.validate_phone(form.phone.data):
             raise ValidationError("Số điện thoại không hợp lệ!")
 
         if form.avatar_file.data:

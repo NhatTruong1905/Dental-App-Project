@@ -1,0 +1,53 @@
+{% extends 'layout/base.html' %}
+
+{% block title %}Tạo hồ sơ bệnh nhân{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-5 col-md-7 col-sm-10">
+            <div class="card shadow-lg border-0 rounded-4">
+                <div class="card-body p-5">
+                    <div class="text-center mb-4">
+                        <i class="fa-solid fa-user-plus text-primary fs-1 mb-2"></i>
+                        <h3 class="fw-bold text-primary">Tạo hồ sơ bệnh nhân</h3>
+                    </div>
+                    {% if err_msg %}
+                    <div class="alert alert-danger text-center mb-4">
+                        <i class="fa-solid fa-circle-exclamation me-2"></i>
+                        {{ err_msg }}
+                    </div>
+                    {% endif %}
+                    <form method="post" action="/patients?next=/patients">
+
+                        <div class="form-floating mb-3">
+                            <input type="text" class="form-control" id="name" name="name" placeholder="Họ tên" required>
+                            <label for="name"><i class="fa-solid fa-user me-1"></i> Họ tên</label>
+                        </div>
+                        <div class="form-floating mb-3">
+                            <input type="text" class="form-control" id="phone" name="phone" placeholder="Số điện thoại" required>
+                            <label for="phone"><i class="fa-solid fa-phone me-1"></i> Số điện thoại</label>
+                        </div>
+                        <div class="form-floating mb-3">
+                            <input type="date" class="form-control" id="birthday" name="birthday" required>
+                            <label for="birthday"><i class="fa-solid fa-cake-candles me-1"></i> Ngày sinh</label>
+                        </div>
+                        <div class="form-floating mb-3">
+                            <input type="text" class="form-control" id="address" name="address" placeholder="Địa chỉ" required>
+                            <label for="address"><i class="fa-solid fa-location-dot me-1"></i> Địa chỉ</label>
+                        </div>
+                        <div class="form-floating mb-4">
+                            <textarea class="form-control" id="medical_history" name="medical_history" placeholder="Tiền sử bệnh án" style="height: 100px"></textarea>
+                            <label for="medical_history"><i class="fa-solid fa-notes-medical me-1"></i> Tiền sử bệnh án</label>
+                        </div>
+                        <div class="d-grid gap-3">
+                            <button type="submit" class="btn btn-primary btn-lg shadow"><i class="fa-solid fa-check me-1"></i> Xác nhận</button>
+                            <a href="/patients" class="btn btn-outline-secondary"><i class="fa-solid fa-arrow-left me-1"></i> Quay lại</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

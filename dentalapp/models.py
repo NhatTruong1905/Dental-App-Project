@@ -35,6 +35,8 @@ class User(BaseModel, UserMixin):
     username = Column(String(50), nullable=False, unique=True)
     password = Column(String(50), nullable=False)
     user_role = Column(Enum(UserRole), default=UserRole.USER)
+    patients = relationship("Patient", backref="user", lazy=True)
+
 
     def __str__(self):
         return self.name

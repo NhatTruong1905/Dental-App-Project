@@ -1,5 +1,5 @@
 from flask import render_template, redirect, Blueprint, request
-from flask_login import current_user
+from flask_login import current_user, login_required
 from dentalapp.dao.users import change_password
 from dentalapp.utils import hash_password
 
@@ -14,6 +14,7 @@ def render_change_pwd():
         return redirect('/login')
 
 @change_password_bp.route('/change_password', methods=['POST'])
+@login_required
 def change_pwd():
     curr_pwd = hash_password(request.form.get('current_password'))
     if curr_pwd != current_user.password:

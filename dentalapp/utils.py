@@ -6,3 +6,4 @@ def hash_password(password):
 
 def is_image(file):
     return file.lower().endswith(('.jpg', '.jpeg', '.png'))
+
