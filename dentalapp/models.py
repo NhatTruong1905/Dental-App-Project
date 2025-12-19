@@ -1,5 +1,6 @@
 from dentalapp import db, app
-from sqlalchemy import Column, Integer, String, DATE, DateTime, Double, Boolean, ForeignKey, Enum, UniqueConstraint, Text
+from sqlalchemy import Column, Integer, String, DATE, DateTime, Double, Boolean, ForeignKey, Enum, UniqueConstraint, \
+    Text
 from sqlalchemy.orm import relationship
 import enum
 from flask_login import UserMixin
@@ -31,11 +32,13 @@ class User(BaseModel, UserMixin):
     __tablename__ = 'user'
     name = Column(String(50), nullable=False)
     phone = Column(String(10), nullable=False)
-    avatar = Column(String(100), default='https://res.cloudinary.com/dt1pa28g2/image/upload/v1765801014/default_avatar_dht_fu4l1b.jpg')
+    avatar = Column(String(100),
+                    default='https://res.cloudinary.com/dt1pa28g2/image/upload/v1765801014/default_avatar_dht_fu4l1b.jpg')
     username = Column(String(50), nullable=False, unique=True)
     password = Column(String(50), nullable=False)
     user_role = Column(Enum(UserRole), default=UserRole.USER)
     patients = relationship("Patient", backref="user", lazy=True)
+    doctor = relationship("Doctor", backref="user", lazy=True, uselist=False)
 
 
     def __str__(self):
@@ -65,7 +68,8 @@ class Service(BaseModel):
     name = Column(String(100), nullable=False)
     price = Column(Double, nullable=False)
     created_date = Column(DateTime, default=datetime.now())
-    image = Column(String(200), default='https://res.cloudinary.com/dt1pa28g2/image/upload/v1765882079/service_default_ymbsdi.jpg')
+    image = Column(String(200),
+                   default='https://res.cloudinary.com/dt1pa28g2/image/upload/v1765882079/service_default_ymbsdi.jpg')
     appointment_schedule_services = relationship("AppointmentScheduleService", backref="service", lazy=True)
 
     def __str__(self):
@@ -141,10 +145,12 @@ class Invoice(db.Model):
     vat = Column(Double, default=10.0)
     total_invoice = Column(Double)
 
+
 def create_db():
     with app.app_context():
         db.create_all()
         db.session.commit()
+
 
 def insert_services():
     services = [
@@ -214,6 +220,7 @@ def insert_services():
             db.session.add(Service(**s))
         db.session.commit()
 
+
 def insert_medicines():
     medicines = [
         {
@@ -265,13 +272,13 @@ def insert_medicines():
         db.session.commit()
 
 
-
 def create_user_base(name, phone, username, password, role):
     password = hash_password(password)
-    user = User(name=name, phone=phone, username=username,password=password, user_role=role)
+    user = User(name=name, phone=phone, username=username, password=password, user_role=role)
     db.session.add(user)
     db.session.flush()
     return user
+
 
 def insert_doctors(count):
     majors = ["Chỉnh nha", "Phục hình", "Nha chu", "Implant", "Niềng", "Phẫu thuật tuỷ"]
@@ -279,7 +286,8 @@ def insert_doctors(count):
     last_name = ["Nguyễn", "Trần", "Phạm", "Ngô", "Lê"]
     with app.app_context():
         for i in range(1, count + 1):
-            u = create_user_base(name=f"{random.choice(last_name)} {random.choice(first_name)}", phone=f"0912000{i:03d}", username=f"doctor{i}", password="123", role=UserRole.DOCTOR)
+            u = create_user_base(name=f"{random.choice(last_name)} {random.choice(first_name)}",
+                                 phone=f"0912000{i:03d}", username=f"doctor{i}", password="123", role=UserRole.DOCTOR)
             dr = Doctor(id=u.id, major=random.choice(majors))
             db.session.add(dr)
         db.session.commit()
@@ -291,8 +299,11 @@ def insert_patient(count):
     medical_history = ["Đau răng", "Đau lợi", "Chảy máu răng", "Sâu răng", "Rối loạn mọc răng"]
     with app.app_context():
         for i in range(1, count + 1):
-            u = create_user_base(f"{random.choice(last_name)} {random.choice(first_name)}", f"0988000{i:03d}", f"user{i}", "123", UserRole.USER)
-            pa = Patient(name=f"Bệnh nhân {random.choice(last_name)} {random.choice(first_name)}",phone=f"0988000{i:03d}",birthday=date(2000, 1, 1),address=f"Địa chỉ mẫu số {i}, TP.HCM", medical_history=random.choice(medical_history),user_id=u.id)
+            u = create_user_base(f"{random.choice(last_name)} {random.choice(first_name)}", f"0988000{i:03d}",
+                                 f"user{i}", "123", UserRole.USER)
+            pa = Patient(name=f"Bệnh nhân {random.choice(last_name)} {random.choice(first_name)}",
+                         phone=f"0988000{i:03d}", birthday=date(2000, 1, 1), address=f"Địa chỉ mẫu số {i}, TP.HCM",
+                         medical_history=random.choice(medical_history), user_id=u.id)
             db.session.add(pa)
         db.session.commit()
 
@@ -310,6 +321,7 @@ def init_all_data():
     insert_doctors(4)
     insert_patient(10)
 
+
 def create_slots(date):
     start_morning = datetime.combine(date, time(7, 0))
     end_morning = datetime.combine(date, time(11, 30))
@@ -326,7 +338,7 @@ def create_slots(date):
 
 
 if __name__ == "__main__":
-    init_all_data()
-    # slots = create_slots(date.today())
-    # for slot in slots:
-    #     print(slot)
+    # init_all_data()
+    slots = create_slots(date.today())
+    for slot in slots:
+        print(slot)
