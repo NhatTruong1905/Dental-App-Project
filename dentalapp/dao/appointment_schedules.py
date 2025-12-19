@@ -1,11 +1,14 @@
 from dentalapp.models import AppointmentSchedule
-from sqlalchemy import func
+from sqlalchemy import func, and_
 
 
 def count_appointment_schedules(doctor_id, check_date):
     return AppointmentSchedule.query.filter(
-        (AppointmentSchedule.doctor_id == doctor_id) & (
-                func.date(AppointmentSchedule.datetime) == check_date)).count() <= 5
+        and_(
+            AppointmentSchedule.doctor_id == doctor_id,
+            func.date(AppointmentSchedule.start_time) == check_date
+        )
+    ).count() <= 5
 
 
 def load_appointment_schedules(doctor_id, check_date):
