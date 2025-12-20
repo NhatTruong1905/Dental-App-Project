@@ -10,7 +10,7 @@
                 <div class="card-body p-5">
                     <div class="text-center mb-4"><h3 class="fw-bold text-primary">Đăng ký người dùng</h3></div>
                     {% if err_msg %}
-                    <div class="alert alert-danger text-center mb-4"><i class="fa-solid fa-circle-exclamation me-2"></i>{{ err_msg }}</div>
+                    <div class="alert alert-danger text-center mb-4">{{ err_msg }}</div>
                     {% endif %}
                     <form method="post" action="/register?next=/login" enctype="multipart/form-data">
                         <div class="form-floating mb-3">

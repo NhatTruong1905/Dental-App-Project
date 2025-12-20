@@ -7,7 +7,7 @@ from dentalapp.utils import permission
 change_password_bp = Blueprint('change_password', __name__)
 
 
-@change_password_bp.route('/change_password', methods=['GET'])
+@change_password_bp.route('/password', methods=['GET'])
 @permission()
 def render_change_pwd():
     if current_user.is_authenticated:
@@ -15,7 +15,7 @@ def render_change_pwd():
     else:
         return redirect('/login')
 
-@change_password_bp.route('/change_password', methods=['POST'])
+@change_password_bp.route('/password', methods=['POST'])
 @permission()
 def change_pwd():
     curr_pwd = hash_password(request.form.get('current_password'))

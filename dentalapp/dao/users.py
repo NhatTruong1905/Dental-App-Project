@@ -23,6 +23,15 @@ def add_user(name, phone, username, password, avatar):
     db.session.add(user)
     db.session.commit()
 
+def update_user(user_id, name, phone, avatar):
+    user = User.query.get(user_id)
+    user.name = name
+    user.phone = phone
+    if avatar:
+        res = cloudinary.uploader.upload(avatar)
+        user.avatar = res.get("secure_url")
+    db.session.commit()
+
 def change_password(user, new_password):
     user.password = hash_password(new_password)
     db.session.commit()

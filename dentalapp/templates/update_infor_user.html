@@ -1,0 +1,61 @@
+{% extends 'layout/base.html' %}
+
+{% block title %}Sửa thông tin tài khoản{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-5 col-md-7 col-sm-10">
+            <div class="card shadow-lg border-0 rounded-4">
+                <div class="card-body p-5">
+
+                    <div class="text-center mb-4">
+                        <h3 class="fw-bold text-primary">Sửa thông tin tài khoản</h3>
+                    </div>
+
+                    {% if err_msg %}
+                    <div class="alert alert-danger text-center mb-4">
+                        {{ err_msg }}
+                    </div>
+                    {% endif %}
+                    <div id="warning" class="alert alert-danger text-center mb-4 d-none"></div>
+
+                    {% if user.avatar %}
+                    <div class="text-center mb-3">
+                        <img id="render_avatar" src="{{ user.avatar }}" class="rounded-circle" width="128" height="128"
+                             style="object-fit: cover">
+                    </div>
+                    {% endif %}
+
+                    <form id="edit-profile-form" enctype="multipart/form-data">
+                        <input id="user_id" type="hidden" value="{{ user.id }}">
+
+                        <div class="form-floating mb-3">
+                            <input type="text" class="form-control" id="name" value="{{ user.name }}" required>
+                            <label for="name">Họ tên</label>
+                        </div>
+
+                        <div class="form-floating mb-3">
+                            <input type="text" class="form-control" id="phone" value="{{ user.phone }}" required>
+                            <label for="phone">Số điện thoại</label>
+                        </div>
+
+                        <div class="form-floating mb-3">
+                            <input type="file" class="form-control" id="avatar" onChange="handleUploadAvatar(this)"
+                                   accept="image/*">
+                            <label for="avatar">Ảnh đại diện</label>
+                        </div>
+
+
+                    </form>
+                    <div class="d-grid gap-3">
+                        <button class="btn btn-primary btn-lg shadow" onclick="updateInforUser()">Lưu thay đổi</button>
+                        <a href="/user" class="btn btn-outline-secondary">Hủy</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="{{ url_for('static', filename='js/infor_user.js') }}"></script>
+{% endblock %}
