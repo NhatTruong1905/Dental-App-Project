@@ -1,44 +1,49 @@
 {% extends 'layout/base.html' %}
 
 {% block content %}
-<div class="container mt-5">
 
-    <div class="text-center mb-4">
-        <h2 class="fw-bold text-info">Dịch vụ của chúng tôi</h2>
-        <p class="text-muted">Chăm sóc sức khỏe toàn diện – tận tâm – chuyên nghiệp</p>
-    </div>
+    <div class="container mt-5">
 
-    <form class="d-flex gap-2 mb-5 w-50 mx-auto" method="get" action="/services">
-        <input class="form-control" type="text" placeholder="Tìm dịch vụ..." name="kw" value="{{ request.args.get('kw', '') }}">
-        <button class="btn btn-primary px-4" type="submit">Tìm</button>
-    </form>
-
-    {% if services %}
-    <div class="row">
-        {% for s in services %}
-        <div class="col-lg-4 col-md-6 col-sm-12 p-3">
-
-            <div class="card shadow-sm border-0 h-100 rounded-4">
-                <img src="{{ s.image }}" class="card-img-top rounded-top-4" alt="{{ s.name }}" style="height: 220px; object-fit: cover;">
-
-                <div class="card-body d-flex flex-column">
-                    <h5 class="fw-bold mb-2">{{ s.name }}</h5>
-
-                    <p class="text-danger fw-semibold fs-5 mb-3">{{ "{:,.0f}".format(s.price) }} ₫</p>
-
-                    <div class="mt-auto"><a href="#" class="btn btn-primary w-100">Đặt lịch khám ngay</a></div>
-                </div>
-            </div>
-
+        <div class="text-center mb-4">
+            <i class="fa-solid fa-stethoscope text-primary fs-1 mb-2"></i>
+            <h2 class="fw-bold text-info">Dịch vụ của chúng tôi</h2>
+            <p class="text-muted">Chăm sóc sức khỏe toàn diện – tận tâm – chuyên nghiệp</p>
         </div>
-        {% endfor %}
-    </div>
-    {% else %}
-    <div class="alert alert-danger text-center mt-4">
-        <i class="fa-solid fa-circle-exclamation me-2"></i>
-        Không có dịch vụ nào!
-    </div>
-    {% endif %}
 
-</div>
+        <form class="d-flex gap-2 mb-5 w-50 mx-auto" method="get" action="/services">
+            <input class="form-control" type="text" placeholder="Tìm dịch vụ..." name="kw"
+                   value="{{ request.args.get('kw', '') }}">
+            <button class="btn btn-primary px-4" type="submit"><i class="fa-solid fa-magnifying-glass"></i></button>
+        </form>
+
+        {% if services %}
+            <div class="row">
+                {% for s in services %}
+                    <div class="col-lg-4 col-md-6 col-sm-12 p-3">
+
+                        <div class="card shadow-sm border-0 h-100 rounded-4">
+                            <img src="{{ s.image }}" class="card-img-top rounded-top-4" alt="{{ s.name }}"
+                                 style="height: 220px; object-fit: cover;">
+
+                            <div class="card-body d-flex flex-column">
+                                <h5 class="fw-bold mb-2">{{ s.name }}</h5>
+
+                                <p class="text-danger fw-semibold fs-5 mb-3">{{ "{:,.0f}".format(s.price) }} ₫</p>
+
+                                <div class="mt-auto"><a href="/doctors" class="btn btn-primary w-100"><i
+                                        class="fa-solid fa-calendar-check me-1"></i>Đặt lịch khám ngay</a></div>
+                            </div>
+                        </div>
+
+                    </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <div class="alert alert-danger text-center mt-4">
+                <i class="fa-solid fa-circle-exclamation me-2"></i>
+                Không có dịch vụ nào!
+            </div>
+        {% endif %}
+
+    </div>
 {% endblock %}
