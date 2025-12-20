@@ -1,0 +1,96 @@
+{% extends 'layout/base.html' %}
+
+{% block content %}
+    {% if doctor %}
+        <div class="container py-5">
+            <nav aria-label="breadcrumb" class="mb-4">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="/" class="text-decoration-none">Trang chủ</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">Đặt lịch khám</li>
+                </ol>
+            </nav>
+
+            <div class="row g-4">
+                <div class="col-lg-4">
+                    <div class="card shadow border-0 rounded-4">
+                        <div class="card-body text-center p-4">
+                            <img src="{{ doctor.user.avatar }}"
+                                 alt="{{ doctor.user.name }}"
+                                 class="rounded-circle mb-3 shadow-sm"
+                                 style="width: 150px; height: 150px; object-fit: cover;">
+
+                            <h4 class="card-title fw-bold text-primary">{{ doctor.user.name }}</h4>
+                            <span class="badge bg-info text-dark mb-3">{{ doctor.major }}</span>
+
+                            <div class="text-start mt-3">
+                                <p class="mb-2"><i
+                                        class="fa-solid fa-phone text-success me-2"></i> {{ doctor.user.phone }}</p>
+                                <hr>
+                                <p class="small text-muted">
+                                    <i class="fa-solid fa-quote-left me-1"></i>
+                                    Bác sĩ {{ doctor.user.name }} là chuyên gia hàng đầu trong lĩnh
+                                    vực {{ doctor.major }} với nhiều năm kinh nghiệm điều trị...
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-8">
+                    <div class="card shadow border-0 rounded-4 h-100">
+                        <div class="card-header bg-white border-0 pt-4 px-4">
+                            <h4 class="fw-bold"><i class="fa-regular fa-calendar-check me-2 text-primary"></i>Đăng ký
+                                lịch khám</h4>
+                        </div>
+
+                        <div class="card-body p-4">
+                            <form action="/api/booking" method="POST" id="bookingForm">
+                                <input type="hidden" name="doctor_id" value="{{ doctor.id }}">
+
+                                <div class="mb-4">
+                                    <label for="date" class="form-label fw-bold">Chọn ngày khám:</label>
+                                    <input type="date" class="form-control form-control-lg" id="date" name="date"
+                                           required>
+                                </div>
+
+                                <div class="mb-4">
+                                    <label class="form-label fw-bold mb-3">Chọn khung giờ:</label>
+
+                                    <div class="row g-2" id="time-slots">
+                                        {% set slots = ['08:00 - 09:00', '09:00 - 10:00', '10:00 - 11:00', '13:30 - 14:30', '14:30 - 15:30', '15:30 - 16:30'] %}
+
+                                        {% for slot in slots %}
+                                            <div class="col-6 col-md-4">
+                                                <input type="radio" class="btn-check" name="time_slot"
+                                                       id="slot_{{ loop.index }}" value="{{ slot }}" required>
+                                                <label class="btn btn-outline-primary w-100 py-2"
+                                                       for="slot_{{ loop.index }}">
+                                                    {{ slot }}
+                                                </label>
+                                            </div>
+                                        {% endfor %}
+                                    </div>
+                                </div>
+
+                                <div class="mb-4">
+                                    <label for="note" class="form-label fw-bold">Triệu chứng / Ghi chú:</label>
+                                    <textarea class="form-control" id="note" name="note" rows="3"
+                                              placeholder="Mô tả sơ qua tình trạng của bạn..."></textarea>
+                                </div>
+
+                                <div class="d-grid">
+                                    <button type="submit" class="btn btn-primary btn-lg fw-bold">
+                                        <i class="fa-solid fa-check-circle me-2"></i>Xác nhận đặt lịch
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% else %}
+
+    {% endif %}
+
+{% endblock %}

@@ -1,5 +1,5 @@
 from dentalapp.routes import home, login_logout, register, change_password, services, patients, doctors, infor_user
-from dentalapp.api import api_patients, api_users
+from dentalapp.api import api_patients, api_doctors, api_users
 from dentalapp import app, login
 from dentalapp.admin import *
 
@@ -19,9 +19,11 @@ def register_routes():
     app.register_blueprint(infor_user.infor_user_bp)
 
 
+
 def register_api():
     app.register_blueprint(api_patients.api_patient_bp)
     app.register_blueprint(api_users.api_users_bp)
+    app.register_blueprint(api_doctors.api_doctors_bp)
 
 
 if __name__ == '__main__':
