@@ -1,0 +1,61 @@
+{% extends 'layout/base.html' %}
+
+{% block content %}
+<div class="container mt-5">
+    <h2 class="text-center text-info fw-bold mb-4">Thông tin tài khoản</h2>
+
+    {% if user %}
+    <div class="row justify-content-center">
+        <div class="col-lg-6 col-md-8 col-sm-12">
+            <div class="card shadow-lg border-0 rounded-4">
+                <div class="card-body p-4">
+                    <button type="button" class="btn btn-sm btn-primary position-absolute top-0 end-0 m-2 "><a href="/user/infor" style="color: white; text-decoration: none;">Sửa</a></button>
+
+                    <div class="text-center mb-4">
+                        <img width="128px" height="128px" src="{{ user.avatar }}" class="rounded-circle shadow" alt="Avatar">
+                    </div>
+
+                    <h4 class="text-center fw-bold mb-3">{{ user.name }}</h4>
+
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item"><strong>Số điện thoại:</strong> {{ user.phone }}</li>
+                    </ul>
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+    {% else %}
+    <div class="alert alert-danger text-center mt-4">Tài khoản không hợp lệ!</div>
+    {% endif %}
+    <div class="d-flex justify-content-between align-items-center mb-4 mt-5">
+        <h2 class="text-info fw-bold mb-0">Hồ sơ bệnh nhân của tôi</h2>
+    </div>
+
+    {% if patients %}
+    <div class="row">
+        {% for p in patients %}
+        <div id="patient{{ p.id }}" class="col-lg-4 col-md-6 col-sm-12 p-3">
+
+            <div class="card shadow-sm border-0 h-100 rounded-4 position-relative">
+                <button type="button" class="btn btn-sm btn-danger position-absolute top-0 end-0 m-2 " onclick="deletePatient({{ p.id }})" title="Xóa hồ sơ"><i class="fa-solid fa-xmark"></i></button>
+
+                <div class="card-body text-center">
+                    <img src="https://ui-avatars.com/api/?name={{ p.name }}&background=0D6EFD&color=fff&size=96" class="rounded-circle mb-3 shadow-sm" alt="Avatar">
+                    <h5 class="fw-bold mb-3">{{ p.name }}</h5>
+                    <div class="d-flex justify-content-center gap-2">
+                        <a href="/patients/{{ p.id }}" class="btn btn-primary btn-sm">Xem</a>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <div class="alert alert-danger text-center mt-4">Không có hồ sơ nào!</div>
+    {% endif %}
+</div>
+<script src="{{ url_for('static', filename='js/patients.js') }}"></script>
+{% endblock %}

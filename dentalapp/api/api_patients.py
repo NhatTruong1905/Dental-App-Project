@@ -16,7 +16,7 @@ def delete_patient(id):
     except Exception as e:
         return jsonify({"ok": False, "message": str(e)})
 
-@api_patient_bp.route('/api/patients/<int:id>', methods=["PATH"])
+@api_patient_bp.route('/api/patients/<int:id>', methods=["PUT"])
 @login_required
 def edit_patient(id):
     try:
