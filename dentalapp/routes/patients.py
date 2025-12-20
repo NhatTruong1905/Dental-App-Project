@@ -1,17 +1,19 @@
 from flask import Blueprint, render_template, request, redirect, jsonify
 from dentalapp.dao.users import validate_phone
-from flask_login import current_user, login_required
+from flask_login import current_user
 from dentalapp.dao import patients
+from dentalapp.utils import permission
 
 patient_bp = Blueprint('patient', __name__)
 
 
 @patient_bp.route('/patients/new', methods=["GET"])
-@login_required
+@permission()
 def render_create_patient():
     return render_template("register_patient.html")
 
 @patient_bp.route('/patients', methods=['POST'])
+@permission()
 def create_patient():
     name = request.form.get("name")
     phone = request.form.get("phone")
@@ -28,6 +30,7 @@ def create_patient():
 
 
 @patient_bp.route('/patients', methods=['GET'])
+@permission()
 def render_patients():
     if current_user.is_authenticated:
         list_patients = patients.get_list_patients()
@@ -36,7 +39,7 @@ def render_patients():
         return redirect("/login")
 
 @patient_bp.route("/patients/<int:id>", methods=["GET"])
-@login_required
+@permission()
 def patients_profile(id):
     patient = patients.get_patient(id)
     if patient.user.id != current_user.id or not patient.active:
