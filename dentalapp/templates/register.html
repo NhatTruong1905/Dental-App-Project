@@ -8,38 +8,38 @@
         <div class="col-lg-5 col-md-7 col-sm-10">
             <div class="card shadow-lg border-0 rounded-4">
                 <div class="card-body p-5">
-                    <div class="text-center mb-4"><i class="fa-solid fa-user-plus text-primary fs-1 mb-2"></i><h3 class="fw-bold text-primary">Đăng ký người dùng</h3></div>
+                    <div class="text-center mb-4"><h3 class="fw-bold text-primary">Đăng ký người dùng</h3></div>
                     {% if err_msg %}
                     <div class="alert alert-danger text-center mb-4"><i class="fa-solid fa-circle-exclamation me-2"></i>{{ err_msg }}</div>
                     {% endif %}
                     <form method="post" action="/register?next=/login" enctype="multipart/form-data">
                         <div class="form-floating mb-3">
                             <input type="text" class="form-control" id="name" name="name" placeholder="Họ tên" required>
-                            <label for="name"><i class="fa-solid fa-user me-1"></i> Họ tên</label>
+                            <label for="name">Họ tên</label>
                         </div>
                         <div class="form-floating mb-3">
                             <input type="text" class="form-control" id="phone" name="phone" placeholder="Số điện thoại" required>
-                            <label for="phone"><i class="fa-solid fa-phone me-1"></i> Số điện thoại</label>
+                            <label for="phone"><Số điện thoại</label>
                         </div>
                         <div class="form-floating mb-3">
                             <input type="text" class="form-control" id="username" name="username" placeholder="Tên đăng nhập" required>
-                            <label for="username"><i class="fa-solid fa-user-tag me-1"></i> Tên đăng nhập</label>
+                            <label for="username"><Tên đăng nhập</label>
                         </div>
                         <div class="form-floating mb-3">
                             <input type="password" class="form-control" id="pwd" name="password" placeholder="Mật khẩu" required>
-                            <label for="pwd"><i class="fa-solid fa-lock me-1"></i> Mật khẩu</label>
+                            <label for="pwd">Mật khẩu</label>
                         </div>
                         <div class="form-floating mb-3">
                             <input type="password" class="form-control" id="confirm" name="confirm" placeholder="Xác nhận mật khẩu" required>
-                            <label for="confirm"><i class="fa-solid fa-lock-open me-1"></i> Xác nhận mật khẩu</label>
+                            <label for="confirm">Xác nhận mật khẩu</label>
                         </div>
                         <div class="mb-4">
-                            <label class="form-label fw-semibold"><i class="fa-solid fa-image me-1"></i> Ảnh đại diện</label>
+                            <label class="form-label fw-semibold">Ảnh đại diện</label>
                             <input type="file" class="form-control" id="avatar" name="avatar">
                         </div>
                         <div class="d-grid gap-3">
-                            <button type="submit" class="btn btn-primary btn-lg shadow"><i class="fa-solid fa-user-check me-1"></i> Đăng ký</button>
-                            <a href="/login" class="btn btn-outline-secondary"><i class="fa-solid fa-arrow-left me-1"></i> Quay lại đăng nhập</a>
+                            <button type="submit" class="btn btn-primary btn-lg shadow">Đăng ký</button>
+                            <a href="/login" class="btn btn-outline-secondary">Quay lại đăng nhập</a>
                         </div>
                     </form>
                 </div>

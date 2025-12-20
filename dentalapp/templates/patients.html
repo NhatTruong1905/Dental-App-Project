@@ -3,12 +3,8 @@
 {% block content %}
 <div class="container mt-5">
     <div class="d-flex justify-content-between align-items-center mb-4">
-        <h2 class="text-info fw-bold mb-0">
-            <i class="fa-solid fa-clipboard-user me-2"></i> Hồ sơ bệnh nhân
-        </h2>
-        <a href="/patients/new" class="btn btn-primary shadow">
-            <i class="fa-solid fa-plus me-1"></i> Tạo hồ sơ
-        </a>
+        <h2 class="text-info fw-bold mb-0">Hồ sơ bệnh nhân</h2>
+        <a href="/patients/new" class="btn btn-primary shadow">Tạo hồ sơ</a>
     </div>
 
     {% if patients %}
@@ -23,8 +19,8 @@
                     <img src="https://ui-avatars.com/api/?name={{ p.name }}&background=0D6EFD&color=fff&size=96" class="rounded-circle mb-3 shadow-sm" alt="Avatar">
                     <h5 class="fw-bold mb-3">{{ p.name }}</h5>
                     <div class="d-flex justify-content-center gap-2">
-                        <a href="/patients/{{ p.id }}" class="btn btn-primary btn-sm"><i class="fa-solid fa-eye me-1"></i> Xem</a>
-                        <button class="btn btn-success btn-sm"><i class="fa-solid fa-check me-1"></i> Chọn</button>
+                        <a href="/patients/{{ p.id }}" class="btn btn-primary btn-sm">Xem</a>
+                        <button class="btn btn-success btn-sm">Chọn</button>
                     </div>
                 </div>
             </div>
