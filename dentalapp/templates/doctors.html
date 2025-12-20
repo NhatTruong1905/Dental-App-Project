@@ -1,29 +1,32 @@
 {% extends 'layout/base.html' %}
 
 {% block content %}
-<h1 class="text-info mt-5 text-center fw-bold">Đội ngũ bác sĩ</h1>
-<p class="text-center text-muted mb-4">Các chuyên gia Răng – Hàm – Mặt giàu kinh nghiệm</p>
+    <h1 class="text-info mt-5 text-center fw-bold">Đội ngũ bác sĩ</h1>
+    <p class="text-center text-muted mb-4">Các chuyên gia Răng – Hàm – Mặt giàu kinh nghiệm</p>
 
-{% if doctors %}
-<div class="row justify-content-center">
-    {% for d in doctors %}
-    <div class="col-lg-4 col-md-6 col-12 p-3">
-        <div class="card h-100 shadow-sm doctor-card">
-            <img src="{{ d.user.avatar }}" alt="{{ d.user.name }}" class="card-img-top" style="height: 260px; object-fit: cover;">
+    {% if doctors %}
+        <div class="row justify-content-center">
+            {% for d in doctors %}
+                <div class="col-lg-4 col-md-6 col-12 p-3">
+                    <div class="card h-100 shadow-sm doctor-card">
+                        <img src="{{ d.user.avatar }}" alt="{{ d.user.name }}" class="card-img-top"
+                             style="height: 260px; object-fit: cover;">
 
-            <div class="card-body text-center">
-                <h5 class="card-title fw-bold mb-1">{{ d.user.name }}</h5>
-                <p class="text-primary fw-semibold mb-2"><i class="fa-solid fa-user-doctor me-1"></i>{{ d.major }}</p>
-                <p class="text-muted mb-3"><i class="fa-solid fa-phone me-1"></i>{{ d.user.phone }}</p>
-                <a href="/appointment_of_doctor?doctor_id={{ d.id }}" class="btn btn-primary w-100">🦷 Đặt lịch với bác sĩ</a>
-            </div>
+                        <div class="card-body text-center">
+                            <h5 class="card-title fw-bold mb-1">{{ d.user.name }}</h5>
+                            <p class="text-primary fw-semibold mb-2"><i
+                                    class="fa-solid fa-user-doctor me-1"></i>{{ d.major }}</p>
+                            <p class="text-muted mb-3"><i class="fa-solid fa-phone me-1"></i>{{ d.user.phone }}</p>
+                            <a href="/doctors/{{ d.id }}" class="btn btn-primary w-100">Đặt lịch
+                                với bác sĩ</a>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
         </div>
-    </div>
-    {% endfor %}
-</div>
-{% else %}
-<div class="alert alert-danger mt-3 text-center">
-    Không có bác sĩ nào!
-</div>
-{% endif %}
+    {% else %}
+        <div class="alert alert-danger mt-3 text-center">
+            Không có bác sĩ nào!
+        </div>
+    {% endif %}
 {% endblock %}
