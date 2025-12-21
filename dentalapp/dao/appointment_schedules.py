@@ -1,45 +1,49 @@
 from datetime import datetime, time, timedelta
 from dentalapp import db
-from dentalapp.models import AppointmentSchedule
-from sqlalchemy import func, and_
+from dentalapp.models import AppointmentSchedule, Doctor
+from sqlalchemy import and_, func
 
 
-def count_appointment_schedules(doctor_id, check_datetime):
+def count_appointment_schedules(doctor_id, check_date):
     return AppointmentSchedule.query.filter(
         and_(
             AppointmentSchedule.doctor_id == doctor_id,
-            func.date(AppointmentSchedule.start_time) == check_datetime
+            func.date(AppointmentSchedule.start_time) == check_date
         )
-    ).count() <= 5
+    ).count() < 5
 
 
-def load_appointment_schedules(doctor_id, check_date):
-    appointment_of_doctors = count_appointment_schedules(doctor_id=doctor_id, check_datetime=check_date)
-    query = AppointmentSchedule.query
+def load_doctors(check_date):
+    date_ui = datetime.strptime(check_date, '%m/%d/%Y')
+    date_result = date_ui.date()
+    query = db.session.query(AppointmentSchedule.doctor_id).where(
+        func.date(AppointmentSchedule.start_time) == date_result).group_by(AppointmentSchedule.doctor_id).having(
+        func.count(AppointmentSchedule.doctor_id) < 5)
 
-    if appointment_of_doctors:
-        query = query.filter(AppointmentSchedule.doctor_id == doctor_id)
-
-    return query.all()
+    result_query = db.session.query(Doctor).join(query, query.c.doctor_id == Doctor.id).all()
+    return result_query
 
 
-def check_duplicate_appointment(doctor_id, check_datetime):
+def check_duplicate_time(doctor_id, check_date, check_time):
     query = AppointmentSchedule.query.filter(
         and_(
             AppointmentSchedule.doctor_id == doctor_id,
-            func.date(AppointmentSchedule.start_time) == check_datetime
+            func.date(AppointmentSchedule.start_time) == check_date,
+            func.time(AppointmentSchedule.start_time) == check_time
         )
-    )
+    ).first()
     if query:
         return False
     return True
 
 
-def add_appointment_schedules(doctor_id, check_date):
-    date_choice = datetime.combine(check_date, datetime.now().time())
-    a = AppointmentSchedule(doctor_id=doctor_id, start_time=time, end_time=date_choice + timedelta(minutes=30))
+def add_appointment_schedules(doctor_id, patient_id, check_date, check_time):
+    datetime_choice = datetime.combine(check_date, check_time)
+    a = AppointmentSchedule(doctor_id=doctor_id, patient_id=patient_id, start_time=time,
+                            end_time=datetime_choice + timedelta(minutes=30))
 
     count = count_appointment_schedules(doctor_id, check_date)
-    if count:
+    check = check_duplicate_time(doctor_id, check_date, check_time)
+    if count and not check:
         db.session.add(a)
         db.session.commit()
