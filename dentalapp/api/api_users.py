@@ -1,4 +1,3 @@
-from flask_login import current_user
 from flask import Blueprint, jsonify, request
 from dentalapp.utils import permission
 from dentalapp.dao import users
@@ -17,3 +16,7 @@ def update_infor_users(id):
     except Exception as ex:
         return jsonify({"ok": False, "error": str(ex)})
 
+@api_users_bp.route('/api/users/<int:id>/patients', methods=['GET'])
+@permission()
+def get_patients(id):
+    pass

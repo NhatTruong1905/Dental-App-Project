@@ -1,6 +1,7 @@
 from flask import render_template, redirect, Blueprint, request
 from flask_login import current_user
 from dentalapp.dao.users import change_password
+from dentalapp.models import UserRole
 from dentalapp.utils import hash_password
 from dentalapp.utils import permission
 

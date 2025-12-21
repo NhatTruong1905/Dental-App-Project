@@ -28,5 +28,3 @@ def permission(user_role=None):
             return "You can't access this page!"
         return decorated_function
     return decorated_login_required
-
-

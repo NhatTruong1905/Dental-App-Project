@@ -1,5 +1,5 @@
-from flask import render_template, Blueprint, request
-from dentalapp.dao import appointment_schedules
+from flask import render_template, Blueprint
+
 
 appointment_bp = Blueprint('appointment', __name__)
 
