@@ -14,3 +14,12 @@ function hiddenTime() {
     if (listTime.classList.contains("d-none") === false)
         listTime.classList.add("d-none");
 }
+
+
+function loadTime(select) {
+    let date = document.getElementById("date").value;
+    doctor_id = select.options[select.selectedIndex]
+    fetch(`/api/doctors/%${doctor_id}/${date}/times`).then(res => res.json()).then(data => {
+        console.log(data);
+    });
+}
