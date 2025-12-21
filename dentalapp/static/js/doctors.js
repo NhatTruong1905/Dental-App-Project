@@ -1,8 +1,7 @@
 function loadDoctor(date) {
     if (!date) return;
 
-    fetch(`/api/doctors/check-date?date=${date}`, {
-    }).then(res => res.json()).then(data => {
+    fetch(`/api/doctors/${date}`, {}).then(res => res.json()).then(data => {
         let doctorSelect = document.getElementById("doctor-select")
 
         if (data.length > 0) {

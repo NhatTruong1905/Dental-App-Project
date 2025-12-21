@@ -4,15 +4,6 @@ from dentalapp.models import AppointmentSchedule, Doctor
 from sqlalchemy import and_, func
 
 
-def count_appointment_schedules(doctor_id, check_date) -> bool:
-    return AppointmentSchedule.query.filter(
-        and_(
-            AppointmentSchedule.doctor_id == doctor_id,
-            func.date(AppointmentSchedule.start_time) == check_date
-        )
-    ).count() < 5
-
-
 def load_doctors(check_date):
     date = datetime.strptime(check_date, '%Y-%m-%d').date()
 
@@ -37,13 +28,16 @@ def check_duplicate_time(doctor_id, check_date, check_time):
     return True
 
 
-def add_appointment_schedules(doctor_id, patient_id, check_date, check_time):
-    datetime_choice = datetime.combine(check_date, check_time)
-    a = AppointmentSchedule(doctor_id=doctor_id, patient_id=patient_id, start_time=time,
-                            end_time=datetime_choice + timedelta(minutes=30))
+def time_of_doctor(doctor_id, check_date):
+    check_date = datetime.strptime(check_date, '%Y-%m-%d').date()
 
-    count = count_appointment_schedules(doctor_id, check_date)
-    check = check_duplicate_time(doctor_id, check_date, check_time)
-    if count and not check:
-        db.session.add(a)
-        db.session.commit()
+    appointments = db.session.query(AppointmentSchedule.start_time).where(
+        and_(
+            AppointmentSchedule.doctor_id == doctor_id,
+            func.date(AppointmentSchedule.start_time) == check_date)).all()
+
+    list_times_of_doctor = []
+    for a in appointments:
+        list_times_of_doctor.append(a.start_time.strftime('%H:%M')) # 19:00
+
+    return list_times_of_doctor
