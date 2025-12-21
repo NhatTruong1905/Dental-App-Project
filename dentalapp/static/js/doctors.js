@@ -13,7 +13,6 @@ function loadDoctor(date) {
                 doctorSelect.appendChild(option);
             }
         } else {
-            console.log("ok")
             let selected = document.getElementById("selected");
             selected.textContent = `Ngày ${date} không có bác sĩ hoặc bận!`;
         }

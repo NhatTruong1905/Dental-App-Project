@@ -25,6 +25,6 @@ def get_doctor_of_date():
 
             return jsonify(result)
         else:
-            jsonify({"ok": False, "message": "Thất bại"})
+            return jsonify({"ok": False, "message": "Thất bại"})
     except Exception as e:
         return jsonify({"ok": False, "message": str(e)})
