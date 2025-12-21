@@ -21,6 +21,7 @@
         </div>
     </div>
 
+
     <div class="card shadow border-0 rounded-4 mb-4" data-step="1">
         <div class="card-body">
             <h5 class="fw-bold mb-3">Chọn dịch vụ</h5>
@@ -30,23 +31,34 @@
         </div>
     </div>
 
-    <div class="card shadow border-0 rounded-4 mb-4" data-step="3">
-        <div class="card-body">
-            <h5 class="fw-bold mb-3">Chọn bác sĩ</h5>
-            <select class="form-select" name="doctor_id">
-                <option selected disabled>-- Chọn bác sĩ --</option>
-                <option value="1">BS. Nguyễn Văn Tuấn</option>
-                <option value="2">GS.TS Dương Hữu Thành</option>
-            </select>
-        </div>
-    </div>
 
     <div class="card shadow border-0 rounded-4 mb-4" data-step="4">
         <div class="card-body">
             <h5 class="fw-bold mb-3">Chọn ngày khám</h5>
-            <input type="date" class="form-control" name="appointment_date">
+            <input type="date" class="form-control" name="check_date" onchange="loadDoctor(this.value)">
         </div>
     </div>
+
+
+    <script src="{{ url_for('static', filename='js/patients.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/services.js') }}"></script>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            getPatients();
+            getServices();
+        })
+    </script>
+
+    <div class="card shadow border-0 rounded-4 mb-4" data-step="3">
+        <div class="card-body">
+            <h5 class="fw-bold mb-3">Chọn bác sĩ</h5>
+            <select class="form-select" name="doctor_id" id="doctor-select">
+                <option selected disabled>-- Vui lòng chọn ngày trước --</option>
+            </select>
+        </div>
+    </div>
+
 
     <div class="card shadow border-0 rounded-4 mb-4" data-step="5">
         <div class="card-body">
@@ -69,8 +81,9 @@
     </div>
 
 </div>
+<script src="{{ url_for('static',filename='js/doctors.js') }}"></script>
 <script src="{{ url_for('static', filename='js/patients.js') }}"></script>
-<script src="{{ url_for('static', filename='js/services.js') }}" ></script>
+<script src="{{ url_for('static', filename='js/services.js') }}"></script>
 
 <script>
     document.addEventListener("DOMContentLoaded", () => {
