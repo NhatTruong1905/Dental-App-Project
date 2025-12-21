@@ -6,6 +6,8 @@ function loadDoctor(date) {
         let doctorSelect = document.getElementById("doctor-select")
 
         if (data.length > 0) {
+            let selected = document.getElementById("selected");
+            selected.textContent = "-- Chọn bác sĩ --";
             for (doctor of data) {
                 let option = document.createElement('option')
                 option.textContent = doctor["name"];
@@ -14,7 +16,7 @@ function loadDoctor(date) {
             }
         } else {
             let selected = document.getElementById("selected");
-            selected.textContent = `Ngày ${date} không có bác sĩ hoặc bận!`;
+            selected.textContent = `-- Ngày ${date} không có bác sĩ hoặc bận --`;
         }
     })
 }
