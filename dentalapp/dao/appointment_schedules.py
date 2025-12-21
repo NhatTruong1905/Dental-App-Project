@@ -4,7 +4,7 @@ from dentalapp.models import AppointmentSchedule, Doctor
 from sqlalchemy import and_, func
 
 
-def count_appointment_schedules(doctor_id, check_date):
+def count_appointment_schedules(doctor_id, check_date) -> bool:
     return AppointmentSchedule.query.filter(
         and_(
             AppointmentSchedule.doctor_id == doctor_id,
@@ -14,14 +14,15 @@ def count_appointment_schedules(doctor_id, check_date):
 
 
 def load_doctors(check_date):
-    date_ui = datetime.strptime(check_date, '%m/%d/%Y')
-    date_result = date_ui.date()
+    date = datetime.strptime(check_date, '%Y-%m-%d').date()
     query = db.session.query(AppointmentSchedule.doctor_id).where(
-        func.date(AppointmentSchedule.start_time) == date_result).group_by(AppointmentSchedule.doctor_id).having(
-        func.count(AppointmentSchedule.doctor_id) < 5)
+        func.date(AppointmentSchedule.start_time) == date).group_by(AppointmentSchedule.doctor_id).having(
+        func.count(AppointmentSchedule.doctor_id) < 5).subquery()
 
-    result_query = db.session.query(Doctor).join(query, query.c.doctor_id == Doctor.id).all()
-    return result_query
+    doctors = db.session.query(Doctor).join(query, query.c.doctor_id == Doctor.id).all()
+    # import pdb
+    # pdb.set_trace()
+    return doctors
 
 
 def check_duplicate_time(doctor_id, check_date, check_time):

@@ -7,7 +7,6 @@ api_doctors_bp = Blueprint('api_doctors', __name__)
 @api_doctors_bp.route('/api/doctors/check-date', methods=['GET'])
 def get_doctor_of_date():
     check_date = request.args.get('date')
-
     if not check_date:
         return jsonify([{}])
 
