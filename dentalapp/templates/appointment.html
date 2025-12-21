@@ -35,33 +35,57 @@
     <div class="card shadow border-0 rounded-4 mb-4" data-step="4">
         <div class="card-body">
             <h5 class="fw-bold mb-3">Chọn ngày khám</h5>
-            <input type="date" class="form-control" name="check_date" onchange="loadDoctor(this.value)">
+            <input type="date" class="form-control" name="check_date" onchange="loadDoctor(this.value); hiddenTime();">
         </div>
     </div>
 
     <div class="card shadow border-0 rounded-4 mb-4" data-step="3">
         <div class="card-body">
             <h5 class="fw-bold mb-3">Chọn bác sĩ</h5>
-            <select class="form-select" name="doctor_id" id="doctor-select">
+            <select class="form-select" name="doctor_id" id="doctor-select" onchange="showTime()">
                 <option id="selected" selected disabled>-- Vui lòng chọn ngày trước --</option>
             </select>
         </div>
     </div>
 
 
-    <div class="card shadow border-0 rounded-4 mb-4" data-step="5">
-        <div class="card-body">
-            <h5 class="fw-bold mb-3">Chọn giờ khám</h5>
+<div class="card shadow border-0 rounded-4 mb-4" data-step="5">
+    <div class="card-body">
+        <h5 class="fw-bold mb-3">Chọn giờ khám</h5>
+        <p id="text-info-time" class="fw-semibold mb-2 text-secondary">-- Vui lòng chọn bác sĩ --</p>
+        <div id="list-time" class="d-none">
+        <p class="fw-semibold mb-2 text-secondary">Buổi sáng</p>
+        <div class="d-flex justify-content-between flex-wrap gap-2 mb-4">
+            <button type="button" class="time-btn btn btn-outline-primary">07:00</button>
+            <button type="button" class="time-btn btn btn-outline-primary">07:30</button>
+            <button type="button" class="time-btn btn btn-outline-primary">08:00</button>
+            <button type="button" class="time-btn btn btn-outline-primary">08:30</button>
+            <button type="button" class="time-btn btn btn-outline-primary">09:00</button>
+            <button type="button" class="time-btn btn btn-outline-primary">09:30</button>
+            <button type="button" class="time-btn btn btn-outline-primary">10:00</button>
+            <button type="button" class="time-btn btn btn-outline-primary">10:30</button>
+            <button type="button" class="time-btn btn btn-outline-primary">11:00</button>
+            <button type="button" class="time-btn btn btn-outline-primary">11:30</button>
+        </div>
 
-            <div class="d-flex flex-wrap gap-2">
-                <button type="button" class="btn btn-outline-primary">08:00</button>
-                <button type="button" class="btn btn-outline-primary">09:00</button>
-                <button type="button" class="btn btn-outline-primary">10:00</button>
-                <button type="button" class="btn btn-outline-primary">14:00</button>
-                <button type="button" class="btn btn-outline-primary">15:00</button>
-            </div>
+        <p class="fw-semibold mb-2 text-secondary">Buổi chiều</p>
+        <div class="d-flex justify-content-between flex-wrap gap-2">
+            <button type="button" class="time-btn btn btn-outline-primary">13:00</button>
+            <button type="button" class="time-btn btn btn-outline-primary">13:30</button>
+            <button type="button" class="time-btn btn btn-outline-primary">14:00</button>
+            <button type="button" class="time-btn btn btn-outline-primary">14:30</button>
+            <button type="button" class="time-btn btn btn-outline-primary">15:00</button>
+            <button type="button" class="time-btn btn btn-outline-primary">15:30</button>
+            <button type="button" class="time-btn btn btn-outline-primary">16:00</button>
+            <button type="button" class="time-btn btn btn-outline-primary">16:30</button>
+            <button type="button" class="time-btn btn btn-outline-primary">17:00</button>
+            <button type="button" class="time-btn btn btn-outline-primary">17:30</button>
+        </div>
         </div>
     </div>
+</div>
+
+
 
     <div class="text-center mt-5">
         <button class="btn btn-success btn-lg px-5">
@@ -70,9 +94,20 @@
     </div>
 
 </div>
+<style>
+    .time-btn {
+        width: 100px;
+        height: 45px;
+        padding: 0;
+        text-align: center;
+    }
+</style>
+
+</style>
 <script src="{{ url_for('static',filename='js/doctors.js') }}"></script>
 <script src="{{ url_for('static', filename='js/patients.js') }}"></script>
 <script src="{{ url_for('static', filename='js/services.js') }}"></script>
+<script src="{{ url_for('static', filename='js/time.js') }}"></script>
 
 <script>
     document.addEventListener("DOMContentLoaded", () => {
