@@ -15,13 +15,12 @@ def count_appointment_schedules(doctor_id, check_date) -> bool:
 
 def load_doctors(check_date):
     date = datetime.strptime(check_date, '%Y-%m-%d').date()
+
     query = db.session.query(AppointmentSchedule.doctor_id).where(
         func.date(AppointmentSchedule.start_time) == date).group_by(AppointmentSchedule.doctor_id).having(
         func.count(AppointmentSchedule.doctor_id) < 5).subquery()
 
     doctors = db.session.query(Doctor).join(query, query.c.doctor_id == Doctor.id).all()
-    # import pdb
-    # pdb.set_trace()
     return doctors
 
 
