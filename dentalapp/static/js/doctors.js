@@ -16,7 +16,6 @@ function loadDoctor(date) {
         } else {
             let selected = document.getElementById("selected");
             selected.textContent = `-- Ngày ${date} không có bác sĩ hoặc bận --`;
-            let doctorSelect = document.getElementById("doctor-select");
         }
     });
 }

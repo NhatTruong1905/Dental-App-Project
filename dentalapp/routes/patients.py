@@ -29,15 +29,6 @@ def create_patient():
         return render_template("register_patient.html", err_msg="Lỗi hệ thống vui lòng thử lại sau!")
 
 
-@patient_bp.route('/patients', methods=['GET'])
-@permission()
-def render_patients():
-    if current_user.is_authenticated:
-        list_patients = patients.get_list_patients()
-        return render_template("patients.html", patients=list_patients)
-    else:
-        return redirect("/login")
-
 @patient_bp.route("/patients/<int:id>", methods=["GET"])
 @permission()
 def patients_profile(id):

@@ -15,8 +15,3 @@ def update_infor_users(id):
         return jsonify({"ok": True, "message": "Update user successfully"})
     except Exception as ex:
         return jsonify({"ok": False, "error": str(ex)})
-
-@api_users_bp.route('/api/users/<int:id>/patients', methods=['GET'])
-@permission()
-def get_patients(id):
-    pass
