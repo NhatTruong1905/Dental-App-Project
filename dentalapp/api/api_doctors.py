@@ -27,17 +27,13 @@ def get_doctor_of_date(date):
 
 
 @api_doctors_bp.route('/api/doctors/<int:id>/<date>/times', methods=['GET'])
-def get_times_of_doctor(id,date):
-
-    list_times_of_doctor = appointment_schedules.load_doctors(id, date)
+def get_times_of_doctor(id, date):
+    list_times_of_doctor = appointment_schedules.time_of_doctor(id, date)
     try:
         if list_times_of_doctor:
-            result = [
-                {
-                    'time': time
-                }
-                for time in list_times_of_doctor
-            ]
+            result = {
+                "time": [time for time in list_times_of_doctor]
+            }
 
             return jsonify(result)
         else:

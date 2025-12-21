@@ -18,8 +18,15 @@ function hiddenTime() {
 
 function loadTime(select) {
     let date = document.getElementById("date").value;
-    doctor_id = select.options[select.selectedIndex]
-    fetch(`/api/doctors/%${doctor_id}/${date}/times`).then(res => res.json()).then(data => {
-        console.log(data);
+    doctor_id = select.options[select.selectedIndex].id
+    fetch(`/api/doctors/${doctor_id}/${date}/times`).then(res => res.json()).then(data => {
+        Array.from(data["time"]).forEach(time => {
+            let id = time.trim().replace(":", "-");
+            let bt = document.getElementById(id);
+            bt.style.backgroundColor = "gray";
+            bt.style.color = "white";
+            bt.style.borderColor = "white";
+            bt.disabled = true;
+        })
     });
 }
