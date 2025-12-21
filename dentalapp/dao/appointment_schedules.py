@@ -9,9 +9,9 @@ def load_doctors(check_date):
 
     query = db.session.query(AppointmentSchedule.doctor_id).where(
         func.date(AppointmentSchedule.start_time) == date).group_by(AppointmentSchedule.doctor_id).having(
-        func.count(AppointmentSchedule.doctor_id) < 5).subquery()
+        func.count(AppointmentSchedule.doctor_id) >= 5).subquery()
 
-    doctors = db.session.query(Doctor).join(query, query.c.doctor_id == Doctor.id).all()
+    doctors = db.session.query(Doctor).outerjoin(query, query.c.doctor_id == Doctor.id).where(query.c.doctor_id.is_(None)).all()
     return doctors
 
 
