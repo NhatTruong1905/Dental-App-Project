@@ -1,28 +1,32 @@
 from flask import jsonify, Blueprint
-from flask_login import login_required, current_user
-from dentalapp.dao import patients
+from flask_login import current_user
+from dentalapp.dao.patients import get_patient, get_list_patients, delete_soft_patient
+from dentalapp.utils import permission
 
 api_patient_bp = Blueprint('patients', __name__)
 
 @api_patient_bp.route('/api/patients/<int:id>', methods=["DELETE"])
-@login_required
+@permission()
 def delete_patient(id):
     try:
-        if current_user.id != patients.get_patient(id).user.id:
+        if current_user.id != get_patient(id).user.id:
             return jsonify({"ok": False, "message": "Patient not found!"})
 
-        patients.delete_soft_patient(id)
+        delete_soft_patient(id)
         return jsonify({"ok": True, "message": "Patient deleted successfully!"})
     except Exception as e:
         return jsonify({"ok": False, "message": str(e)})
 
-@api_patient_bp.route('/api/patients/<int:id>', methods=["PUT"])
-@login_required
-def edit_patient(id):
-    try:
-        if current_user.id != patients.get_patient(id).user.id:
-            return jsonify({"ok": False, "message": "Patient not found!"})
+@api_patient_bp.route('/api/patients', methods=["GET"])
+@permission()
+def get_patients():
+    patients = get_list_patients()
+    patients = [
+        {
+            "id": patient.id,
+            "name": patient.name
+        }
+        for patient in patients
+    ]
 
-        patient = patients.get_patient(id)
-    except Exception as ex:
-        return jsonify({"ok": False, "message": str(ex)})
+    return jsonify(patients)
