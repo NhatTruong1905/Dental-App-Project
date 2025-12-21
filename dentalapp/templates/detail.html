@@ -57,9 +57,9 @@
                                     <label class="form-label fw-bold mb-3">Chọn khung giờ:</label>
 
                                     <div class="row g-2" id="time-slots">
-                                        {% set slots = ['08:00 - 09:00', '09:00 - 10:00', '10:00 - 11:00', '13:30 - 14:30', '14:30 - 15:30', '15:30 - 16:30'] %}
-
-                                        {% for slot in slots %}
+                                        {#                                        {% set slots = ['08:00 - 09:00', '09:00 - 10:00', '10:00 - 11:00', '13:30 - 14:30', '14:30 - 15:30', '15:30 - 16:30'] %}#}
+                                        {% for a in appointment_of_doctor %}
+                                            {% set slotTimes = [a.start_time.strftime('%H:%M')] %}
                                             <div class="col-6 col-md-4">
                                                 <input type="radio" class="btn-check" name="time_slot"
                                                        id="slot_{{ loop.index }}" value="{{ slot }}" required>

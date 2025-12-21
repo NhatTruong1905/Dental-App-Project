@@ -3,110 +3,104 @@
 {% block title %}Đặt lịch khám{% endblock %}
 
 {% block content %}
-<div class="container my-5">
+    <div class="container my-5">
 
-    <h2 class="text-center text-primary fw-bold mb-5">
-        Đặt lịch khám
-    </h2>
+        <h2 class="text-center text-primary fw-bold mb-5">
+            Đặt lịch khám
+        </h2>
 
-    <!-- STEP 1: CHỌN HỒ SƠ -->
-    <div class="card shadow border-0 rounded-4 mb-4" data-step="1">
-        <div class="card-body">
-            <h5 class="fw-bold mb-3">🧑‍⚕️ Chọn hồ sơ bệnh nhân</h5>
-            <select class="form-select" name="patient_id">
-                <option selected disabled>-- Chọn hồ sơ --</option>
-                <option value="1">Nguyễn Văn A</option>
-                <option value="2">Trần Thị B</option>
-            </select>
+        <div class="card shadow border-0 rounded-4 mb-4" data-step="1">
+            <div class="card-body">
+                <h5 class="fw-bold mb-3">Chọn hồ sơ bệnh nhân</h5>
+                <select class="form-select" name="patient_id">
+                    <option selected disabled>-- Chọn hồ sơ --</option>
+                    <option value="1">Nguyễn Văn A</option>
+                    <option value="2">Trần Thị B</option>
+                </select>
+            </div>
         </div>
-    </div>
 
-    <!-- STEP 2: CHỌN DỊCH VỤ (MULTI) -->
-    <div class="card shadow border-0 rounded-4 mb-4" data-step="2">
-        <div class="card-body">
-            <h5 class="fw-bold mb-3">🦷 Chọn dịch vụ</h5>
+        <div class="card shadow border-0 rounded-4 mb-4" data-step="2">
+            <div class="card-body">
+                <h5 class="fw-bold mb-3">Chọn dịch vụ</h5>
 
-            <div class="row">
-                <div class="col-md-6 mb-2">
-                    <div class="form-check border rounded p-2">
-                        <input class="form-check-input" type="checkbox" name="services[]" id="sv1" value="1">
-                        <label class="form-check-label fw-semibold" for="sv1">
-                            Khám tổng quát <span class="text-muted">(200.000 ₫)</span>
-                        </label>
+                <div class="row">
+                    <div class="col-md-6 mb-2">
+                        <div class="form-check border rounded p-2">
+                            <input class="form-check-input" type="checkbox" name="services[]" id="sv1" value="1">
+                            <label class="form-check-label fw-semibold" for="sv1">
+                                Khám tổng quát <span class="text-muted">(200.000 ₫)</span>
+                            </label>
+                        </div>
                     </div>
-                </div>
 
-                <div class="col-md-6 mb-2">
-                    <div class="form-check border rounded p-2">
-                        <input class="form-check-input" type="checkbox" name="services[]" id="sv2" value="2">
-                        <label class="form-check-label fw-semibold" for="sv2">
-                            Cạo vôi răng <span class="text-muted">(300.000 ₫)</span>
-                        </label>
+                    <div class="col-md-6 mb-2">
+                        <div class="form-check border rounded p-2">
+                            <input class="form-check-input" type="checkbox" name="services[]" id="sv2" value="2">
+                            <label class="form-check-label fw-semibold" for="sv2">
+                                Cạo vôi răng <span class="text-muted">(300.000 ₫)</span>
+                            </label>
+                        </div>
                     </div>
-                </div>
 
-                <div class="col-md-6 mb-2">
-                    <div class="form-check border rounded p-2">
-                        <input class="form-check-input" type="checkbox" name="services[]" id="sv3" value="3">
-                        <label class="form-check-label fw-semibold" for="sv3">
-                            Tẩy trắng răng <span class="text-muted">(1.200.000 ₫)</span>
-                        </label>
+                    <div class="col-md-6 mb-2">
+                        <div class="form-check border rounded p-2">
+                            <input class="form-check-input" type="checkbox" name="services[]" id="sv3" value="3">
+                            <label class="form-check-label fw-semibold" for="sv3">
+                                Tẩy trắng răng <span class="text-muted">(1.200.000 ₫)</span>
+                            </label>
+                        </div>
                     </div>
-                </div>
 
-                <div class="col-md-6 mb-2">
-                    <div class="form-check border rounded p-2">
-                        <input class="form-check-input" type="checkbox" name="services[]" id="sv4" value="4">
-                        <label class="form-check-label fw-semibold" for="sv4">
-                            Trám răng thẩm mỹ <span class="text-muted">(500.000 ₫)</span>
-                        </label>
+                    <div class="col-md-6 mb-2">
+                        <div class="form-check border rounded p-2">
+                            <input class="form-check-input" type="checkbox" name="services[]" id="sv4" value="4">
+                            <label class="form-check-label fw-semibold" for="sv4">
+                                Trám răng thẩm mỹ <span class="text-muted">(500.000 ₫)</span>
+                            </label>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
 
-    <!-- STEP 3: CHỌN BÁC SĨ -->
-    <div class="card shadow border-0 rounded-4 mb-4" data-step="3">
-        <div class="card-body">
-            <h5 class="fw-bold mb-3">👨‍⚕️ Chọn bác sĩ</h5>
-            <select class="form-select" name="doctor_id">
-                <option selected disabled>-- Chọn bác sĩ --</option>
-                <option value="1">BS. Nguyễn Văn Tuấn</option>
-                <option value="2">GS.TS Dương Hữu Thành</option>
-            </select>
-        </div>
-    </div>
-
-    <!-- STEP 4: CHỌN NGÀY -->
-    <div class="card shadow border-0 rounded-4 mb-4" data-step="4">
-        <div class="card-body">
-            <h5 class="fw-bold mb-3">📅 Chọn ngày khám</h5>
-            <input type="date" class="form-control" name="appointment_date">
-        </div>
-    </div>
-
-    <!-- STEP 5: CHỌN GIỜ -->
-    <div class="card shadow border-0 rounded-4 mb-4" data-step="5">
-        <div class="card-body">
-            <h5 class="fw-bold mb-3">⏰ Chọn giờ khám</h5>
-
-            <div class="d-flex flex-wrap gap-2">
-                <button type="button" class="btn btn-outline-primary">08:00</button>
-                <button type="button" class="btn btn-outline-primary">09:00</button>
-                <button type="button" class="btn btn-outline-primary">10:00</button>
-                <button type="button" class="btn btn-outline-primary">14:00</button>
-                <button type="button" class="btn btn-outline-primary">15:00</button>
+        <div class="card shadow border-0 rounded-4 mb-4" data-step="4">
+            <div class="card-body">
+                <h5 class="fw-bold mb-3">Chọn ngày khám</h5>
+                <input type="date" class="form-control" name="check_date" onchange="loadDoctor(this.value)">
             </div>
         </div>
-    </div>
 
-    <!-- SUBMIT -->
-    <div class="text-center mt-5">
-        <button class="btn btn-success btn-lg px-5">
-            ✅ Xác nhận đặt lịch
-        </button>
-    </div>
+        <div class="card shadow border-0 rounded-4 mb-4" data-step="3">
+            <div class="card-body">
+                <h5 class="fw-bold mb-3">Chọn bác sĩ</h5>
+                <select class="form-select" name="doctor_id" id="doctor-select">
+                    <option selected disabled>-- Vui lòng chọn ngày trước --</option>
+                </select>
+            </div>
+        </div>
 
-</div>
+
+        <div class="card shadow border-0 rounded-4 mb-4" data-step="5">
+            <div class="card-body">
+                <h5 class="fw-bold mb-3">Chọn giờ khám</h5>
+
+                <div class="d-flex flex-wrap gap-2">
+                    <button type="button" class="btn btn-outline-primary">08:00</button>
+                    <button type="button" class="btn btn-outline-primary">09:00</button>
+                    <button type="button" class="btn btn-outline-primary">10:00</button>
+                    <button type="button" class="btn btn-outline-primary">14:00</button>
+                    <button type="button" class="btn btn-outline-primary">15:00</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="text-center mt-5">
+            <button class="btn btn-success btn-lg px-5">
+                Xác nhận đặt lịch
+            </button>
+        </div>
+
+    </div>
+    <script src="{{ url_for('static',filename='js/doctors.js') }}"></script>
 {% endblock %}
