@@ -39,6 +39,7 @@ class User(BaseModel, UserMixin):
     user_role = Column(Enum(UserRole), default=UserRole.USER)
     patients = relationship("Patient", backref="user", lazy=True)
     doctor = relationship("Doctor", backref="user", lazy=True, uselist=False)
+    staff = relationship("Staff", backref="user", lazy=True, uselist=False)
 
     def __str__(self):
         return self.name
@@ -60,6 +61,11 @@ class Doctor(BaseModel):
     id = Column(Integer, ForeignKey('user.id'), primary_key=True)
     major = Column(String(100), nullable=True)
     appointment_schedules = relationship("AppointmentSchedule", backref="doctor", lazy=True)
+
+
+class Staff(BaseModel):
+    __tablename__ = 'staff'
+    id = Column(Integer, ForeignKey('user.id'), primary_key=True)
 
 
 class Service(BaseModel):
@@ -337,40 +343,6 @@ def create_slots(date):
 
 
 if __name__ == "__main__":
-    # init_all_data()
-    # slots = create_slots(date.today())
-    # for slot in slots:
-    #     print(slot)
-    with app.app_context():
-        slots = []
-        # appoint = AppointmentSchedule.query.all()
-        # for a in appoint:
-        #     slots.append(a.start_time.strftime('%H:%M'))
-        #
-        # print(slots)
-
-        # a = AppointmentSchedule.query.filter(
-        #     and_(
-        #         AppointmentSchedule.doctor_id == 5, func.date(AppointmentSchedule.start_time) == date(2025, 12, 22)
-        #     ))
-        # for app in a:
-        #     print(app.start_time.date())
-        #
-        # a = AppointmentSchedule.query.filter(
-        #     and_(
-        #         AppointmentSchedule.doctor_id == 5,
-        #         func.date(AppointmentSchedule.start_time) == date(2025, 12, 22)
-        #     )
-        # ).count()
-        #
-        # print(a)
-        # a = AppointmentSchedule.query.filter(
-        #     and_(
-        #         func.time(AppointmentSchedule.start_time) == time(11, 30),
-        #         AppointmentSchedule.doctor_id == 4,
-        #         func.date(AppointmentSchedule.start_time) == date(2025, 12, 30)
-        #     )
-        # ).first()
-        #
-        # print(f"{a.doctor_id} {a.patient_id}")
+    create_db()
+    init_all_data()
 

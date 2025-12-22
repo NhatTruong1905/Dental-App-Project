@@ -1,36 +1,57 @@
-<nav class="navbar navbar-expand-lg navbar-dark sticky-top shadow p-4" style="background: linear-gradient(90deg, #0177fe, #0d6efd);">
+
+<nav class="navbar navbar-expand-lg navbar-dark sticky-top shadow"
+     style="background: linear-gradient(90deg, #0177fe, #0d6efd);">
     <div class="container">
-        <a class="navbar-brand d-flex align-items-center fw-bold" href="/" style="text-shadow: 2px 2px 4px rgba(0,0,0,.4);">Nha Khoa Việt Nam</a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#collapsibleNavbar"><span class="navbar-toggler-icon"></span></button>
+        <a class="navbar-brand d-flex align-items-center fw-bold" href="/"
+           style="text-shadow: 2px 2px 4px rgba(0,0,0,.4);"><img
+                src="https://res.cloudinary.com/dt1pa28g2/image/upload/v1766259935/logo_nha_khoa_white_1_gw3aou.png"
+                alt="logo" width="70" class="me-2">Nha Khoa Việt Nam</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#collapsibleNavbar"><span
+                class="navbar-toggler-icon"></span></button>
 
         <div class="collapse navbar-collapse" id="collapsibleNavbar">
-            <ul class="navbar-nav ms-auto align-items-lg-center gap-lg-2">
+            {% if current_user.is_authenticated and current_user.user_role.value == 4 %}
+                <ul class="navbar-nav ms-auto align-items-lg-center gap-lg-2">
+                <li class="nav-item"><a class="nav-link fw-semibold" href="/">Trang chủ</a></li>
+                <li class="nav-item"><a class="nav-link fw-semibold" href="/appointment_employees">Đặt lịch khám</a>
+                <li class="nav-item"><a class="nav-link fw-semibold" href="/services">Dịch vụ</a></li>
+            {% else %}
+                <ul class="navbar-nav ms-auto align-items-lg-center gap-lg-2">
                 <li class="nav-item"><a class="nav-link fw-semibold" href="/">Trang chủ</a></li>
                 <li class="nav-item"><a class="nav-link fw-semibold" href="/appointment">Đặt lịch khám</a></li>
                 <li class="nav-item"><a class="nav-link fw-semibold" href="/services">Dịch vụ</a></li>
-                <li class="nav-item dropdown ms-lg-3">
-                    {% if current_user.is_authenticated %}
-                    <a class="nav-link dropdown-toggle d-flex align-items-center p-0" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false" title="{{ current_user.username }}"><img src="{{ current_user.avatar }}" alt="avatar" class="rounded-circle border border-2 border-light" width="38" height="38"></a>
+            {% endif %}
+            <li class="nav-item dropdown ms-lg-3">
+                {% if current_user.is_authenticated %}
+                    <a class="nav-link dropdown-toggle d-flex align-items-center p-0" href="#" role="button"
+                       data-bs-toggle="dropdown" aria-expanded="false" title="{{ current_user.username }}"><img
+                            src="{{ current_user.avatar }}" alt="avatar"
+                            class="rounded-circle border border-2 border-light" width="38" height="38"></a>
                     <ul class="dropdown-menu dropdown-menu-end shadow-sm rounded-3">
                         <li class="dropdown-header text-center fw-bold">{{ current_user.username }}</li>
 
                         {% if current_user.user_role.value == 1 %}
-                        <li><a class="dropdown-item" href="/admin" target="_blank">Trang quản trị</a></li>
+                            <li><a class="dropdown-item" href="/admin" target="_blank">Trang quản trị</a></li>
                         {% endif %}
                         <li><a class="dropdown-item" href="/user">Thông tin tài khoản</a></li>
                         <li><a class="dropdown-item" href="/password">Đổi mật khẩu</a></li>
-                        <li><hr class="dropdown-divider"></li>
+                        <li>
+                            <hr class="dropdown-divider">
+                        </li>
                         <li><a class="dropdown-item text-danger" href="/logout">Đăng xuất</a></li>
                     </ul>
 
-                    {% else %}
-                    <a class="nav-link dropdown-toggle btn btn-outline-light px-3" href="#" role="button" data-bs-toggle="dropdown"><i class="fa-solid fa-user me-1"></i> Tài khoản</a>
+                {% else %}
+                    <a class="nav-link dropdown-toggle btn btn-outline-light px-3" href="#" role="button"
+                       data-bs-toggle="dropdown"><i class="fa-solid fa-user me-1"></i> Tài khoản</a>
                     <ul class="dropdown-menu dropdown-menu-end shadow-sm rounded-3">
-                        <li><a class="dropdown-item" href="/login"><i class="fa-solid fa-right-to-bracket me-2"></i> Đăng nhập</a></li>
-                        <li><a class="dropdown-item" href="/register"><i class="fa-solid fa-user-plus me-2"></i> Đăng ký</a></li>
+                        <li><a class="dropdown-item" href="/login"><i class="fa-solid fa-right-to-bracket me-2"></i>
+                            Đăng nhập</a></li>
+                        <li><a class="dropdown-item" href="/register"><i class="fa-solid fa-user-plus me-2"></i> Đăng ký</a>
+                        </li>
                     </ul>
-                    {% endif %}
-                </li>
+                {% endif %}
+            </li>
             </ul>
         </div>
     </div>

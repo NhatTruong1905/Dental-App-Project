@@ -24,6 +24,10 @@ def login_process():
     login_type = request.form.get('login_type')
     if user:
         login_user(user)
+
+        if user.user_role.value == 4:
+            return redirect('/appointment_employees')
+
         next = request.args.get('next')
         return redirect(next if next else '/')
     elif login_type == "user":
