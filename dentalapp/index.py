@@ -1,4 +1,5 @@
-from dentalapp.routes import home, login_logout, register, change_password, services, patients, doctors, infor_user, appointment
+from dentalapp.routes import home, login_logout, register, change_password, services, patients, doctors, infor_user, \
+    appointment, employees
 from dentalapp.api import api_patients, api_doctors, api_users, api_services
 from dentalapp import app, login
 from dentalapp.admin import *
@@ -7,6 +8,7 @@ from dentalapp.admin import *
 @login.user_loader
 def load_user(user_id):
     return infor_user.get_current_user(user_id)
+
 
 def register_routes():
     app.register_blueprint(home.home_bp)
@@ -18,7 +20,7 @@ def register_routes():
     app.register_blueprint(doctors.doctors_bp)
     app.register_blueprint(infor_user.infor_user_bp)
     app.register_blueprint(appointment.appointment_bp)
-
+    app.register_blueprint(employees.employees_bp)
 
 
 def register_api():
