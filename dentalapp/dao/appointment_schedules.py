@@ -1,7 +1,8 @@
 from datetime import datetime, time, timedelta
-from dentalapp import db
-from dentalapp.models import AppointmentSchedule, Doctor
+from dentalapp import db, app
+from dentalapp.models import AppointmentSchedule, Doctor, Service
 from sqlalchemy import and_, func
+from dentalapp.dao import appointment_schedule_service
 
 
 def load_doctors(check_date):
@@ -41,3 +42,11 @@ def time_of_doctor(doctor_id, check_date):
         list_times_of_doctor.append(a.start_time.strftime('%H:%M')) # 19:00
 
     return list_times_of_doctor
+
+def save_appointment_schedule(doctor_id, patient_id, start_time, service_id):
+    appointment_schedule = AppointmentSchedule(doctor_id=doctor_id, patient_id=patient_id, start_time=start_time, end_time=start_time + timedelta(minutes=30))
+    db.session.add(appointment_schedule)
+    db.session.flush()
+    price_service = Service.query.get(service_id).price
+    appointment_schedule_service.save_appointment_schedule_service(appointment_schedule_id=appointment_schedule.id, service_id=service_id, price_service=price_service)
+    db.session.commit()

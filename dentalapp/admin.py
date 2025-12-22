@@ -7,7 +7,6 @@ from flask_login import current_user
 from dentalapp.utils import hash_password
 from wtforms import PasswordField, FileField
 import cloudinary.uploader
-from dentalapp.dao import users
 from wtforms.validators import ValidationError
 from dentalapp.utils import is_image
 
