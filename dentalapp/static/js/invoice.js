@@ -6,84 +6,78 @@ function loadAppointmentSuccess(date) {
         if (data.length > 0) {
             for (let a of data) {
                 let option = document.createElement('option')
-                option.textContent = `Lịch khám ${a["start_time"]}`
+                option.textContent = `Lịch khám lúc ${a["start_time"]} - ${a["patient_name"]} - ${a["patient_phone"]}`
                 option.value = a["id"]
-                option.dataset.patientName = a["patient_name"]
-                option.dataset.patientPhone = a["patient_phone"]
-                // optionPatient.textContent = `${a["patient_name"]} - ${a["patient_phone"]}`
                 appointmentSelect.appendChild(option)
             }
+
+            document.getElementById("total-services").textContent = "0 VNĐ";
+            document.getElementById("total-medicines").textContent = "0 VNĐ";
+            document.getElementById("total-vat").textContent = "0 VNĐ";
+            document.getElementById("total-result").textContent = "0 VNĐ";
         } else {
             let option = document.createElement('option')
-            let patient = document.getElementById("patient-info")
             option.textContent = "-- Không có lịch khả dụng --"
-            patient.textContent = "Không có bệnh nhân"
             appointmentSelect.appendChild(option)
+            document.getElementById("total-services").textContent = "0 VNĐ";
+            document.getElementById("total-medicines").textContent = "0 VNĐ";
+            document.getElementById("total-vat").textContent = "0 VNĐ";
+            document.getElementById("total-result").textContent = "0 VNĐ";
         }
     })
 }
 
-function getPatientFromAppointment() {
-    let appointmentSelect = document.getElementById("select-appointment")
-    let patient = document.getElementById("patient-info")
+function calculateTotalServices() {
+    let id = document.getElementById("select-appointment").value
+    let totalServices = document.getElementById("total-services")
+    totalServices.innerHTML = ""
 
-    patient.addEventListener('appointmentSelect', function () {
-        let selectApp = this.value
-        let options = appointmentSelect.options
-
-        selectedPatient.innerHTML = ""
-
-        for (let i = 0; i < options.length; i++) {
-            if (options[i].value === selectApp) {
-                selectedPatient.value = options[i].id
-                break
-            }
+    return fetch(`/api/appointment_schedule/${id}/total_services`).then(res => res.json()).then(data => {
+        if (data["total_services"] === 0 || !data["total_services"]) {
+            totalServices.textContent = "Không có giá dịch vụ"
+        } else {
+            totalServices.textContent = data["total_services"].toLocaleString('vi-VN') + " VNĐ"
         }
     })
 }
 
-// function loadPatients(phone) {
-//     if (phone.length < 4) return
-//     date = document.getElementById("selected-appointment")
-//
-//     fetch(`/api/patients/${date}/${phone}`, {}).then(res => res.json()).then(data => {
-//         let patientList = document.getElementById('patient-list')
-//
-//         patientList.innerHTML = ""
-//
-//         if (data.length > 0) {
-//             for (let patient of data) {
-//                 let option = document.createElement('option')
-//                 option.value = `${patient['name']} - ${patient['phone']}`
-//                 option.dataset.id = patient['id']
-//                 patientList.appendChild(option)
-//             }
-//
-//         } else {
-//             console.info("Không tải được danh sách bệnh nhân")
-//         }
-//     }).catch(err => console.error("Lỗi API", err))
-// }
-//
-// function getPhone() {
-//     let phone = document.getElementById('patient-search')
-//     let patientList = document.getElementById('patient-list')
-//     let input = document.getElementById('patient-id-hidden')
-//
-//     phone.addEventListener('input', function () {
-//         let inputValue = this.value
-//         let options = patientList.options
-//
-//         input.innerHTML = ""
-//
-//         for (let i = 0; i < options.length; i++) {
-//             if (options[i].value === inputValue) {
-//                 input.value = options[i].dataset.id
-//                 break
-//             }
-//         }
-//     })
-// }
+function calculateTotalMedicines() {
+    let id = document.getElementById("select-appointment").value
+    let totalMedicines = document.getElementById("total-medicines")
+    totalMedicines.innerHTML = ""
+
+    return fetch(`/api/appointment_schedule/${id}/total_medicines`).then(res => res.json()).then(data => {
+        if (data["total_medicines"] === 0 || !data["total_medicines"]) {
+            totalMedicines.textContent = "Không có giá thuốc"
+        } else {
+            totalMedicines.textContent = data["total_medicines"].toLocaleString('vi-VN') + " VNĐ"
+        }
+    })
+}
+
+function calculateTotalVatAndResult() {
+    let totalSerivcesStr = document.getElementById("total-services").textContent.replace(/[^\d]/g, '')
+    let totalMedicinesStr = document.getElementById("total-medicines").textContent.replace(/[^\d]/g, '')
+
+    let services = parseFloat(totalSerivcesStr)
+    let medicines = parseFloat(totalMedicinesStr)
+
+    let totalVAT = (services + medicines) * 0.1
+    let totalResult = services + medicines + totalVAT
+
+    let totalVatFinal = document.getElementById("total-vat")
+    let totalResultFinal = document.getElementById("total-result")
+    totalVatFinal.textContent = totalVAT.toLocaleString("vi-VN") + " VNĐ"
+    totalResultFinal.textContent = totalResult.toLocaleString("vi-VN") + " VNĐ"
+}
+
+async function finalTotal() {
+    await calculateTotalServices()
+    await calculateTotalMedicines()
+
+    calculateTotalVatAndResult()
+}
+
 
 
 
