@@ -1,7 +1,7 @@
 import hashlib
 from functools import wraps
 from flask_login import current_user
-from flask import redirect
+from flask import redirect, abort
 
 
 def hash_password(password):
@@ -10,18 +10,26 @@ def hash_password(password):
 def is_image(file):
     return file.lower().endswith(('.jpg', '.jpeg', '.png'))
 
-def permission(user_role=None):
-    def decorated_login_required(function):
+
+def permission(allow=None):
+    def decorator(function):
         @wraps(function)
         def decorated_function(*args, **kwargs):
-            if current_user.is_authenticated:
-                if user_role is None:
+            if not current_user.is_authenticated:
+                return redirect("/login")
+
+            if allow is None:
+                return function(*args, **kwargs)
+
+            if current_user.user_role in allow["roles"]:
+                if allow["access"]:
                     return function(*args, **kwargs)
-                elif user_role is not None and current_user.user_role in user_role:
-                    return function(*args, **kwargs)
-                else:
-                    return "You can't access this page!"
+                return abort(403)
             else:
-                return redirect('/login')
+                if not allow["access"]:
+                    return function(*args, **kwargs)
+                return abort(403)
+
+
         return decorated_function
-    return decorated_login_required
+    return decorator

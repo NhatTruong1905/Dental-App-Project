@@ -27,7 +27,20 @@ def time_of_doctor(doctor_id, check_date):
 
     list_times_of_doctor = []
     for a in appointments:
-        list_times_of_doctor.append(a.start_time.strftime('%H:%M'))  # 19:00
+        list_times_of_doctor.append(a.start_time.strftime('%H:%M'))
+
+    if check_date == datetime.today().date():
+        now = datetime.now()
+
+        time_start_morning = datetime.combine(check_date, time(7, 0))
+        while time_start_morning <= min(now, datetime.combine(check_date, time(11, 30))):
+            list_times_of_doctor.append(time_start_morning.strftime('%H:%M'))
+            time_start_morning += timedelta(minutes=30)
+
+        time_start_afternoon = datetime.combine(check_date, time(13, 0))
+        while time_start_afternoon <= min(now, datetime.combine(check_date, time(17, 30))):
+            list_times_of_doctor.append(time_start_afternoon.strftime('%H:%M'))
+            time_start_afternoon += timedelta(minutes=30)
 
     return list_times_of_doctor
 

@@ -35,6 +35,7 @@ function loadTime(select) {
             if (!data["time"])
                 return;
             Array.from(data["time"]).forEach(time => {
+                console.log(time);
                 let id = time.trim().replace(":", "-");
                 let btn = document.getElementById(id);
                 btn.style.backgroundColor = "gray";

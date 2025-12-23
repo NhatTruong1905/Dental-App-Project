@@ -1,6 +1,7 @@
 from flask import jsonify, Blueprint
 from flask_login import current_user
 from dentalapp.dao.patients import get_patient, get_list_patients, delete_soft_patient
+from dentalapp.models import UserRole
 from dentalapp.utils import permission
 from dentalapp.dao import appointment_schedules
 
@@ -23,7 +24,11 @@ def delete_patient(id):
 @api_patient_bp.route('/api/patients', methods=["GET"])
 @permission()
 def get_patients():
-    patients = get_list_patients()
+    patients = []
+    if current_user.user_role in [UserRole.ADMIN, UserRole.STAFF]:
+        patients = get_list_patients(full=True)
+    else:
+        patients = get_list_patients(full=False)
     patients = [
         {
             "id": patient.id,

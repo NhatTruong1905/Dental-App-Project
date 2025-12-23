@@ -4,10 +4,11 @@
 
 {% block content %}
 <div class="container my-5">
-
-    <h2 class="text-center text-primary fw-bold mb-5">
-        Đặt lịch khám
-    </h2>
+    {% if current_user.is_authenticated and current_user.user_role.value == 4 %}
+    <h2 class="text-center text-primary fw-bold mb-5">Đặt lịch khám (Quản trị)</h2>
+    {% else %}
+    <h2 class="text-center text-primary fw-bold mb-5">Đặt lịch khám</h2>
+    {% endif %}
 
     <div id="alert-appointment" class="alert alert-danger text-center mb-4 d-none"></div>
 
@@ -103,5 +104,9 @@
     }
 </style>
 
+<script>
+  const today = new Date().toISOString().split("T")[0];
+  document.getElementById("date").setAttribute("min", today);
+</script>
 
 {% endblock %}

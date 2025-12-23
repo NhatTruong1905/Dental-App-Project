@@ -2,49 +2,78 @@
 
 {% block content %}
 
-    <div class="container mt-5">
+<div class="container mt-5">
 
-        <div class="text-center mb-4">
-            <h2 class="fw-bold text-info">Dịch vụ của chúng tôi</h2>
-            <p class="text-muted">Chăm sóc sức khỏe toàn diện – tận tâm – chuyên nghiệp</p>
-        </div>
-
-        <form class="d-flex gap-2 mb-5 w-50 mx-auto" method="get" action="/services">
-            <input class="form-control" type="text" placeholder="Tìm dịch vụ..." name="kw"
-                   value="{{ request.args.get('kw', '') }}">
-            <button class="btn btn-primary px-4" type="submit">Tìm</button>
-        </form>
-
-        {% if services %}
-            <div class="row">
-                {% for s in services %}
-                    <div class="col-lg-4 col-md-6 col-sm-12 p-3">
-
-                        <div class="card shadow-sm border-0 h-100 rounded-4">
-                            <img src="{{ s.image }}" class="card-img-top rounded-top-4" alt="{{ s.name }}" style="height: 220px; object-fit: cover;">
-
-                            <div class="card-body d-flex flex-column">
-                                <h5 class="fw-bold mb-2">{{ s.name }}</h5>
-
-                                <p class="text-danger fw-semibold fs-5 mb-3">{{ "{:,.0f}".format(s.price) }} ₫</p>
-                               {% if current_user.is_authenticated and current_user.user_role.value == 4 %}
-                                   <div class="mt-auto"><a href="/appointment_employees" class="btn btn-primary w-100">Đặt lịch khám cho bệnh nhân</a></div>
-                                {% else %}
-                                   <div class="mt-auto"><a href="/appointment" class="btn btn-primary w-100">Đặt lịch khám ngay</a></div>
-                                {% endif %}
-
-                            </div>
-                        </div>
-
-                    </div>
-                {% endfor %}
-            </div>
-        {% else %}
-            <div class="alert alert-danger text-center mt-4">
-                <i class="fa-solid fa-circle-exclamation me-2"></i>
-                Không có dịch vụ nào!
-            </div>
-        {% endif %}
-
+    <div class="text-center mb-4">
+        <h2 class="fw-bold text-info">Dịch vụ của chúng tôi</h2>
+        <p class="text-muted">Chăm sóc sức khỏe toàn diện – tận tâm – chuyên nghiệp</p>
     </div>
+
+    <form class="d-flex gap-2 mb-5 w-50 mx-auto" method="get" action="/services">
+        <input class="form-control" type="text" placeholder="Tìm dịch vụ..." name="kw"
+               value="{{ request.args.get('kw', '') }}">
+        <button class="btn btn-primary px-4" type="submit">Tìm</button>
+    </form>
+
+    {% if services %}
+    <div class="row">
+        {% for s in services %}
+        <div class="col-lg-4 col-md-6 col-sm-12 p-3">
+
+            <div class="card shadow-sm border-0 h-100 rounded-4">
+                <img src="{{ s.image }}" class="card-img-top rounded-top-4" alt="{{ s.name }}"
+                     style="height: 220px; object-fit: cover;">
+
+                <div class="card-body d-flex flex-column">
+                    <h5 class="fw-bold mb-2">{{ s.name }}</h5>
+
+                    <p class="text-danger fw-semibold fs-5 mb-3">{{ "{:,.0f}".format(s.price) }} ₫</p>
+                    {% if current_user.is_authenticated and current_user.user_role.value != 3 or not
+                    current_user.is_authenticated %}
+                    <div class="mt-auto"><a href="/appointment" class="btn btn-primary w-100">Đặt lịch khám ngay</a>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+
+        </div>
+        {% endfor %}
+    </div>
+    <div>
+  <ul class="pagination justify-content-center" id="pagination"></ul>
+</div>
+    {% else %}
+    <div class="alert alert-danger text-center mt-4">
+        <i class="fa-solid fa-circle-exclamation me-2"></i>
+        Không có dịch vụ nào!
+    </div>
+    {% endif %}
+
+</div>
+<script>
+    let currentPage = 1;
+    totalPages = Math.ceil({{ count / config.PAGE_SIZE }})
+
+
+    document.addEventListener("click", (e) => {
+        if (!e.target.classList.contains("page-link")) return;
+
+        const value = e.target.dataset.page;
+
+        if (value === "prev" && currentPage > 1) {
+            currentPage--;
+        } else if (value === "next" && currentPage < totalPages) {
+            currentPage++;
+        } else if (!isNaN(value)) {
+            currentPage = parseInt(value);
+        }
+
+        renderPaginationUI("/services", Math.min(totalPages, 5), totalPages);
+    });
+
+    document.addEventListener("DOMContentLoaded", () => {
+        renderPaginationUI("/services", Math.min(totalPages, 5), totalPages);
+    })
+
+</script>
 {% endblock %}

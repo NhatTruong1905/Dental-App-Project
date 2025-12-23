@@ -9,10 +9,12 @@
         <div class="col-lg-6 col-md-8 col-sm-12">
             <div class="card shadow-lg border-0 rounded-4">
                 <div class="card-body p-4">
-                    <button type="button" class="btn btn-sm btn-primary position-absolute top-0 end-0 m-2 "><a href="/user/infor" style="color: white; text-decoration: none;">Sửa</a></button>
+                    <button type="button" class="btn btn-sm btn-primary position-absolute top-0 end-0 m-2 "><a
+                            href="/user/infor" style="color: white; text-decoration: none;">Sửa</a></button>
 
                     <div class="text-center mb-4">
-                        <img width="128px" height="128px" src="{{ user.avatar }}" class="rounded-circle shadow" alt="Avatar">
+                        <img width="128px" height="128px" src="{{ user.avatar }}" class="rounded-circle shadow"
+                             alt="Avatar">
                     </div>
 
                     <h4 class="text-center fw-bold mb-3">{{ user.name }}</h4>
@@ -30,7 +32,13 @@
     <div class="alert alert-danger text-center mt-4">Tài khoản không hợp lệ!</div>
     {% endif %}
     <div class="d-flex justify-content-between align-items-center mb-4 mt-5">
+        {% if current_user.user_role.value in [1, 4] %}
+        <h2 class="text-info fw-bold mb-0">Hồ sơ bệnh nhân</h2>
+        {% else %}
+        {% if current_user.user_role.value != 3 %}
         <h2 class="text-info fw-bold mb-0">Hồ sơ bệnh nhân của tôi</h2>
+        {% endif %}
+        {% endif %}
     </div>
 
     {% if patients %}
@@ -39,10 +47,12 @@
         <div id="patient{{ p.id }}" class="col-lg-4 col-md-6 col-sm-12 p-3">
 
             <div class="card shadow-sm border-0 h-100 rounded-4 position-relative">
-                <button type="button" class="btn btn-sm btn-danger position-absolute top-0 end-0 m-2 " onclick="deletePatient({{ p.id }})" title="Xóa hồ sơ"><i class="fa-solid fa-xmark"></i></button>
+                <button type="button" class="btn btn-sm btn-danger position-absolute top-0 end-0 m-2 "
+                        onclick="deletePatient({{ p.id }})" title="Xóa hồ sơ"><i class="fa-solid fa-xmark"></i></button>
 
                 <div class="card-body text-center">
-                    <img src="https://ui-avatars.com/api/?name={{ p.name }}&background=0D6EFD&color=fff&size=96" class="rounded-circle mb-3 shadow-sm" alt="Avatar">
+                    <img src="https://ui-avatars.com/api/?name={{ p.name }}&background=0D6EFD&color=fff&size=96"
+                         class="rounded-circle mb-3 shadow-sm" alt="Avatar">
                     <h5 class="fw-bold mb-3">{{ p.name }}</h5>
                     <div class="d-flex justify-content-center gap-2">
                         <a href="/patients/{{ p.id }}" class="btn btn-primary btn-sm">Xem</a>
@@ -53,9 +63,37 @@
         </div>
         {% endfor %}
     </div>
+  <ul class="pagination justify-content-center" id="pagination"></ul>
     {% else %}
+    {% if current_user.user_role.value != 3 %}
     <div class="alert alert-danger text-center mt-4">Không có hồ sơ nào!</div>
     {% endif %}
+
+    {% endif %}
 </div>
-<script src="{{ url_for('static', filename='js/patients.js') }}"></script>
+<script>
+    let currentPage = 1;
+    totalPages = Math.ceil({{ count / config.PAGE_SIZE }})
+
+
+    document.addEventListener("click", (e) => {
+        if (!e.target.classList.contains("page-link")) return;
+
+        const value = e.target.dataset.page;
+
+        if (value === "prev" && currentPage > 1) {
+            currentPage--;
+        } else if (value === "next" && currentPage < totalPages) {
+            currentPage++;
+        } else if (!isNaN(value)) {
+            currentPage = parseInt(value);
+        }
+
+        renderPaginationUI("/user", Math.min(totalPages, 5), totalPages);
+    });
+
+    document.addEventListener("DOMContentLoaded", () => {
+        renderPaginationUI("/user", Math.min(totalPages, 5), totalPages);
+    })
+</script>
 {% endblock %}
