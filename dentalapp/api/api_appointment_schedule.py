@@ -30,7 +30,7 @@ def get_appointment_schedule(date):
                     'id': a.id,
                     'doctor_id': a.doctor_id,
                     'patient_id': a.patient_id,
-                    'start_time': str(a.start_time),
+                    'start_time': str(a.start_time.strftime('%H:%M')),
                     'end_time': str(a.end_time),
                     'status': a.status.name,
                     'patient_name': a.patient.name,
@@ -44,3 +44,21 @@ def get_appointment_schedule(date):
             return jsonify({'ok': False, 'message': "Không có danh sách lịch khám"})
     except Exception as ex:
         return jsonify({'ok': False, 'error': str(ex)})
+
+
+@api_appointment_schedule.route('/api/appointment_schedule/<int:id>/total_services', methods=['GET'])
+def calculate_total_services(id):
+    total_services = appointment_schedules.culculated_total_service(id)
+    if total_services:
+        return jsonify({'ok': True, 'total_services': total_services})
+    else:
+        return jsonify({'ok': True, 'message': "Tổng dịch vụ không khả thi"})
+
+
+@api_appointment_schedule.route('/api/appointment_schedule/<int:id>/total_medicines', methods=['GET'])
+def culculate_total_medicines(id):
+    total_medicines = appointment_schedules.culculated_total_medicine(id)
+    if total_medicines:
+        return jsonify({'ok': True, 'total_medicines': total_medicines})
+    else:
+        return jsonify({'ok': False, 'message': "Tổng thuốc không khả thi"})

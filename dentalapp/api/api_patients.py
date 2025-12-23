@@ -40,23 +40,3 @@ def get_patients():
     return jsonify(patients)
 
 
-@api_patient_bp.route('/api/patients/<date>/<phone>', methods=["GET"])
-def get_patient(date, phone):
-    try:
-        patients = appointment_schedules.find_patient(date, phone)
-
-        if patients:
-            result = [
-                {
-                    'id': p.id,
-                    'name': p.name,
-                    'phone': p.phone
-                }
-                for p in patients
-            ]
-
-            return jsonify(result)
-        else:
-            return jsonify({"ok": False, "message": "Patient not found!"})
-    except Exception as e:
-        return jsonify({"ok": False, "message": str(e)})
