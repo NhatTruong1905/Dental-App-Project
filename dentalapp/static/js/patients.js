@@ -9,7 +9,6 @@ function deletePatient(id) {
             let patient = document.getElementById(`patient${id}`)
             patient.style.display = "none"
         })
-        .catch(err => console.error(err))
     }
 }
 

@@ -1,5 +1,3 @@
-from pickle import GET
-
 import dentalapp.dao.users
 import dentalapp.utils
 from dentalapp import admin, db

@@ -15,27 +15,47 @@ function hiddenTime() {
         listTime.classList.add("d-none");
 }
 
-function loadTime(select) {
-    let date = document.getElementById("date").value;
-    doctor_id = select.options[select.selectedIndex].id
-    fetch(`/api/doctors/${doctor_id}/${date}/times`).then(res => res.json()).then(data => {
-        Array.from(data["time"]).forEach(time => {
-            let id = time.trim().replace(":", "-");
-            let btn = document.getElementById(id);
-            btn.style.backgroundColor = "gray";
-            btn.style.color = "white";
-            btn.style.borderColor = "gray";
-            btn.disabled = true;
-        })
+function resetTime() {
+    document.querySelectorAll(".time-btn").forEach(btn => {
+        btn.disabled = false;
+            btn.style.backgroundColor = "white";
+            btn.style.color = "blue";
+            btn.style.borderColor = "blue";         
     });
 }
 
+
+function loadTime(select) {
+    let date = document.getElementById("date").value;
+    let doctor_id = select.options[select.selectedIndex].id;
+    resetTime();
+    fetch(`/api/doctors/${doctor_id}/${date}/times`)
+        .then(res => res.json())
+        .then(data => {
+            if (!data["time"])
+                return;
+            Array.from(data["time"]).forEach(time => {
+                let id = time.trim().replace(":", "-");
+                let btn = document.getElementById(id);
+                btn.style.backgroundColor = "gray";
+                btn.style.color = "white";
+                btn.style.borderColor = "gray";
+                btn.disabled = true;
+            });
+        });
+}
+
 let pre_btn = null;
+let btnClick = null;
 Array.from(document.getElementsByClassName("time-btn")).forEach(btn => {
     btn.addEventListener("click", () => {
-        if (pre_btn !== null)
-            pre_btn.classList.remove("btn-primary");
-        btn.classList.add("btn-primary");
+        if (pre_btn !== null) {
+            pre_btn.style.backgroundColor = "white";
+            pre_btn.style.color = "blue";
+        }
+        btn.style.backgroundColor = "blue";
+        btn.style.color = "white";
         pre_btn = btn;
+        btnClick = btn;
     });
 });

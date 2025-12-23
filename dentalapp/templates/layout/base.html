@@ -43,6 +43,17 @@
 {% block footer %}
     {% include 'layout/footer.html' %}
 {% endblock %}
+<script src="{{ url_for('static',filename='js/doctors.js') }}"></script>
 <script src="{{ url_for('static', filename='js/patients.js') }}"></script>
+<script src="{{ url_for('static', filename='js/services.js') }}"></script>
+<script src="{{ url_for('static', filename='js/time.js') }}"></script>
+<script src="{{ url_for('static', filename='js/appointment.js') }}"></script>
+
+<script>
+    document.addEventListener("DOMContentLoaded", () => {
+        getPatients();
+        getServices();
+    })
+</script>
 </body>
 </html>

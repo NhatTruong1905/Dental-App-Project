@@ -5,7 +5,7 @@ function loadDoctor(date) {
         let doctorSelect = document.getElementById("doctor-select")
 
         if (data.length > 0) {
-            let selected = document.getElementById("selected");
+            let selected = document.getElementById("selected-doctor");
             selected.textContent = "-- Chọn bác sĩ --";
             for (doctor of data) {
                 let option = document.createElement('option')
@@ -14,7 +14,7 @@ function loadDoctor(date) {
                 doctorSelect.appendChild(option);
             }
         } else {
-            let selected = document.getElementById("selected");
+            let selected = document.getElementById("selected-doctor");
             selected.textContent = `-- Ngày ${date} không có bác sĩ hoặc bận --`;
         }
     });
@@ -23,7 +23,7 @@ function loadDoctor(date) {
 function reloadDoctor() {
     let doctorSelect = document.getElementById("doctor-select")
     Array.from(doctorSelect.options).forEach(option => {
-        if (option.id !== "selected")
+        if (option.id !== "selected-doctor")
             option.remove();
     });
 }
