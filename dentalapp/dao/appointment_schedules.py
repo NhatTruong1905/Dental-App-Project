@@ -1,7 +1,7 @@
 from datetime import datetime, time, timedelta
 from dentalapp import db, app
-from dentalapp.models import AppointmentSchedule, Doctor, Service
-from sqlalchemy import and_, func
+from dentalapp.models import AppointmentSchedule, Doctor, Service, Patient
+from sqlalchemy import and_, func, or_
 from dentalapp.dao import appointment_schedule_service
 
 
@@ -12,21 +12,9 @@ def load_doctors(check_date):
         func.date(AppointmentSchedule.start_time) == date).group_by(AppointmentSchedule.doctor_id).having(
         func.count(AppointmentSchedule.doctor_id) >= 5).subquery()
 
-    doctors = db.session.query(Doctor).outerjoin(query, query.c.doctor_id == Doctor.id).where(query.c.doctor_id.is_(None)).all()
+    doctors = db.session.query(Doctor).outerjoin(query, query.c.doctor_id == Doctor.id).where(
+        query.c.doctor_id.is_(None)).all()
     return doctors
-
-
-def check_duplicate_time(doctor_id, check_date, check_time):
-    query = AppointmentSchedule.query.filter(
-        and_(
-            AppointmentSchedule.doctor_id == doctor_id,
-            func.date(AppointmentSchedule.start_time) == check_date,
-            func.time(AppointmentSchedule.start_time) == check_time
-        )
-    ).first()
-    if query:
-        return False
-    return True
 
 
 def time_of_doctor(doctor_id, check_date):
@@ -39,14 +27,41 @@ def time_of_doctor(doctor_id, check_date):
 
     list_times_of_doctor = []
     for a in appointments:
-        list_times_of_doctor.append(a.start_time.strftime('%H:%M')) # 19:00
+        list_times_of_doctor.append(a.start_time.strftime('%H:%M'))  # 19:00
 
     return list_times_of_doctor
 
+
 def save_appointment_schedule(doctor_id, patient_id, start_time, service_id):
-    appointment_schedule = AppointmentSchedule(doctor_id=doctor_id, patient_id=patient_id, start_time=start_time, end_time=start_time + timedelta(minutes=30))
+    appointment_schedule = AppointmentSchedule(doctor_id=doctor_id, patient_id=patient_id, start_time=start_time,
+                                               end_time=start_time + timedelta(minutes=30))
     db.session.add(appointment_schedule)
     db.session.flush()
     price_service = Service.query.get(service_id).price
-    appointment_schedule_service.save_appointment_schedule_service(appointment_schedule_id=appointment_schedule.id, service_id=service_id, price_service=price_service)
+    appointment_schedule_service.save_appointment_schedule_service(appointment_schedule_id=appointment_schedule.id,
+                                                                   service_id=service_id, price_service=price_service)
     db.session.commit()
+
+
+def find_patient(date_success, phone=None):
+    date_success = datetime.strptime(date_success, '%Y-%m-%d').date()
+
+    query = db.session.query(AppointmentSchedule.patient_id).where(
+        and_(
+            AppointmentSchedule.status == "SUCCESS",
+            func.date(AppointmentSchedule.start_time) == date_success)).subquery()
+
+    patients = db.session.query(Patient).join(query, query.c.patient_id == Patient.id).where(
+        Patient.phone == phone).all()
+
+    return patients
+
+
+def load_appointment_schedules_success(check_date):
+    check_date = datetime.strptime(check_date, '%Y-%m-%d').date()
+    query = db.session.query(AppointmentSchedule).filter(
+        and_(
+            AppointmentSchedule.status == "SUCCESS",
+            func.date(AppointmentSchedule.start_time) == check_date)).all()
+
+    return query

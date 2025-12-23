@@ -26,6 +26,7 @@ class Status(enum.Enum):
     PENDING = 0
     IN_PROGRESS = 1
     COMPLETED = 2
+    SUCCESS = 3
 
 
 class User(BaseModel, UserMixin):
@@ -345,4 +346,3 @@ def create_slots(date):
 if __name__ == "__main__":
     create_db()
     init_all_data()
-

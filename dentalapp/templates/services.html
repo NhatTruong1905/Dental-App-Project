@@ -27,7 +27,12 @@
                                 <h5 class="fw-bold mb-2">{{ s.name }}</h5>
 
                                 <p class="text-danger fw-semibold fs-5 mb-3">{{ "{:,.0f}".format(s.price) }} ₫</p>
-                                <div class="mt-auto"><a href="/appointment" class="btn btn-primary w-100">Đặt lịch khám ngay</a></div>
+                               {% if current_user.is_authenticated and current_user.user_role.value == 4 %}
+                                   <div class="mt-auto"><a href="/appointment_employees" class="btn btn-primary w-100">Đặt lịch khám cho bệnh nhân</a></div>
+                                {% else %}
+                                   <div class="mt-auto"><a href="/appointment" class="btn btn-primary w-100">Đặt lịch khám ngay</a></div>
+                                {% endif %}
+
                             </div>
                         </div>
 

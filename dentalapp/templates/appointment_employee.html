@@ -1,13 +1,16 @@
 {% extends 'layout/base.html' %}
 
-{% block title %}Đặt lịch khám{% endblock %}
+{% block title %}Đặt lịch khám quản trị{% endblock %}
 
 {% block content %}
-    <div class="container my-5">
-        <h2 class="text-center text-primary fw-bold mb-5">
-            Đặt lịch khám (Quản trị)
-        </h2>
-    </div>
+<div class="container my-5">
+
+    <h2 class="text-center text-primary fw-bold mb-5">
+        Đặt lịch khám (quản trị)
+    </h2>
+
+    <div id="alert-appointment" class="alert alert-danger text-center mb-4 d-none"></div>
+
     <div class="card shadow border-0 rounded-4 mb-4" data-step="1">
         <div class="card-body">
             <div class="d-flex justify-content-between align-items-center">
@@ -15,25 +18,26 @@
                 <a href="/patients/new" class="btn btn-primary shadow mb-3">Tạo hồ sơ mới</a>
             </div>
             <select id="select-patient" class="form-select" name="patient_id">
-                <option selected disabled>-- Chọn hồ sơ --</option>
+                <option id="selected-patient" selected disabled>-- Chọn hồ sơ --</option>
             </select>
         </div>
     </div>
+
 
     <div class="card shadow border-0 rounded-4 mb-4" data-step="1">
         <div class="card-body">
             <h5 class="fw-bold mb-3">Chọn dịch vụ</h5>
             <select id="select-service" class="form-select">
-                <option selected disabled>-- Chọn dịch vụ --</option>
+                <option id="selected-service" selected disabled>-- Chọn dịch vụ --</option>
             </select>
         </div>
     </div>
 
+
     <div class="card shadow border-0 rounded-4 mb-4" data-step="4">
         <div class="card-body">
             <h5 class="fw-bold mb-3">Chọn ngày khám</h5>
-            <input id="date" type="date" class="form-control" name="check_date"
-                   onchange="loadDoctor(this.value); hiddenTime(); reloadDoctor();">
+            <input id="date" type="date" class="form-control" name="check_date" onchange="loadDoctor(this.value); hiddenTime(); reloadDoctor()">
         </div>
     </div>
 
@@ -41,10 +45,11 @@
         <div class="card-body">
             <h5 class="fw-bold mb-3">Chọn bác sĩ</h5>
             <select class="form-select" name="doctor_id" id="doctor-select" onchange="showTime(); loadTime(this)">
-                <option id="selected" selected disabled>-- Vui lòng chọn ngày trước --</option>
+                <option id="selected-doctor" selected disabled>-- Vui lòng chọn ngày trước --</option>
             </select>
         </div>
     </div>
+
 
     <div class="card shadow border-0 rounded-4 mb-4" data-step="5">
         <div class="card-body">
@@ -85,32 +90,18 @@
 
 
     <div class="text-center mt-5">
-        <button class="btn btn-success btn-lg px-5">
-            Xác nhận đặt lịch
-        </button>
+        <button class="btn btn-success btn-lg px-5" onclick="handleAppointment(btnClick)">Xác nhận đặt lịch</button>
     </div>
 
-    </div>
-    <style>
-        .time-btn {
-            width: 100px;
-            height: 45px;
-            padding: 0;
-            text-align: center;
-        }
-    </style>
+</div>
+<style>
+    .time-btn {
+        width: 100px;
+        height: 45px;
+        padding: 0;
+        text-align: center;
+    }
+</style>
 
-    </style>
-    <script src="{{ url_for('static',filename='js/doctors.js') }}"></script>
-    <script src="{{ url_for('static', filename='js/patients.js') }}"></script>
-    <script src="{{ url_for('static', filename='js/services.js') }}"></script>
-    <script src="{{ url_for('static', filename='js/time.js') }}"></script>
-
-    <script>
-        document.addEventListener("DOMContentLoaded", () => {
-            getPatients();
-            getServices();
-        })
-    </script>
 
 {% endblock %}
