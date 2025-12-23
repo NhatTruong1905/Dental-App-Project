@@ -20,7 +20,18 @@
 {% endblock %}
 
 {% else %}
-
-<p>You can't access this page!</p>
-
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>403 Forbidden</title>
+</head>
+<body>
+    <div>
+        <h1>Forbidden</h1>
+        <p>You don't have the permission to access the requested resource. It is either read-protected or not readable by the server.</p>
+    </div>
+</body>
+</html>
 {% endif %}

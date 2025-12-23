@@ -18,6 +18,7 @@ class AuthenticatedAdmin(ModelView):
 class BaseModelAdminView(ModelView):
     column_display_pk = True
     edit_modal = True
+    page_size = 10
 
 class MedicineView(BaseModelAdminView, AuthenticatedAdmin):
     column_filters = ['id', 'name', 'price', 'production_date', 'expiration_date', 'active']
@@ -97,6 +98,8 @@ class UserView(AuthenticatedAdmin):
         model.username = form.username.data
         model.password = hash_password(form.pwd.data)
         model.phone = form.phone.data
+
+    page_size = 10
 
 
 

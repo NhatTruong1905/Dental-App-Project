@@ -2,6 +2,7 @@ from flask import Blueprint, render_template, request, redirect, jsonify
 from dentalapp.dao.users import validate_phone
 from flask_login import current_user
 from dentalapp.dao import patients
+from dentalapp.models import UserRole
 from dentalapp.utils import permission
 
 patient_bp = Blueprint('patient', __name__)
@@ -33,6 +34,6 @@ def create_patient():
 @permission()
 def patients_profile(id):
     patient = patients.get_patient(id)
-    if patient.user.id != current_user.id or not patient.active:
+    if patient.user.id != current_user.id and current_user.user_role not in [UserRole.ADMIN, UserRole.STAFF] or not patient.active:
         patient = None
     return render_template("patient_profile.html", patient=patient)

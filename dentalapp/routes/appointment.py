@@ -7,6 +7,9 @@ appointment_bp = Blueprint('appointment', __name__)
 
 
 @appointment_bp.route('/appointment')
-@permission()
+@permission({
+    "roles": [UserRole.DOCTOR],
+    "access": False
+})
 def render_appointment():
     return render_template('appointment.html')
