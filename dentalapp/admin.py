@@ -3,12 +3,15 @@ import dentalapp.utils
 from dentalapp import admin, db
 from dentalapp.models import Medicine, Service, UserRole, User
 from flask_admin.contrib.sqla import ModelView
+from flask_admin import BaseView, expose
 from flask_login import current_user
 from dentalapp.utils import hash_password
 from wtforms import PasswordField, FileField
 import cloudinary.uploader
+from dentalapp.dao import stats
 from wtforms.validators import ValidationError
 from dentalapp.utils import is_image
+from flask import request
 
 
 class AuthenticatedAdmin(ModelView):
@@ -101,8 +104,17 @@ class UserView(AuthenticatedAdmin):
 
     page_size = 10
 
+class Stats_view(BaseView):
+    @expose('/')
+    def index(self):
+        return self.render('admin/stats.html'
+                           , revenue_day=stats.revenue_by_doctor_day()
+                           , revenue_month=stats.revenue_by_doctor_month()
+                           , revenue_doctor=stats.revenue_by_doctor())
+
 
 
 admin.add_view(MedicineView(Medicine, db.session, name="Thuốc"))
 admin.add_view(ServiceView(Service, db.session, name="Dịch vụ"))
 admin.add_view(UserView(User, db.session, name="Người dùng"))
+admin.add_view(Stats_view(name="Thống kê"))

@@ -1,13 +1,14 @@
 function loadDoctor(date) {
     if (!date) return;
 
-    fetch(`/api/doctors/${date}`, {}).then(res => res.json()).then(data => {
+    fetch(`/api/doctors/${date}`).then(res => res.json()).then(data => {
         let doctorSelect = document.getElementById("doctor-select")
 
         if (data.length > 0) {
             let selected = document.getElementById("selected-doctor");
             selected.textContent = "-- Chọn bác sĩ --";
-            for (doctor of data) {
+
+            for (let doctor of data) {
                 let option = document.createElement('option')
                 option.textContent = doctor["name"];
                 option.id = doctor["id"];
