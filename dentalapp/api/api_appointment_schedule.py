@@ -1,5 +1,5 @@
 from flask import jsonify, Blueprint, request
-from dentalapp.dao import appointment_schedules
+from dentalapp.dao import appointment_schedules, appointment_schedule_invoice
 from datetime import datetime
 
 api_appointment_schedule = Blueprint('api_appointment_schedule', __name__)
@@ -49,16 +49,60 @@ def get_appointment_schedule(date):
 @api_appointment_schedule.route('/api/appointment_schedule/<int:id>/total_services', methods=['GET'])
 def calculate_total_services(id):
     total_services = appointment_schedules.culculated_total_service(id)
-    if total_services:
-        return jsonify({'ok': True, 'total_services': total_services})
-    else:
-        return jsonify({'ok': True, 'message': "Tổng dịch vụ không khả thi"})
+    services_of_appointment = appointment_schedules.get_services_of_appointment(id)
+
+    try:
+        if services_of_appointment:
+            result = []
+            for s in services_of_appointment:
+                result.append(s.service.name)
+
+            return jsonify({
+                'service_list': result,
+                'total_services': total_services or 0,
+            })
+        else:
+            return jsonify({'ok': True, 'message': "Không khả thi"})
+    except Exception as ex:
+        return jsonify({'ok': False, 'error': str(ex)})
 
 
 @api_appointment_schedule.route('/api/appointment_schedule/<int:id>/total_medicines', methods=['GET'])
 def culculate_total_medicines(id):
     total_medicines = appointment_schedules.culculated_total_medicine(id)
-    if total_medicines:
-        return jsonify({'ok': True, 'total_medicines': total_medicines})
-    else:
-        return jsonify({'ok': False, 'message': "Tổng thuốc không khả thi"})
+    medicines_of_appointment = appointment_schedules.get_medicines_of_appointment(id)
+
+    try:
+        if medicines_of_appointment:
+            result = []
+            for m in medicines_of_appointment:
+                result.append({
+                    'quantity_day': m.quantity_day,
+                    'dosage': m.dosage,
+                    'medicine_name': m.medicine.name,
+                })
+
+            return jsonify({
+                'total_medicines': total_medicines or 0,
+                'medicine_list': result,
+            })
+        else:
+            return jsonify({'ok': True, 'message': "Không khả thi"})
+    except Exception as ex:
+        return jsonify({'ok': False, 'error': str(ex)})
+
+
+@api_appointment_schedule.route('/api/appointment_schedule/invoice', methods=['POST'])
+def save_invoice():
+    id = int(request.json.get('id'))
+    total_service = float(request.json.get('total_service'))
+    total_medicine = float(request.json.get('total_medicine'))
+    vat = float(request.json.get('vat'))
+    total_invoice = float(request.json.get('total_invoice'))
+
+    try:
+        appointment_schedule_invoice.saveInvoice(id, total_service, total_medicine, vat, total_invoice)
+
+        return jsonify({'ok': True})
+    except Exception as ex:
+        return jsonify({'ok': False, 'error': str(ex)})

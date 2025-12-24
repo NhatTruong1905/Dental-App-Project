@@ -1,7 +1,7 @@
 from datetime import datetime, time, timedelta
 from dentalapp import db, app
 from dentalapp.models import AppointmentSchedule, Doctor, Service, AppointmentScheduleService, \
-    AppointmentScheduleMedicine
+    AppointmentScheduleMedicine, Medicine
 from sqlalchemy import and_, func, or_
 from dentalapp.dao import appointment_schedule_service
 
@@ -92,3 +92,13 @@ def culculated_total_medicine(appointment_schedule_id):
         AppointmentScheduleMedicine.appointment_schedule_id == appointment_schedule_id).scalar()
 
     return total_medicines or 0
+
+
+def get_services_of_appointment(appointment_schedule_id):
+    return db.session.query(AppointmentScheduleService).filter(
+        AppointmentScheduleService.appointment_schedule_id == appointment_schedule_id).all()
+
+
+def get_medicines_of_appointment(appointment_schedule_id):
+    return db.session.query(AppointmentScheduleMedicine).filter(
+        AppointmentScheduleMedicine.appointment_schedule_id == appointment_schedule_id)
