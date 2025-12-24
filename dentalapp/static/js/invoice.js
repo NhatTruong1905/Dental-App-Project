@@ -3,17 +3,29 @@ function loadAppointmentSuccess(date) {
         let appointmentSelect = document.getElementById("select-appointment")
         appointmentSelect.innerHTML = ""
 
-        if (data.length > 0) {
+        if (data.length > 1) {
             for (let a of data) {
                 let option = document.createElement('option')
                 option.textContent = `Lịch khám lúc ${a["start_time"]} - ${a["patient_name"]} - ${a["patient_phone"]}`
                 option.value = a["id"]
                 appointmentSelect.appendChild(option)
             }
+
             document.getElementById("total-services").textContent = "0 VNĐ";
             document.getElementById("total-medicines").textContent = "0 VNĐ";
             document.getElementById("total-vat").textContent = "0 VNĐ";
             document.getElementById("total-result").textContent = "0 VNĐ";
+        } else if (data.length === 1) {
+            let option = document.createElement('option')
+            option.textContent = `Lịch khám lúc ${data[0]["start_time"]} - ${data[0]["patient_name"]} - ${data[0]["patient_phone"]}`
+            option.value = data[0]["id"]
+            appointmentSelect.appendChild(option)
+
+            calculateTotalServices()
+            calculateTotalMedicines()
+            setTimeout(() => {
+                calculateTotalVatAndResult()
+            }, 50)
         } else {
             let option = document.createElement('option')
             option.textContent = "-- Không có lịch khả dụng --"
@@ -140,7 +152,7 @@ function saveInvoice() {
             alert.classList.remove("alert-error")
             setTimeout(() => {
                 window.location.href = "/";
-            }, 1500);
+            }, 1500)
         } else {
             alert.textContent = "Lỗi: " + (data["error"] || "Lưu không thành công");
             alert.classList.replace("alert-success", "alert-danger");
