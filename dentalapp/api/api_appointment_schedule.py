@@ -2,7 +2,8 @@ from flask import jsonify, Blueprint, request
 from flask_login import current_user
 
 from dentalapp import db
-from dentalapp.dao import appointment_schedules, appointment_schedule_service, appointment_schedule_medicine, treatment_card
+from dentalapp.dao import appointment_schedules, appointment_schedule_service, appointment_schedule_medicine, \
+    treatment_card, appointment_schedule_invoice
 from datetime import datetime
 
 from dentalapp.models import UserRole, Status
@@ -107,6 +108,7 @@ def confirm_appointment_doctor(id):
 
         db.session.commit()
 
+
         return jsonify({'ok': True, "message": "Save success"})
     except Exception as ex:
         return jsonify({"ok": False, "message": str(ex)})
@@ -121,20 +123,24 @@ def calculate_total_services(id):
         if services_of_appointment:
             result = []
             for s in services_of_appointment:
-                result.append(s.service.name)
+                result.append({
+                    "name": s.service.name,
+                    "price": s.service.price
+                })
 
             return jsonify({
+                'ok': True,
                 'service_list': result,
                 'total_services': total_services or 0,
             })
         else:
-            return jsonify({'ok': True, 'message': "Không khả thi"})
+            return jsonify({'ok': False, 'message': "Không khả thi"})
     except Exception as ex:
         return jsonify({'ok': False, 'error': str(ex)})
 
 
 @api_appointment_schedule.route('/api/appointment_schedule/<int:id>/total_medicines', methods=['GET'])
-def culculate_total_medicines(id):
+def calculate_total_medicines(id):
     total_medicines = appointment_schedules.culculated_total_medicine(id)
     medicines_of_appointment = appointment_schedules.get_medicines_of_appointment(id)
 
@@ -143,17 +149,19 @@ def culculate_total_medicines(id):
             result = []
             for m in medicines_of_appointment:
                 result.append({
+                    'price_medicine': m.price_medicine,
                     'quantity_day': m.quantity_day,
                     'dosage': m.dosage,
                     'medicine_name': m.medicine.name,
                 })
 
             return jsonify({
+                'ok': True,
                 'total_medicines': total_medicines or 0,
                 'medicine_list': result,
             })
         else:
-            return jsonify({'ok': True, 'message': "Không khả thi"})
+            return jsonify({'ok': False, 'message': "Không khả thi"})
     except Exception as ex:
         return jsonify({'ok': False, 'error': str(ex)})
 

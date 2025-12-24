@@ -132,7 +132,7 @@ class AppointmentScheduleMedicine(db.Model):
     medicine_id = Column(Integer, ForeignKey("medicine.id", ondelete="CASCADE"))
     price_medicine = Column(Double, nullable=False)
     quantity_day = Column(Integer, nullable=False)
-    dosage = Column(String, nullable=False)
+    dosage = Column(Integer, nullable=False)
 
 class TreatmentCard(db.Model):
     __tablename__ = 'treatment_card'
