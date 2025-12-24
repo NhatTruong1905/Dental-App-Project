@@ -3,87 +3,168 @@ function loadAppointmentSuccess(date) {
         let appointmentSelect = document.getElementById("select-appointment")
         appointmentSelect.innerHTML = ""
 
-        if (data.length > 0) {
+        if (data.length > 1) {
             for (let a of data) {
                 let option = document.createElement('option')
-                option.textContent = `Lịch khám ${a["start_time"]}`
+                option.textContent = `Lịch khám lúc ${a["start_time"]} - ${a["patient_name"]} - ${a["patient_phone"]}`
                 option.value = a["id"]
-                option.dataset.patientName = a["patient_name"]
-                option.dataset.patientPhone = a["patient_phone"]
-                // optionPatient.textContent = `${a["patient_name"]} - ${a["patient_phone"]}`
                 appointmentSelect.appendChild(option)
             }
+
+            document.getElementById("total-services").textContent = "0 VNĐ";
+            document.getElementById("total-medicines").textContent = "0 VNĐ";
+            document.getElementById("total-vat").textContent = "0 VNĐ";
+            document.getElementById("total-result").textContent = "0 VNĐ";
+        } else if (data.length === 1) {
+            let option = document.createElement('option')
+            option.textContent = `Lịch khám lúc ${data[0]["start_time"]} - ${data[0]["patient_name"]} - ${data[0]["patient_phone"]}`
+            option.value = data[0]["id"]
+            appointmentSelect.appendChild(option)
+
+            calculateTotalServices()
+            calculateTotalMedicines()
+            setTimeout(() => {
+                calculateTotalVatAndResult()
+            }, 50)
         } else {
             let option = document.createElement('option')
-            let patient = document.getElementById("patient-info")
             option.textContent = "-- Không có lịch khả dụng --"
-            patient.textContent = "Không có bệnh nhân"
             appointmentSelect.appendChild(option)
+            document.getElementById("total-services").textContent = "0 VNĐ";
+            document.getElementById("total-medicines").textContent = "0 VNĐ";
+            document.getElementById("total-vat").textContent = "0 VNĐ";
+            document.getElementById("total-result").textContent = "0 VNĐ";
         }
     })
 }
 
-function getPatientFromAppointment() {
-    let appointmentSelect = document.getElementById("select-appointment")
-    let patient = document.getElementById("patient-info")
+function calculateTotalServices() {
+    let id = document.getElementById("select-appointment").value
+    let totalServices = document.getElementById("total-services")
+    let servicesAppointment = document.getElementById("select-services-list")
 
-    patient.addEventListener('appointmentSelect', function () {
-        let selectApp = this.value
-        let options = appointmentSelect.options
+    totalServices.innerHTML = ""
+    servicesAppointment.innerHTML = ""
 
-        selectedPatient.innerHTML = ""
-
-        for (let i = 0; i < options.length; i++) {
-            if (options[i].value === selectApp) {
-                selectedPatient.value = options[i].id
-                break
+    return fetch(`/api/appointment_schedule/${id}/total_services`).then(res => res.json()).then(data => {
+        if (data["total_services"] === 0 || !data["total_services"] || data["service_list"].length === 0) {
+            totalServices.textContent = "Không có giá dịch vụ"
+            let option = document.createElement('option')
+            option.textContent = "Không có dịch vụ khả dụng"
+            servicesAppointment.appendChild(option)
+        } else {
+            totalServices.textContent = data["total_services"].toLocaleString('vi-VN') + " VNĐ"
+            for (let s of data['service_list']) {
+                let option = document.createElement('option')
+                option.textContent = s
+                servicesAppointment.appendChild(option)
             }
         }
     })
 }
 
-// function loadPatients(phone) {
-//     if (phone.length < 4) return
-//     date = document.getElementById("selected-appointment")
-//
-//     fetch(`/api/patients/${date}/${phone}`, {}).then(res => res.json()).then(data => {
-//         let patientList = document.getElementById('patient-list')
-//
-//         patientList.innerHTML = ""
-//
-//         if (data.length > 0) {
-//             for (let patient of data) {
-//                 let option = document.createElement('option')
-//                 option.value = `${patient['name']} - ${patient['phone']}`
-//                 option.dataset.id = patient['id']
-//                 patientList.appendChild(option)
-//             }
-//
-//         } else {
-//             console.info("Không tải được danh sách bệnh nhân")
-//         }
-//     }).catch(err => console.error("Lỗi API", err))
-// }
-//
-// function getPhone() {
-//     let phone = document.getElementById('patient-search')
-//     let patientList = document.getElementById('patient-list')
-//     let input = document.getElementById('patient-id-hidden')
-//
-//     phone.addEventListener('input', function () {
-//         let inputValue = this.value
-//         let options = patientList.options
-//
-//         input.innerHTML = ""
-//
-//         for (let i = 0; i < options.length; i++) {
-//             if (options[i].value === inputValue) {
-//                 input.value = options[i].dataset.id
-//                 break
-//             }
-//         }
-//     })
-// }
+function calculateTotalMedicines() {
+    let id = document.getElementById("select-appointment").value
+    let totalMedicines = document.getElementById("total-medicines")
+    let medicinesAppointment = document.getElementById("select-medicines-list")
+
+    totalMedicines.innerHTML = ""
+    medicinesAppointment.innerHTML = ""
+
+
+    return fetch(`/api/appointment_schedule/${id}/total_medicines`).then(res => res.json()).then(data => {
+        if (data["total_medicines"] === 0 || !data["total_medicines"] || data['total_medicines'] === 0) {
+            totalMedicines.textContent = "Không có giá thuốc"
+            let option = document.createElement('option')
+            option.textContent = "Không có dịch vụ khả dụng"
+            medicinesAppointment.appendChild(option)
+        } else {
+            totalMedicines.textContent = data["total_medicines"].toLocaleString('vi-VN') + " VNĐ"
+            for (let m of data["medicine_list"]) {
+                let option = document.createElement('option')
+                option.textContent = `${m["medicine_name"]} - Số lượng: ${m["quantity_day"]} - Liều lượng: ${m["dosage"]}`
+                medicinesAppointment.appendChild(option)
+            }
+        }
+    })
+}
+
+function calculateTotalVatAndResult() {
+    let totalSerivcesStr = document.getElementById("total-services").textContent.replace(/[^\d]/g, '') || 0
+    let totalMedicinesStr = document.getElementById("total-medicines").textContent.replace(/[^\d]/g, '') || 0
+
+    let services = parseFloat(totalSerivcesStr)
+    let medicines = parseFloat(totalMedicinesStr)
+
+    let totalVAT = (services + medicines) * 0.1
+    let totalResult = services + medicines + totalVAT
+
+    let totalVatFinal = document.getElementById("total-vat")
+    let totalResultFinal = document.getElementById("total-result")
+    totalVatFinal.textContent = totalVAT.toLocaleString("vi-VN") + " VNĐ"
+    totalResultFinal.textContent = totalResult.toLocaleString("vi-VN") + " VNĐ"
+}
+
+async function finalResult() {
+    await calculateTotalServices()
+    await calculateTotalMedicines()
+
+    calculateTotalVatAndResult()
+}
+
+
+function saveInvoice() {
+    let total_service = parseFloat(document.getElementById("total-services").textContent.replace(/[^\d]/g, '')) || 0
+    let total_medicine = parseFloat(document.getElementById("total-medicines").textContent.replace(/[^\d]/g, '')) || 0
+    let vat = parseFloat(document.getElementById("total-vat").textContent.replace(/[^\d]/g, '')) || 0
+    let result = parseFloat(document.getElementById("total-result").textContent.replace(/[^\d]/g, '')) || 0
+
+    let selectAppointment = document.getElementById("select-appointment");
+    let id_appointment_schedule = parseInt(selectAppointment.value)
+
+    if (!id_appointment_schedule || selectAppointment.selectedIndex === 0) {
+        let alertBox = document.getElementById("alert-appointment");
+        alertBox.textContent = "Vui lòng chọn lịch khám trước khi lưu!";
+        alertBox.classList.remove("d-none");
+        alertBox.classList.add("alert-danger");
+        return;
+    }
+
+    fetch(`/api/appointment_schedule/invoice`, {
+        method: "POST",
+        body: JSON.stringify({
+            'id': id_appointment_schedule,
+            'total_service': total_service,
+            'total_medicine': total_medicine,
+            'vat': vat,
+            'total_invoice': result
+        }),
+        headers: {
+            "Content-Type": "application/json"
+        }
+    }).then(res => res.json()).then(data => {
+        let alert = document.getElementById("alert-appointment")
+
+        if (data["ok"]) {
+            alert.textContent = "Lưu hóa đơn thành công"
+            alert.classList.replace("alert-danger", "alert-success");
+            alert.classList.remove("d-none");
+            alert.classList.remove("alert-error")
+            setTimeout(() => {
+                window.location.href = "/";
+            }, 1500)
+        } else {
+            alert.textContent = "Lỗi: " + (data["error"] || "Lưu không thành công");
+            alert.classList.replace("alert-success", "alert-danger");
+            alert.classList.remove("d-none");
+        }
+    }).catch(err => {
+        let alert = document.getElementById("alert-appointment");
+        alert.textContent = "Không thể kết nối đến máy chủ!";
+        alert.classList.remove("d-none");
+        console.error("error:", err);
+    })
+}
 
 
 

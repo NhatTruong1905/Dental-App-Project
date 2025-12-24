@@ -1,6 +1,7 @@
 from datetime import datetime, time, timedelta
 from dentalapp import db, app
-from dentalapp.models import AppointmentSchedule, Doctor, Service, Patient, UserRole, Status, User
+from dentalapp.models import AppointmentSchedule, Doctor, Service, AppointmentScheduleService, \
+    AppointmentScheduleMedicine, Medicine, UserRole, Patient, Status
 from sqlalchemy import and_, func, or_
 from dentalapp.dao import appointment_schedule_service
 from flask_login import current_user
@@ -57,25 +58,11 @@ def save_appointment_schedule(doctor_id, patient_id, start_time, service_id):
     db.session.commit()
 
 
-def find_patient(date_success, phone=None):
-    date_success = datetime.strptime(date_success, '%Y-%m-%d').date()
-
-    query = db.session.query(AppointmentSchedule.patient_id).where(
-        and_(
-            AppointmentSchedule.status == "SUCCESS",
-            func.date(AppointmentSchedule.start_time) == date_success)).subquery()
-
-    patients = db.session.query(Patient).join(query, query.c.patient_id == Patient.id).where(
-        Patient.phone == phone).all()
-
-    return patients
-
-
 def load_appointment_schedules_success(check_date):
     check_date = datetime.strptime(check_date, '%Y-%m-%d').date()
     query = db.session.query(AppointmentSchedule).filter(
         and_(
-            AppointmentSchedule.status == "SUCCESS",
+            AppointmentSchedule.status == "COMPLETED",
             func.date(AppointmentSchedule.start_time) == check_date)).all()
 
     return query
@@ -118,3 +105,38 @@ def get_appointment_schedule(id):
 
     return None
 
+def load_doctors(check_date):
+    date = datetime.strptime(check_date, '%Y-%m-%d').date()
+
+    query = db.session.query(AppointmentSchedule.doctor_id).where(
+        func.date(AppointmentSchedule.start_time) == date).group_by(AppointmentSchedule.doctor_id).having(
+        func.count(AppointmentSchedule.doctor_id) >= 5).subquery()
+
+    doctors = db.session.query(Doctor).outerjoin(query, query.c.doctor_id == Doctor.id).where(
+        query.c.doctor_id.is_(None)).all()
+    return doctors
+
+
+def culculated_total_service(appointment_schedule_id):
+    total_services = db.session.query(func.sum(AppointmentScheduleService.price_service)).filter(
+        AppointmentScheduleService.appointment_schedule_id == appointment_schedule_id).scalar()
+
+    return total_services or 0
+
+
+def culculated_total_medicine(appointment_schedule_id):
+    total_medicines = db.session.query(func.sum(
+        AppointmentScheduleMedicine.price_medicine * AppointmentScheduleMedicine.quantity_day * AppointmentScheduleMedicine.dosage)).filter(
+        AppointmentScheduleMedicine.appointment_schedule_id == appointment_schedule_id).scalar()
+
+    return total_medicines or 0
+
+
+def get_services_of_appointment(appointment_schedule_id):
+    return db.session.query(AppointmentScheduleService).filter(
+        AppointmentScheduleService.appointment_schedule_id == appointment_schedule_id).all()
+
+
+def get_medicines_of_appointment(appointment_schedule_id):
+    return db.session.query(AppointmentScheduleMedicine).filter(
+        AppointmentScheduleMedicine.appointment_schedule_id == appointment_schedule_id)
