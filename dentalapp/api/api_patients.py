@@ -24,7 +24,6 @@ def delete_patient(id):
 @api_patient_bp.route('/api/patients', methods=["GET"])
 @permission()
 def get_patients():
-    patients = []
     if current_user.user_role in [UserRole.ADMIN, UserRole.STAFF]:
         patients = get_list_patients(full=True)
     else:

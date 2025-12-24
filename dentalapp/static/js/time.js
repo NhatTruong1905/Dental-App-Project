@@ -26,7 +26,9 @@ function resetTime() {
 
 
 function loadTime(select) {
-    let date = document.getElementById("date").value;
+    let date = document.getElementById("select-date");
+    date = date.options[date.selectedIndex].value;
+    console.log(date);
     let doctor_id = select.options[select.selectedIndex].id;
     resetTime();
     fetch(`/api/doctors/${doctor_id}/${date}/times`)

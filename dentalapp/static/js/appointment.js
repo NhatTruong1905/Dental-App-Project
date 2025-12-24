@@ -8,7 +8,9 @@ function handleAppointment(time) {
     let service = document.getElementById("select-service");
     service = service.options[service.selectedIndex];
 
-    let date = document.getElementById("date").value;
+    let date = document.getElementById("select-date");
+    date = date.options[date.selectedIndex].value;
+    console.log(date);
 
     let doctor = document.getElementById("doctor-select");
     doctor = doctor.options[doctor.selectedIndex]
@@ -33,33 +35,28 @@ function handleAppointment(time) {
         }
     }).then(res => res.json()).then(data => {
         console.log(data);
-        if (data["ok"]) {
-            let alertSuccess = document.getElementById("alert-appointment");
-            if (alertSuccess) {
-                alertSuccess.textContent = "Đặt lịch khám thành công!";
-                alertSuccess.classList.remove("alert-error")
-                alertSuccess.classList.remove("d-none")
-                window.location.href = "/";
-            }
-            else {
-                console.log("element not found");
-            }
-        }
-        else {
-            let alertError = document.getElementById("alert-appointment");
-            if (alertError) {
-                alertError.textContent = "Đặt lịch khám không thành công vui lòng thử lại sau!";
-                alertError.classList.add("alert-error")
-                alertError.classList.remove("d-none")
-                window.location.href = "/";
-            }
-            else {
-                console.log("element not found");
-            }
-        }
+        window.location.href = data["ok"] ? "/?success=1" : "/?success=0";
     })
     
 
     alert.classList.add("d-none");
     console.log("ok");
+}
+
+
+function deleteAppointment(id) {
+    if (confirm("Bạn có chắc chắn xoá lịch khám này không?") === false)
+        return;
+
+    fetch(`/api/appointment_schedule/${id}`, {
+        method: "DELETE"
+    }).then(res => res.json()).then(data => {
+        console.log(data);
+        if (data["ok"]) {
+            let appointment = document.getElementById(`appointment${id}`);
+            appointment.style.display = "none";
+        }
+        else
+            console.log("Can not delete appointment");
+    })
 }

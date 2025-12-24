@@ -7,7 +7,7 @@ api_services_bp = Blueprint("api_services", __name__)
 @api_services_bp.route("/api/services", methods=["GET"])
 @permission()
 def get_services():
-    services = load_services()
+    services = load_services(page=None)
 
     services_json = [
         {

@@ -3,7 +3,7 @@
 {% block title %}Trang chủ{% endblock %}
 
 {% block content %}
-<div id="alert-appointment" class="alert alert-success text-center mb-4 d-none"></div>
+<div id="alert-home" class="alert alert-success text-center mb-4 d-none"></div>
 <div class="container mt-4">
     <div class="row justify-content-center">
         <div class="col-lg-10">
@@ -117,4 +117,23 @@
 
     </div>
 </div>
+<script>
+    document.addEventListener("DOMContentLoaded", () => {
+        const params = new URLSearchParams(window.location.search);
+        const alertHome = document.getElementById("alert-home");
+
+        if (params.get("success")) {
+            if (params.get("success") === "1") {
+                alertHome.textContent = "Đặt lịch khám thành công!";
+                alertHome.classList.remove("alert-danger");
+            }
+            else {
+                alertHome.textContent = "Lỗi hệ thống vui lòng thử lại sau!";
+                alertHome.classList.add("alert-danger");
+            }
+            alertHome.classList.remove("d-none");
+            history.replaceState({}, "", "/");
+        }
+    });
+</script>
 {% endblock %}

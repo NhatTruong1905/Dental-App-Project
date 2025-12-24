@@ -27,6 +27,11 @@
                             <li><a class="dropdown-item" href="/admin" target="_blank">Trang quản trị</a></li>
                         {% endif %}
                         <li><a class="dropdown-item" href="/user">Thông tin tài khoản</a></li>
+                        {% if current_user.user_role.value in [2, 3] %}
+                        <li><a class="dropdown-item" href="/appointments">Lịch khám của tôi</a></li>
+                        {% else %}
+                        <li><a class="dropdown-item" href="/appointments">Danh sách lịch khám</a></li>
+                        {% endif %}
                         <li><a class="dropdown-item" href="/password">Đổi mật khẩu</a></li>
                         <li>
                             <hr class="dropdown-divider">
