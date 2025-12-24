@@ -1,0 +1,119 @@
+{% extends 'layout/base.html' %}
+
+{% block content %}
+{% if appointment %}
+    <h2 class="text-center text-primary fw-bold mb-4">Khám Bệnh</h2>
+
+    <div class="card shadow-sm mb-4">
+        <div class="card-header fw-bold">1. Thông tin bệnh nhân</div>
+        <div class="card-body row g-3">
+            <div class="col-md-6">
+                <label class="form-label">Họ tên</label>
+                <input type="text" class="form-control" value="{{ appointment.patient.name }}">
+            </div>
+            <div class="col-md-3">
+                <label class="form-label">Ngày sinh</label>
+                <input type="date" class="form-control" value="{{ appointment.patient.birthday }}">
+            </div>
+            <div class="col-md-6">
+                <label class="form-label">Số điện thoại</label>
+                <input type="text" class="form-control" value="{{ appointment.patient.phone }}">
+            </div>
+        </div>
+    </div>
+
+    <div class="card shadow-sm mb-4">
+        <div class="card-header fw-bold">2. Thông tin khám</div>
+        <div class="card-body row g-3">
+            <div class="col-md-3">
+                <label class="form-label">Ngày khám</label>
+                <input type="date" class="form-control" value="{{ appointment.start_time.date() }}">
+            </div>
+            <div class="col-md-3">
+                <label class="form-label">Giờ khám</label>
+                <input type="time" class="form-control" value="{{ appointment.start_time.time() }}">
+            </div>
+            <div class="col-md-3">
+                <label class="form-label">Bác sĩ</label>
+                <input type="text" class="form-control" value="{{ appointment.doctor.user.name }}">
+            </div>
+        </div>
+    </div>
+
+    <div class="card shadow-sm mb-4">
+        <div class="card-header fw-bold">3. Dịch vụ khám</div>
+        <div class="card-body">
+            <table class="table table-bordered align-middle">
+                <thead class="table-light">
+                    <tr>
+                        <th>Tên dịch vụ</th>
+                        <th>Giá</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody data-total="{{ service.price }}" id="list-services">
+                    <tr id="tr-default">
+                        <td>{{ service.name }}</td>
+                        <td data-price="{{ service.price }}">{{ "{:,.0f}".format(service.price) }} ₫</td>
+                        <td class="d-flex justify-content-center">Mặc định</td>
+                    </tr>
+                </tbody>
+            </table>
+            <select id="doctor-select-service" class="form-select" onchange="addService()">
+                <option value="" selected disabled>Thêm dịch vụ</option>
+                {% for s in services %}
+                    {% if service.id != s.id %}
+                    <option id="option-service-{{ s.id }}" data-name="{{ s.name }}" data-price="{{ s.price }}">{{ s.name }} - {{ "{:,.0f}".format(s.price) }} ₫</option>
+                    {% endif %}
+                {% endfor %}
+            </select>
+            <input id="total-services" type="text" class="form-control mt-2" value="Tổng tiền dịch vụ: {{ '{:,.0f}'.format(service.price) }} ₫" readonly>
+        </div>
+    </div>
+
+    <div class="card shadow-sm mb-4">
+        <div class="card-header fw-bold">4. Thuốc kê đơn</div>
+        <div class="card-body">
+            <table class="table table-bordered align-middle">
+                <thead class="table-light">
+                <tr>
+                    <th>Tên thuốc</th>
+                    <th>Giá</th>
+                    <th>Liều dùng (viên/ngày)</th>
+                    <th>Số ngày</th>
+                    <th></th>
+                </tr>
+                </thead>
+                <tbody data-total="0" id="list-medicines">
+                </tbody>
+            </table>
+
+            <select id="doctor-select-medicine" class="form-select" onchange="addMedicine();">
+            <option value="" selected disabled>Thêm thuốc</option>
+                {% for medicine in medicines %}
+                    <option id="option-medicine-{{ medicine.id }}" data-name="{{ medicine.name }}" data-price="{{ medicine.price }}">{{ medicine.name }} - {{ "{:,.0f}".format(medicine.price) }} ₫</option>
+                {% endfor %}
+            </select>
+            <input id="total-medicines" type="text" class="form-control mt-2" value="Tổng tiền thuốc: 0 ₫" readonly>
+        </div>
+    </div>
+
+    <div class="card shadow-sm mb-4">
+        <div class="card-header fw-bold">5. Ghi chú của bác sĩ</div>
+        <div class="card-body">
+            <label class="form-label">Chẩn đoán và lên hướng điều trị</label>
+            <textarea id="doctor-note" class="form-control mb-3" rows="2"></textarea>
+        </div>
+    </div>
+
+    <div class="text-center">
+        <button class="btn btn-success me-2" onclick="confirmAppointment({{ appointment.id }})">Xác nhận</button>
+        <button class="btn btn-danger">Hủy</button>
+    </div>
+{% else %}
+    <div class="alert alert-danger text-center mt-4">
+        <i class="fa-solid fa-circle-exclamation me-2"></i>Lịch khám không hợp lệ!
+    </div>
+{% endif %}
+
+{% endblock %}

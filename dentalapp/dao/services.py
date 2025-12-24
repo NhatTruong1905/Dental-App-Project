@@ -7,8 +7,9 @@ def load_services(kw=None, page=1):
     if kw:
         query = query.filter(Service.name.contains(kw))
 
-    start = (page - 1) * app.config['PAGE_SIZE']
-    query = query.slice(start, start + app.config['PAGE_SIZE'])
+    if page:
+        start = (page - 1) * app.config['PAGE_SIZE']
+        query = query.slice(start, start + app.config['PAGE_SIZE'])
     return query.all()
 
 def count_services():

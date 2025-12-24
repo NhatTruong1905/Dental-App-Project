@@ -1,0 +1,80 @@
+{% extends 'layout/base.html' %}
+
+{% block content %}
+
+<div class="container mt-5">
+
+    <div class="text-center mb-4">
+        <h2 class="fw-bold text-info">Lịch khám của tôi</h2>
+    </div>
+
+    <form class="d-flex gap-2 mb-5 w-50 mx-auto" method="get" action="/appointments">
+        <input class="form-control" type="date" placeholder="Chọn ngày" name="date"
+               value="{{ request.args.get('date', '') }}">
+        <button class="btn btn-primary px-4" type="submit">Tìm</button>
+    </form>
+
+    {% if appointments %}
+    <div class="row">
+        {% for a in appointments %}
+        <div id="appointment{{ a.id }}" class="col-lg-4 col-md-6 col-sm-12 p-3">
+
+            <div class="card shadow-sm border-0 h-100 rounded-4">
+                {% if current_user.user_role.value != 3 %}
+                <button type="button" class="btn btn-sm btn-danger position-absolute top-0 end-0 m-2 "
+                        onclick="deleteAppointment({{ a.id }})" title="Xóa hồ sơ"><i class="fa-solid fa-xmark"></i>
+                </button>
+                {% endif %}
+
+                <div class="card-body d-flex flex-column">
+                    <h5 class="fw-bold mb-2">Bệnh nhân: {{ a.patient.name }}</h5>
+                    <p class="fw-semibold fs-7 mb-3">Bác sĩ: {{ a.doctor.user.name }}</p>
+                    <p class="fw-semibold fs-7 mb-3">Thời gian khám: {{ a.start_time.strftime("%H giờ %M phút, ngày
+                        %d/%m/%Y") }}</p>
+                    {% set status = a.status.value %}
+                    {% if status == 0 %}
+                    {% set status = "Chưa khám" %}
+                    {% elif status == 1 %}
+                    {% set status = "Đang trong quá trình khám" %}
+                    {% elif status == 2 %}
+                    {% set status = "Khám xong" %}
+                    {% elif status == 3 %}
+                    {% set status = "Hoàn tất khám và thanh toán" %}
+                    {% endif %}
+                    <p class="fw-semibold fs-7 mb-3">Trạng thái: {{ status }}</p>
+                </div>
+
+                <div class="d-flex justify-content-center gap-3 mt-5">
+                    <div class="d-flex justify-content-center gap-2">
+                        <a href="/appointments/{{ a.id }}" class="btn btn-primary btn-sm">Xem</a>
+                    </div>
+                    {% if current_user.user_role.value == 3 %}
+                    <div class="d-flex justify-content-center gap-2">
+                        <a href="/appointments_doctor/{{ a.id }}" class="btn btn-primary btn-sm">Khám</a>
+                    </div>
+                    {% endif %}
+                </div>
+
+            </div>
+
+        </div>
+        {% endfor %}
+    </div>
+    <div>
+        <ul class="pagination">
+            <li class="page-item"><a class="page-link" href="#"><<</a></li>
+            {% for page in range(1, pages + 1) %}
+            <li class="page-item"><a class="page-link" href="/appointments?page={{ page }}">{{ page }}</a></li>
+            {% endfor %}
+            <li class="page-item"><a class="page-link" href="#">>></a></li>
+        </ul>
+    </div>
+    {% else %}
+    <div class="alert alert-danger text-center mt-4">
+        <i class="fa-solid fa-circle-exclamation me-2"></i>
+        Không có lịch khám nào!
+    </div>
+    {% endif %}
+
+</div>
+{% endblock %}

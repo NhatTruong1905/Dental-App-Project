@@ -1,6 +1,12 @@
 from flask import jsonify, Blueprint, request
-from dentalapp.dao import appointment_schedules, appointment_schedule_invoice
+from flask_login import current_user
+
+from dentalapp import db
+from dentalapp.dao import appointment_schedules, appointment_schedule_service, appointment_schedule_medicine, treatment_card
 from datetime import datetime
+
+from dentalapp.models import UserRole, Status
+from dentalapp.utils import permission
 
 api_appointment_schedule = Blueprint('api_appointment_schedule', __name__)
 
@@ -44,6 +50,66 @@ def get_appointment_schedule(date):
             return jsonify({'ok': False, 'message': "Không có danh sách lịch khám"})
     except Exception as ex:
         return jsonify({'ok': False, 'error': str(ex)})
+
+
+
+@api_appointment_schedule.route("/api/appointment_schedule/<int:id>", methods=["DELETE"])
+@permission({
+    'roles': [UserRole.DOCTOR],
+    'access': False
+})
+def delete_appointment_schedule(id):
+    try:
+        appointment = appointment_schedules.get_appointment_schedule(id)
+        if not appointment:
+            return jsonify({'ok': False, 'error': 'appointment not found'})
+
+        can_delete = False
+        if current_user.user_role in [UserRole.ADMIN, UserRole.STAFF]:
+            can_delete = True
+        elif current_user.user_role == UserRole.USER and current_user.id == appointment.patient.user_id:
+            can_delete = True
+
+        if not can_delete:
+            return jsonify({"ok": False, "error": "You can't delete this appointment"})
+
+        res = appointment_schedules.delete_appointment_schedules(id)
+        return jsonify({
+            'ok': True,
+            'data': {
+                'id': res.id,
+                'start_time': res.start_time.strftime('%Y-%m-%d %H:%M:%S')
+            },
+            'message': 'Delete success'
+        })
+    except Exception as ex:
+        return jsonify({"ok": False, "error": str(ex)})
+
+@api_appointment_schedule.route("/api/appointment_doctor/<int:id>", methods=["POST"])
+@permission({
+    'roles': [UserRole.DOCTOR],
+    'access': True
+})
+def confirm_appointment_doctor(id):
+    services = request.json.get('services')
+    medicines = request.json.get('medicines')
+    note = request.json.get('note')
+
+    try:
+        for service in services:
+             appointment_schedule_service.save_appointment_schedule_service(**service)
+        for medicine in medicines:
+            appointment_schedule_medicine.save_appointment_schedule_medicine(**medicine)
+        treatment_card.save_treatment_card(**note)
+
+        appointment = appointment_schedules.get_appointment_schedule(id)
+        appointment.status = Status.COMPLETED
+
+        db.session.commit()
+
+        return jsonify({'ok': True, "message": "Save success"})
+    except Exception as ex:
+        return jsonify({"ok": False, "message": str(ex)})
 
 
 @api_appointment_schedule.route('/api/appointment_schedule/<int:id>/total_services', methods=['GET'])

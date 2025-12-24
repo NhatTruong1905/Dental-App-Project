@@ -1,61 +1,44 @@
 {% extends 'layout/base.html' %}
 
 {% block content %}
-    <h1 class="text-info mt-5 text-center fw-bold">Đội ngũ bác sĩ</h1>
-    <p class="text-center text-muted mb-4">Các chuyên gia Răng – Hàm – Mặt giàu kinh nghiệm</p>
+<h1 class="text-info mt-5 text-center fw-bold">Đội ngũ bác sĩ</h1>
+<p class="text-center text-muted mb-4">Các chuyên gia Răng – Hàm – Mặt giàu kinh nghiệm</p>
 
-    <form class="d-flex gap-2 mb-5 w-50 mx-auto" method="get" action="/doctors">
-        <input class="form-control" type="text" placeholder="Tìm bác sĩ..." name="kw" value="{{ request.args.get('kw', '') }}">
-        <button class="btn btn-primary px-4" type="submit">Tìm</button>
-    </form>
+<form class="d-flex gap-2 mb-5 w-50 mx-auto" method="get" action="/doctors">
+    <input class="form-control" type="text" placeholder="Tìm bác sĩ..." name="kw"
+           value="{{ request.args.get('kw', '') }}">
+    <button class="btn btn-primary px-4" type="submit">Tìm</button>
+</form>
 
-    {% if doctors %}
-        <div class="row justify-content-center">
-            {% for d in doctors %}
-                <div class="col-lg-4 col-md-6 col-12 p-3">
-                    <div class="card h-100 shadow-sm doctor-card">
-                        <img src="{{ d.user.avatar }}" alt="{{ d.user.name }}" class="card-img-top" style="height: 260px; object-fit: cover;">
+{% if doctors %}
+<div class="row justify-content-center">
+    {% for d in doctors %}
+    <div class="col-lg-4 col-md-6 col-12 p-3">
+        <div class="card h-100 shadow-sm doctor-card">
+            <img src="{{ d.user.avatar }}" alt="{{ d.user.name }}" class="card-img-top"
+                 style="height: 260px; object-fit: cover;">
 
-                        <div class="card-body text-center">
-                            <h5 class="card-title fw-bold mb-1">Bác sĩ: {{ d.user.name }}</h5>
-                            <p class="text-primary fw-semibold mb-2">Chuyên ngành: {{ d.major }}</p>
-                            <p class="text-muted mb-3">Số điện thoại: {{ d.user.phone }}</p>
-                        </div>
-                    </div>
-                </div>
-            {% endfor %}
-
+            <div class="card-body text-center">
+                <h5 class="card-title fw-bold mb-1">Bác sĩ: {{ d.user.name }}</h5>
+                <p class="text-primary fw-semibold mb-2">Chuyên ngành: {{ d.major }}</p>
+                <p class="text-muted mb-3">Số điện thoại: {{ d.user.phone }}</p>
+            </div>
         </div>
-<ul class="pagination justify-content-center" id="pagination"></ul>
-    {% else %}
-        <div class="alert alert-danger mt-3 text-center">
-            Không có bác sĩ nào!
-        </div>
-    {% endif %}
+    </div>
+    {% endfor %}
 
-<script>
-    let currentPage = 1;
-    totalPages = Math.ceil({{ count / config.PAGE_SIZE }})
+</div>
+<ul class="pagination">
+    <li class="page-item"><a class="page-link" href="#"><<</a></li>
+    {% for page in range(1, pages + 1) %}
+    <li class="page-item"><a class="page-link" href="/doctors?page={{ page }}">{{ page }}</a></li>
+    {% endfor %}
+    <li class="page-item"><a class="page-link" href="#">>></a></li>
+</ul>
+{% else %}
+<div class="alert alert-danger mt-3 text-center">
+    Không có bác sĩ nào!
+</div>
+{% endif %}
 
-
-    document.addEventListener("click", (e) => {
-        if (!e.target.classList.contains("page-link")) return;
-
-        const value = e.target.dataset.page;
-
-        if (value === "prev" && currentPage > 1) {
-            currentPage--;
-        } else if (value === "next" && currentPage < totalPages) {
-            currentPage++;
-        } else if (!isNaN(value)) {
-            currentPage = parseInt(value);
-        }
-
-        renderPaginationUI("/doctors", Math.min(totalPages, 5), totalPages);
-    });
-
-    document.addEventListener("DOMContentLoaded", () => {
-        renderPaginationUI("/doctors", Math.min(totalPages, 5), totalPages);
-    })
-</script>
 {% endblock %}

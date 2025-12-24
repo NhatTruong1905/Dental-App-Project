@@ -1,0 +1,55 @@
+{% extends 'layout/base.html' %}
+
+{% block content %}
+<div class="container mt-5">
+    <h2 class="text-center text-info fw-bold mb-4">Chi tiết lịch khám</h2>
+
+    {% if appointment %}
+    <div class="row justify-content-center">
+        <div class="col-lg-6 col-md-8 col-sm-12">
+            <div class="card shadow-lg border-0 rounded-4">
+                <div class="card-body p-4">
+
+                    <h4 class="text-center fw-bold mb-3">Bệnh nhân: {{ appointment.patient.name }}</h4>
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item"><strong>Lịch hẹn với bác sĩ: </strong>{{ appointment.doctor.user.name }}</li>
+                        <li class="list-group-item"><strong>Số điện thoại: </strong>{{ appointment.patient.phone }}</li>
+                        <li class="list-group-item"><strong>Ngày sinh: </strong>{{ appointment.patient.birthday.strftime("%d/%m/%Y") }}</li>
+                        <li class="list-group-item"><strong>Địa chỉ: </strong>{{ appointment.patient.address }}</li>
+                        <li class="list-group-item"><strong>Thời gian khám: </strong>{{ appointment.start_time.strftime("%H giờ %M phút, ngày %d/%m/%Y") }}</li>
+                        <li class="list-group-item">
+                            <strong>Dịch vụ:</strong>
+                            {% if appointment.appointment_schedule_services %}
+                                <ul class="mt-2 ps-3">
+                                    {% for s in appointment.appointment_schedule_services %}
+                                        <li class="mb-1">{{ s.service.name }} - {{ "{:,.0f}".format(s.price_service) }} VNĐ</li>
+                                    {% endfor %}
+                                </ul>
+                            {% else %}
+                                <span class="text-muted">Không có dịch vụ</span>
+                            {% endif %}
+                        </li>
+
+                        {% set status = appointment.status.value %}
+                        {% if status == 0 %}
+                            {% set status_text = "Chưa khám" %}
+                        {% elif status == 1 %}
+                            {% set status_text = "Đang trong quá trình khám" %}
+                        {% else %}
+                            {% set status_text = "Hoàn thành" %}
+                        {% endif %}
+                        <li class="list-group-item"><strong>Trạng thái: </strong><span>{{ status_text }}</span></li>
+                        <li class="list-group-item"><strong>Tiền sử bệnh án: </strong>{{ appointment.patient.medical_history or "Không có" }}</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% else %}
+    <div class="alert alert-danger text-center mt-4">
+        <i class="fa-solid fa-circle-exclamation me-2"></i>
+        Lịch khám này không tồn tại!
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

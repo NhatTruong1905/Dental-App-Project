@@ -40,7 +40,13 @@
         {% endfor %}
     </div>
     <div>
-  <ul class="pagination justify-content-center" id="pagination"></ul>
+<ul class="pagination">
+    <li class="page-item"><a class="page-link" href="#"><<</a></li>
+    {% for page in range(1, pages + 1) %}
+    <li class="page-item"><a class="page-link" href="/services?page={{ page }}">{{ page }}</a></li>
+    {% endfor %}
+    <li class="page-item"><a class="page-link" href="#">>></a></li>
+</ul>
 </div>
     {% else %}
     <div class="alert alert-danger text-center mt-4">
@@ -50,30 +56,4 @@
     {% endif %}
 
 </div>
-<script>
-    let currentPage = 1;
-    totalPages = Math.ceil({{ count / config.PAGE_SIZE }})
-
-
-    document.addEventListener("click", (e) => {
-        if (!e.target.classList.contains("page-link")) return;
-
-        const value = e.target.dataset.page;
-
-        if (value === "prev" && currentPage > 1) {
-            currentPage--;
-        } else if (value === "next" && currentPage < totalPages) {
-            currentPage++;
-        } else if (!isNaN(value)) {
-            currentPage = parseInt(value);
-        }
-
-        renderPaginationUI("/services", Math.min(totalPages, 5), totalPages);
-    });
-
-    document.addEventListener("DOMContentLoaded", () => {
-        renderPaginationUI("/services", Math.min(totalPages, 5), totalPages);
-    })
-
-</script>
 {% endblock %}

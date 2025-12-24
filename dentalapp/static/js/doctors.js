@@ -1,4 +1,5 @@
-function loadDoctor(date) {
+function loadDoctor(obj) {
+    let date = obj.options[obj.selectedIndex].value;
     if (!date) return;
 
     fetch(`/api/doctors/${date}`).then(res => res.json()).then(data => {

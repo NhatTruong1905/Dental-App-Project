@@ -120,7 +120,7 @@ class AppointmentSchedule(db.Model):
 class AppointmentScheduleService(db.Model):
     __tablename__ = 'appointment_schedule_service'
     id = Column(Integer, primary_key=True, autoincrement=True)
-    appointment_schedule_id = Column(Integer, ForeignKey("appointment_schedule.id"))
+    appointment_schedule_id = Column(Integer, ForeignKey("appointment_schedule.id", ondelete="CASCADE"))
     service_id = Column(Integer, ForeignKey("service.id"))
     price_service = Column(Double, nullable=False)
 
@@ -129,23 +129,22 @@ class AppointmentScheduleMedicine(db.Model):
     __tablename__ = 'appointment_schedule_medicine'
     id = Column(Integer, primary_key=True, autoincrement=True)
     appointment_schedule_id = Column(Integer, ForeignKey("appointment_schedule.id"))
-    medicine_id = Column(Integer, ForeignKey("medicine.id"))
+    medicine_id = Column(Integer, ForeignKey("medicine.id", ondelete="CASCADE"))
     price_medicine = Column(Double, nullable=False)
     quantity_day = Column(Integer, nullable=False)
-    dosage = Column(Integer, nullable=False)
-
+    dosage = Column(String, nullable=False)
 
 class TreatmentCard(db.Model):
     __tablename__ = 'treatment_card'
     id = Column(Integer, primary_key=True, autoincrement=True)
-    appointment_schedule_id = Column(Integer, ForeignKey("appointment_schedule.id"), unique=True)
+    appointment_schedule_id = Column(Integer, ForeignKey("appointment_schedule.id", ondelete="CASCADE"), unique=True)
     note = Column(String(100), nullable=False)
 
 
 class Invoice(db.Model):
     __tablename__ = 'invoice'
     id = Column(Integer, primary_key=True, autoincrement=True)
-    appointment_schedule_id = Column(Integer, ForeignKey("appointment_schedule.id"), unique=True)
+    appointment_schedule_id = Column(Integer, ForeignKey("appointment_schedule.id", ondelete="CASCADE"), unique=True)
     total_service = Column(Double, nullable=False)
     total_medicine = Column(Double, nullable=False)
     vat = Column(Double, default=10.0)
@@ -288,11 +287,12 @@ def create_user_base(name, phone, username, password, role):
 
 def insert_doctors(count):
     majors = ["Chỉnh nha", "Phục hình", "Nha chu", "Implant", "Niềng", "Phẫu thuật tuỷ"]
-    first_name = ["Hoàng", "Việt", "Minh", "Phúc", "Phát", "Việt"]
-    last_name = ["Nguyễn", "Trần", "Phạm", "Ngô", "Lê"]
+    ho = ["Nguyễn", "Trần", "Lê", "Phạm", "Hoàng", "Phan", "Vũ", "Đặng", "Bùi", "Đỗ"]
+    ten_dem = ["Văn", "Thị", "Ngọc", "Hoàng", "Hữu", "Minh", "Đức", "Anh", "Thành", "Vĩnh"]
+    ten = ["Dũng", "Nam", "Hậu", "Thành", "Trung", "Hòa", "An", "Bình", "Chi", "Duy", "Giang", "Hương"]
     with app.app_context():
         for i in range(1, count + 1):
-            u = create_user_base(name=f"{random.choice(last_name)} {random.choice(first_name)}",
+            u = create_user_base(name=f"{random.choice(ho)} {random.choice(ten_dem)} {random.choice(ten)}",
                                  phone=f"0912000{i:03d}", username=f"doctor{i}", password="123", role=UserRole.DOCTOR)
             dr = Doctor(id=u.id, major=random.choice(majors))
             db.session.add(dr)
@@ -300,16 +300,33 @@ def insert_doctors(count):
 
 
 def insert_patient(count):
-    first_name = ["Dung", "Nam", "Hậu", "Thành", "Trung", "Hoà"]
-    last_name = ["Lý", "Tô", "Đặng", "Bùi", "Dương"]
-    medical_history = ["Đau răng", "Đau lợi", "Chảy máu răng", "Sâu răng", "Rối loạn mọc răng"]
+    ho = ["Nguyễn", "Trần", "Lê", "Phạm", "Hoàng", "Phan", "Vũ", "Đặng", "Bùi", "Đỗ"]
+    ten_dem = ["Văn", "Thị", "Ngọc", "Hoàng", "Hữu", "Minh", "Đức", "Anh", "Thành", "Vĩnh"]
+    ten = ["Dũng", "Nam", "Hậu", "Thành", "Trung", "Hòa", "An", "Bình", "Chi", "Duy", "Giang", "Hương"]
+
+    medical_history_list = [
+        "Sâu răng hàm số 6", "Viêm lợi cấp tính", "Nhổ răng khôn mọc lệch",
+        "Tẩy trắng răng", "Niềng răng thẩm mỹ", "Chảy máu chân răng",
+        "Khám định kỳ", "Trám răng thẩm mỹ"
+    ]
+
+    address_list = [
+        "123 Lê Lợi, Quận 1, TP.HCM",
+        "45 Nguyễn Trãi, Thanh Xuân, Hà Nội",
+        "789 Cách Mạng Tháng 8, Tân Bình, TP.HCM",
+        "12 Cầu Giấy, Dịch Vọng, Hà Nội",
+        "90 Võ Văn Ngân, Thủ Đức, TP.HCM",
+        "34 Trần Hưng Đạo, Hoàn Kiếm, Hà Nội"
+    ]
+
+    phone_headers = ["090", "091", "098", "032", "035", "070", "077", "083", "085"]
     with app.app_context():
         for i in range(1, count + 1):
-            u = create_user_base(f"{random.choice(last_name)} {random.choice(first_name)}", f"0988000{i:03d}",
+            u = create_user_base(f"{random.choice(ho)} {random.choice(ten_dem)} {random.choice(ten)}", f"{random.choice(phone_headers)}{random.randint(1000000, 9999999)}",
                                  f"user{i}", "123", UserRole.USER)
-            pa = Patient(name=f"Bệnh nhân {random.choice(last_name)} {random.choice(first_name)}",
-                         phone=f"0988000{i:03d}", birthday=date(2000, 1, 1), address=f"Địa chỉ mẫu số {i}, TP.HCM",
-                         medical_history=random.choice(medical_history), user_id=u.id)
+            pa = Patient(name=f"{random.choice(ho)} {random.choice(ten_dem)} {random.choice(ten)}",
+                         phone=f"0988000{i:03d}", birthday=date(2000, 1, 1), address=f"{random.choice(address_list)}",
+                         medical_history=random.choice(medical_history_list), user_id=u.id)
             db.session.add(pa)
         db.session.commit()
 

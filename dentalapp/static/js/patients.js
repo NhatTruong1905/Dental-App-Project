@@ -18,7 +18,6 @@ function getPatients() {
         for (patient of data) {
             let option = new Option(patient['name']);
             option.id = patient['id'];
-            console.log(option);
             select.appendChild(option);
         }
     });

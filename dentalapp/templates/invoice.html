@@ -74,7 +74,11 @@
     <div class="text-center mt-5">
         <button class="btn btn-success btn-lg px-5" onclick="saveInvoice()">Lưu hóa đơn</button>
     </div>
-
+<script>
+    document.addEventListener("DOMContentLoaded", () => {
+        getPatientFromAppointment();
+    })
+</script>
 {% endblock %}
 
 
