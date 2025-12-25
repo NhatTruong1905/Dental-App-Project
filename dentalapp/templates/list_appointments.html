@@ -3,7 +3,7 @@
 {% block content %}
 
 <div class="container mt-5">
-
+    <div id="alert-doctor" class="alert alert-success text-center mb-4 d-none"></div>
     <div class="text-center mb-4">
         <h2 class="fw-bold text-info">Lịch khám của tôi</h2>
     </div>
@@ -77,4 +77,23 @@
     {% endif %}
 
 </div>
+<script>
+    document.addEventListener("DOMContentLoaded", () => {
+        const params = new URLSearchParams(window.location.search);
+        const alertHome = document.getElementById("alert-doctor");
+
+        if (params.get("success")) {
+            if (params.get("success") === "1") {
+                alertHome.textContent = "Hoàn tất khám bệnh!";
+                alertHome.classList.remove("alert-danger");
+            }
+            else {
+                alertHome.textContent = "Lỗi hệ thống vui lòng thử lại sau!";
+                alertHome.classList.add("alert-danger");
+            }
+            alertHome.classList.remove("d-none");
+            history.replaceState({}, "", "/");
+        }
+    });
+</script>
 {% endblock %}
