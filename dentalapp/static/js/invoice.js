@@ -4,6 +4,8 @@ function loadAppointmentSuccess(date) {
 
 
         if (data.length > 0) {
+            let selected = document.getElementById("selected-appointment");
+            selected.textContent = `-- Chọn lịch khám --`;
             for (let a of data) {
                 let option = document.createElement('option')
                 option.textContent = `Lịch khám lúc ${a["start_time"]} - ${a["patient_name"]} - ${a["patient_phone"]}`
@@ -18,6 +20,37 @@ function loadAppointmentSuccess(date) {
             selected.selected = true;
         }
     })
+}
+
+function reloadInvoice() {
+    let appointmentSelect = document.getElementById("select-appointment");
+    Array.from(appointmentSelect.options).forEach(option => {
+        if (option.id != "selected-appointment")
+            option.remove();
+    })
+
+    let tbody_services = document.getElementById("list-services");
+    let tbody_medicines = document.getElementById("list-medicines");
+
+    tbody_services.innerHTML = '';
+    tbody_medicines.innerHTML = '';
+
+    document.getElementById("total-services").dataset.totalservices = "0";
+    document.getElementById("total-medicines").dataset.totalmedicines = "0";
+    document.getElementById("total-vat").dataset.totalvat = "0";
+    document.getElementById("total-result").dataset.totalresult = "0";
+
+    document.getElementById("total-services").textContent = "0 VNĐ";
+    document.getElementById("total-medicines").textContent = "0 VNĐ";
+    document.getElementById("total-vat").textContent = "0 VNĐ";
+    document.getElementById("total-result").textContent = "0 VNĐ";
+}
+
+function reloadListAppointments() {
+    let tbody_services = document.getElementById("list-services");
+    let tbody_medicines = document.getElementById("list-medicines");
+    tbody_services.innerHTML = "";
+    tbody_medicines.innerHTML = "";
 }
 
 function calculateTotalServices() {

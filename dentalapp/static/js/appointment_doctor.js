@@ -139,5 +139,6 @@ function confirmAppointment(id) {
         }
     }).then(res => res.json()).then(data => {
         console.log(data);
+        window.location.href = data["ok"] ? "/appointments?success=1" : "/?success=0";
     })
 }
