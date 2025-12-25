@@ -12,6 +12,7 @@ from dentalapp.dao import stats
 from wtforms.validators import ValidationError
 from dentalapp.utils import is_image
 from flask import request
+from datetime import datetime
 
 
 class AuthenticatedAdmin(ModelView):
@@ -104,14 +105,32 @@ class UserView(AuthenticatedAdmin):
 
     page_size = 10
 
+# class Stats_view(BaseView):
+#     @expose('/')
+#     def index(self):
+#         return self.render('admin/stats.html'
+#                            , revenue_day=stats.revenue_by_doctor_day()
+#                            , revenue_month=stats.revenue_by_doctor_month()
+#                            , revenue_doctor=stats.revenue_by_doctor())
+
 class Stats_view(BaseView):
     @expose('/')
     def index(self):
-        return self.render('admin/stats.html'
-                           , revenue_day=stats.revenue_by_doctor_day()
-                           , revenue_month=stats.revenue_by_doctor_month()
-                           , revenue_doctor=stats.revenue_by_doctor())
+        year = request.args.get('year', datetime.now().year)
+        month = request.args.get('month')
+        day = request.args.get('day')
 
+        year = int(year)
+        month = int(month) if month else None
+
+        return self.render(
+            'admin/stats.html',
+            revenue_day=stats.revenue_by_doctor_day(month, year),
+            revenue_month=stats.revenue_by_doctor_month(month ,year),
+            revenue_doctor=stats.revenue_by_doctor(month,year),
+            selected_year=year,
+            selected_month=month
+        )
 
 
 admin.add_view(MedicineView(Medicine, db.session, name="Thuốc"))
