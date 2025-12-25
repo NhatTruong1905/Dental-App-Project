@@ -1,51 +1,53 @@
 from dentalapp.models import AppointmentSchedule, Invoice, Doctor, User
 from dentalapp import db, app
-from sqlalchemy import func
+from sqlalchemy import func, null
+from datetime import datetime
 
 
-# def revenue_by_doctor1(kw=None):
-#     return (db.session.query(AppointmentSchedule.doctor_id, func.sum(Invoice.total_invoice).label("invoice_amount"))
-#             .join(AppointmentSchedule, Invoice.appointment_schedule_id == AppointmentSchedule.id )
-#             .group_by(AppointmentSchedule.doctor_id))
-# def revenue_by_doctor2(doctor_id, check_date):
-#     return (db.session.query(func.extract("day", AppointmentSchedule.start_time), func.sum(Invoice.total_invoice).label("invoice_amount")).
-#             join(AppointmentSchedule, Invoice.appointment_schedule_id == AppointmentSchedule.id )
-#             .filter(AppointmentSchedule.doctor_id == doctor_id).group_by(func.extract("day", AppointmentSchedule.start_time)).all())
-
-def revenue_by_doctor_month():
-    return (
+def revenue_by_doctor_month(time,year):
+    query = (
         db.session.query(
             func.extract("month", AppointmentSchedule.start_time).label("month"),
             func.sum(Invoice.total_invoice).label("total_revenue")
         )
         .join(AppointmentSchedule, Invoice.appointment_schedule_id == AppointmentSchedule.id)
-        # .filter(
-        #     func.extract("month",AppointmentSchedule.start_time) == check_date
-        # )
+        .filter(
+            func.extract("year",AppointmentSchedule.start_time) == year,
+        )
         .group_by(
             func.extract("month", AppointmentSchedule.start_time)
         )
-        .all()
     )
 
-def revenue_by_doctor_day():
-    return (
+    if time:
+        query = query.filter(
+            func.extract("month", AppointmentSchedule.start_time) == time
+        )
+    return query.all()
+
+def revenue_by_doctor_day(time, year):
+    query = (
         db.session.query(
             func.extract("day", AppointmentSchedule.start_time).label("day"),
             func.sum(Invoice.total_invoice).label("total_revenue")
         )
         .join(AppointmentSchedule, Invoice.appointment_schedule_id == AppointmentSchedule.id)
-        # .filter(
-        #     func.extract("day",AppointmentSchedule.start_time) == check_date
-        # )
+        .filter(
+            func.extract("year",AppointmentSchedule.start_time) == year,
+        )
         .group_by(
             func.extract("day", AppointmentSchedule.start_time)
         )
-        .all()
     )
 
-def revenue_by_doctor():
-    return (
+    if time:
+        query = query.filter(
+            func.extract("month", AppointmentSchedule.start_time) == time
+        )
+    return query.all()
+
+def revenue_by_doctor(time, year):
+    query = (
         db.session.query(
             Doctor.id.label("doctor_id"),
             User.name.label("doctor_name"),
@@ -54,15 +56,19 @@ def revenue_by_doctor():
         .join(AppointmentSchedule, AppointmentSchedule.doctor_id == Doctor.id)
         .join(Invoice, Invoice.appointment_schedule_id == AppointmentSchedule.id)
         .join(User, User.id == Doctor.id)
-        # .filter(
-        #     Doctor.id == doctor_id
-        # )
+        .filter(
+            func.extract("year", AppointmentSchedule.start_time) == year
+        )
         .group_by(
             Doctor.id,
             User.name,
         )
-        .all()
     )
+    if time:
+        query = query.filter(
+            func.extract("month", AppointmentSchedule.start_time) == time
+        )
+    return query.all()
 
 
 
