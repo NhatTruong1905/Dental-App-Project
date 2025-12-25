@@ -34,7 +34,7 @@ class User(BaseModel, UserMixin):
     name = Column(String(50), nullable=False)
     phone = Column(String(10), nullable=False)
     avatar = Column(String(100),
-                    default='https://res.cloudinary.com/dt1pa28g2/image/upload/v1765801014/default_avatar_dht_fu4l1b.jpg')
+                    default='https://res.cloudinary.com/dt1pa28g2/image/upload/v1766648924/zgxyuynpkb7kz99u1hku.png')
     username = Column(String(50), nullable=False, unique=True)
     password = Column(String(50), nullable=False)
     user_role = Column(Enum(UserRole), default=UserRole.USER)
@@ -75,7 +75,7 @@ class Service(BaseModel):
     price = Column(Double, nullable=False)
     created_date = Column(DateTime, default=datetime.now())
     image = Column(String(200),
-                   default='https://res.cloudinary.com/dt1pa28g2/image/upload/v1765882079/service_default_ymbsdi.jpg')
+                   default='https://res.cloudinary.com/dt1pa28g2/image/upload/v1766648924/zgxyuynpkb7kz99u1hku.png')
     appointment_schedule_services = relationship("AppointmentScheduleService", backref="service", lazy=True)
 
     def __str__(self):

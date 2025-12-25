@@ -7,7 +7,8 @@
 <div class="container mt-4">
     <div class="row justify-content-center">
         <div class="col-lg-10">
-            <div id="homeCarousel" class="carousel slide carousel-fade shadow rounded-4 overflow-hidden" data-bs-ride="carousel" data-bs-interval="3000">
+            <div id="homeCarousel" class="carousel slide carousel-fade shadow rounded-4 overflow-hidden"
+                 data-bs-ride="carousel" data-bs-interval="3000">
 
                 <div class="carousel-indicators">
                     <button type="button" data-bs-target="#homeCarousel" data-bs-slide-to="0" class="active"></button>
@@ -18,16 +19,17 @@
 
                 <div class="carousel-inner">
                     {% set images = [
-                        "portrait-female-dentist_aory6v_c_fill_w_900_h_600_ksvhxa.jpg",
-                        "female-dentist-special-glasses-treating-her-patient-s-teeth-with-dental-instruments_ocwmin_c_fill_w_900_h_600_f9slaf.jpg",
-                        "empty-stomatology-orthodontist-bright-office-room-with-nobody-it_f74ahj_c_fill_w_900_h_600_u368l6.jpg",
-                        "female-dentist-treats-patients-teeth-stomatologist-working-with-professional-equipment_yecmga_c_fill_w_900_h_600_v2yn5x.jpg"
+                    "portrait-female-dentist_aory6v_c_fill_w_900_h_600_ksvhxa.jpg",
+                    "female-dentist-special-glasses-treating-her-patient-s-teeth-with-dental-instruments_ocwmin_c_fill_w_900_h_600_f9slaf.jpg",
+                    "empty-stomatology-orthodontist-bright-office-room-with-nobody-it_f74ahj_c_fill_w_900_h_600_u368l6.jpg",
+                    "female-dentist-treats-patients-teeth-stomatologist-working-with-professional-equipment_yecmga_c_fill_w_900_h_600_v2yn5x.jpg"
                     ] %}
 
                     {% for img in images %}
                     <div class="carousel-item {% if loop.first %}active{% endif %}">
                         <div class="ratio ratio-16x9">
-                            <img src="https://res.cloudinary.com/dt1pa28g2/image/upload/v1765996688/{{ img }}" class="d-block w-100" style="object-fit: cover;" alt="Nha khoa Việt Nam">
+                            <img src="https://res.cloudinary.com/dt1pa28g2/image/upload/v1765996688/{{ img }}"
+                                 class="d-block w-100" style="object-fit: cover;" alt="Nha khoa Việt Nam">
                         </div>
                     </div>
                     {% endfor %}
@@ -65,7 +67,6 @@
 
     <div class="row justify-content-center">
 
-        <!-- Doctor 1 -->
         <div class="col-lg-4 col-md-6 col-sm-10 p-3">
             <div class="card h-100 shadow-sm border-0 rounded-4">
                 <div class="card-body text-center p-4">
@@ -75,7 +76,7 @@
                          width="120" height="120"
                          alt="Bác sĩ Nguyễn Văn Tuấn">
 
-                    <h5 class="fw-bold mb-1">TS. Nguyễn Văn Tuấn</h5>
+                    <h5 class="fw-bold mb-1">TS. Bác sĩ Nguyễn Văn Tuấn</h5>
                     <p class="text-primary fw-semibold">
                         Phục hình & Cấy ghép Implant
                     </p>
@@ -90,25 +91,38 @@
             </div>
         </div>
 
-        <!-- Doctor 2 -->
         <div class="col-lg-4 col-md-6 col-sm-10 p-3">
             <div class="card h-100 shadow-sm border-0 rounded-4">
                 <div class="card-body text-center p-4">
 
-                    <img src="https://res.cloudinary.com/dt1pa28g2/image/upload/v1766003791/dht_doctor_vkdb1z_c_fill_w_128_h_128_jkteyc.jpg"
-                         class="rounded-circle mb-3 shadow-sm"
-                         width="120" height="120"
-                         alt="Bác sĩ Dương Hữu Thành">
+                    <img src="https://res.cloudinary.com/dt1pa28g2/image/upload/v1766659463/dhtavt_r2rxdm_c_fill_w_128_h_128_ghgyoi.jpg" class="rounded-circle mb-3 shadow-sm" width="120" height="120" alt="Bác sĩ Dương Hữu Thành">
 
-                    <h5 class="fw-bold mb-1">GS.TS. Dương Hữu Thành</h5>
-                    <p class="text-primary fw-semibold">
-                        Giám đốc chuyên môn
-                    </p>
+                    <h5 class="fw-bold mb-1">PGS.TS Bác sĩ Dương Hữu Thành</h5>
+                    <p class="text-primary fw-semibold">Giám đốc chuyên môn</p>
 
                     <p class="text-muted small">
                         Giáo sư, Tiến sĩ đầu ngành Răng – Hàm – Mặt,
                         nhiều năm kinh nghiệm giảng dạy và điều trị,
                         chuyên sâu phục hình thẩm mỹ & Implant.
+                    </p>
+
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-4 col-md-6 col-sm-10 p-3">
+            <div class="card h-100 shadow-sm border-0 rounded-4">
+                <div class="card-body text-center p-4">
+
+                    <img src="https://res.cloudinary.com/dt1pa28g2/image/upload/v1766659891/zgxyuynpkb7kz99u1hku_c_fill_w_128_h_128_qmr8ow.png" class="rounded-circle mb-3 shadow-sm" width="120" height="120" alt="Bác sĩ Nguyễn Đinh Nhật Trường">
+
+                    <h5 class="fw-bold mb-1">TS Bác sĩ Nguyễn Đinh Nhật Trường</h5>
+                    <p class="text-primary fw-semibold">Nha Khoa Thai Phụ</p>
+
+                    <p class="text-muted small">
+                        Tiến sĩ chuyên khoa Răng – Hàm – Mặt, nhiều năm kinh nghiệm trong chăm sóc và điều trị răng
+                        miệng cho thai phụ. Am hiểu sâu sinh lý thai kỳ, áp dụng các phương pháp điều trị an toàn, nhẹ
+                        nhàng, giúp mẹ bầu yên tâm trong suốt quá trình thăm khám.
                     </p>
 
                 </div>
@@ -137,3 +151,4 @@
     });
 </script>
 {% endblock %}
+

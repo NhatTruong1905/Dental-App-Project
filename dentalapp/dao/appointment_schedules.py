@@ -68,14 +68,14 @@ def load_appointment_schedules_success(check_date):
     return query
 
 def load_appointment_schedules(date=None, page=1):
-    query = AppointmentSchedule.query
+    query = AppointmentSchedule.query.filter(AppointmentSchedule.status.in_([Status.PENDING, Status.IN_PROGRESS]))
     if date:
         query = query.filter(func.date(AppointmentSchedule.start_time) == date)
 
     if current_user.user_role in [UserRole.ADMIN, UserRole.STAFF]:
         pass
     elif current_user.user_role == UserRole.DOCTOR:
-        query = query.filter(and_(AppointmentSchedule.doctor_id == current_user.id, AppointmentSchedule.status.in_([Status.PENDING, Status.IN_PROGRESS])))
+        query = query.filter(AppointmentSchedule.doctor_id == current_user.id)
     else:
         query = query.join(Patient, AppointmentSchedule.patient_id == Patient.id).filter(Patient.user_id == current_user.id)
     count = query.count()
