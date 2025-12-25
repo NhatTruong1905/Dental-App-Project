@@ -25,9 +25,9 @@ def delete_patient(id):
 @permission()
 def get_patients():
     if current_user.user_role in [UserRole.ADMIN, UserRole.STAFF]:
-        patients = get_list_patients(full=True)
+        patients = get_list_patients(full=True, page=None)
     else:
-        patients = get_list_patients(full=False)
+        patients = get_list_patients(full=False, page=None)
     patients = [
         {
             "id": patient.id,
@@ -37,5 +37,3 @@ def get_patients():
     ]
 
     return jsonify(patients)
-
-
