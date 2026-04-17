@@ -4,12 +4,14 @@ from flask_admin import Admin
 from flask_babel import Babel
 from flask_login import LoginManager
 import cloudinary
+import os
+from dotenv import load_dotenv
 
+load_dotenv()
 app = Flask(__name__)
 
-app.secret_key = "!@#$%jasbej%$^(+eiwqbacjfas12399HBAS59^##GSDFG%%jjs;zs4$$"
-app.config["SQLALCHEMY_DATABASE_URI"] ="mysql+pymysql://root:tuannv0505@localhost/dentaldb?charset=utf8mb4"
-# app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://root:root%40123@localhost/dentaldb?charset=utf8mb4'
+app.secret_key = os.environ.get('SECRET_KEY')
+app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URI')
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = True
 app.config['PAGE_SIZE'] = 6
 
