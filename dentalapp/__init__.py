@@ -7,7 +7,9 @@ import cloudinary
 import os
 from dotenv import load_dotenv
 
-load_dotenv()
+basedir = os.path.abspath(os.path.dirname(__file__))
+dotenv_path = os.path.join(basedir, '.env')
+load_dotenv(dotenv_path)
 app = Flask(__name__)
 
 app.secret_key = os.environ.get('SECRET_KEY')
